@@ -5,6 +5,18 @@ namespace MoodFlix
 {
     public class ApplicationDbContext : DbContext
     {
+        /*
+         * Execute this command in the terminal to create the database:
+         * 
+         *       dotnet ef migrations add InitialCreate
+         *       dotnet ef database update
+         *       
+         * Execute this command in the terminal to create the controllers
+         * 
+         * dotnet aspnet-codegenerator controller -name UsersController -async -api -m User -dc ApplicationDbContext -outDir Controllers
+         * 
+         */
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         // Principal tables
@@ -23,6 +35,7 @@ namespace MoodFlix
         public DbSet<Register> History { get; set; }
         public DbSet<GenreMovie> GenreMovie { get; set; }
         public DbSet<DirectorMovie> DirectorMovie { get; set; }
+        public DbSet<CountryPlatform> CountryPlatform { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,6 +43,10 @@ namespace MoodFlix
              * ENUM TABLES
              */
 
+            //This does not autoGenerate the Id
+            modelBuilder.Entity<Country>()
+                .Property(c => c.CountryId)
+                .ValueGeneratedNever();
             //create a table named Country with the EnumCountry values
             modelBuilder.Entity<Country>().HasData(
             Enum.GetValues(typeof(EnumCountry))
@@ -41,6 +58,10 @@ namespace MoodFlix
                 })
             );
 
+            //This does not autoGenerate the Id
+            modelBuilder.Entity<Genre>()
+                .Property(g => g.GenreId)
+                .ValueGeneratedNever();
             //create a table named Genre with the EnumGenre values
             modelBuilder.Entity<Genre>().HasData(
                 Enum.GetValues(typeof(EnumGenre))
@@ -52,6 +73,10 @@ namespace MoodFlix
                 })
             );
 
+            //This does not autoGenerate the Id
+            modelBuilder.Entity<Emotion>()
+                .Property(e => e.EmotionId)
+                .ValueGeneratedNever();
             //create a table named Emotion with the EnumEmotion values
             modelBuilder.Entity<Emotion>().HasData(
                 Enum.GetValues(typeof(EnumEmotion))
@@ -78,6 +103,18 @@ namespace MoodFlix
             //HistoryEmotion relation table
             modelBuilder.Entity<HistoryEmotion>()
                 .HasKey(he => new { he.HistoryEmotionId});
+
+            //DirectorMovie relation table
+            modelBuilder.Entity<DirectorMovie>()
+                .HasKey(dm => new { dm.DirectorId, dm.MovieId });
+            
+            //GenreMovie relation table
+            modelBuilder.Entity<GenreMovie>()
+                .HasKey(gm => new { gm.GenreId, gm.MovieId });
+
+            //CountryPlatform relation table
+            modelBuilder.Entity<CountryPlatform>()
+                .HasKey(cp => new { cp.CountryId, cp.PlatformId });
 
             /*
              * RELATIONSHIPS
@@ -160,6 +197,18 @@ namespace MoodFlix
                 .HasOne(dm => dm.Movie)
                 .WithMany(m => m.DirectorMovie)
                 .HasForeignKey(dm => dm.MovieId);
+
+            //Country-CountryPlatform relationship  1:N
+            modelBuilder.Entity<CountryPlatform>()
+                .HasOne(cp => cp.Country)
+                .WithMany(c => c.CountryPlatforms)
+                .HasForeignKey(cp => cp.CountryId);
+
+            //Platform-CountryPlatform relationship  1:N
+            modelBuilder.Entity<CountryPlatform>()
+                .HasOne(cp => cp.Platform)
+                .WithMany(p => p.CountryPlatforms)
+                .HasForeignKey(cp => cp.PlatformId);
 
             base.OnModelCreating(modelBuilder);
         }

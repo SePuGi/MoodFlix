@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace MoodFlix.Model
 {
@@ -9,9 +10,11 @@ namespace MoodFlix.Model
         public string GenreName { get; set; }
 
         // This is a one-to-many relationship
+        [JsonIgnore]
         public List<UserGenre> UserGenres { get; set; }
 
         // This is a one-to-many relationship
+        [JsonIgnore]
         public List<GenreMovie> GenreMovies { get; set; }
     }
 }

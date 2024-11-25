@@ -7,11 +7,11 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-/*
+
 // DB confing
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-*/
+
 
 // Add services to the container.
 
