@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace MoodFlix.Utilities
 {
@@ -41,6 +42,34 @@ namespace MoodFlix.Utilities
         {
              Regex regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$");
             return regex.IsMatch(password);
+        }
+
+        /// <summary>
+        /// Get the API key from the keys.xml file
+        /// </summary>
+        /// <param name="apiName"></param>
+        /// <returns></returns>
+        public static string GetApiKey(string apiName)
+        {
+            /*
+             * keys.xml file structure
+             * 
+             * <ApiKey>
+             *     <API name="OpenAI">
+             *         <key>OpenAI_Key</key>
+             *     </API>
+             *     <API name="StreamingAvailability">
+             *         <key>StreamingAvailability_Key</key>
+             *     </API>
+             * </ApiKey>
+             */
+
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "API_KEYS/keys.xml");
+            string keysXml = System.IO.File.ReadAllText(path);
+
+            string Key = XElement.Parse(keysXml).Elements("API").Where(x => x.Attribute("name").Value == apiName).Select(x => x.Element("key").Value).FirstOrDefault();
+
+            return Key;
         }
     }
 }
