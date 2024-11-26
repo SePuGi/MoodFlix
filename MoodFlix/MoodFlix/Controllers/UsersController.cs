@@ -30,14 +30,14 @@ namespace MoodFlix.Controllers
         #region UserCRUD-Login-Register
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<User>>> GetUser()
         {
             return await _context.User.ToListAsync();
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser()
+        public async Task<ActionResult<User>> GetUser(int id)
         {
             /*return: 
 		{
@@ -53,13 +53,17 @@ namespace MoodFlix.Controllers
             }]
         }
 */
-            int id = GetLoggedUserId();
+            int logged_id = GetLoggedUserId();
+
+            if(logged_id == -1 || logged_id != id) //if user is not logged or the user is not the same as the one in the token, it will return Unauthorized
+                return Unauthorized();
+            
+
             var user = await _context.User.FindAsync(id);
 
             if (user == null)
-            {
                 return NotFound();
-            }
+            
 
             return user;
         }
@@ -198,8 +202,7 @@ namespace MoodFlix.Controllers
         #region Utils
 
         /// <summary>
-        /// Add to database the platforms and countrycode of a country
-        /// TODO: Check if save the platforms in the database is necessary
+        /// Add to database the platforms and countrycode of a country only if they are not already in the database
         /// </summary>
         /// <param name="countryCode"></param>
         /// <returns></returns>
@@ -252,7 +255,7 @@ namespace MoodFlix.Controllers
                     serviceNames.Add(service.Name);
                 }
 
-                //Get the countryId
+                //Get the countryId //countryName can have whitespaces inside, and the data on the database is without whitespacesz
                 int countryId = _context.Country.FirstOrDefault(c => c.CountryName == countryName).CountryId;
 
                 //Add the services to the database with the relationship with the country
@@ -271,7 +274,8 @@ namespace MoodFlix.Controllers
                         _context.CountryPlatform.Add(
                             new CountryPlatform { 
                                 CountryId = countryId, 
-                                PlatformId = _context.Platform.FirstOrDefault(p => p.PlatformName == service).PlatformId 
+                                PlatformId = _context.Platform.FirstOrDefault(p => p.PlatformName == service).PlatformId,
+                                CountryCode = countryCode
                             });
                     }
                 }
