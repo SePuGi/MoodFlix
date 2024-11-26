@@ -1,4 +1,70 @@
+# Api keys - Security
+MoodFlix/MoodFlix/API_KEYS/keys.xml
+# Ignorar la carpeta .vs dentro de MoodFlix/MoodFlix/
 MoodFlix/.vs/
+
+# Archivos y carpetas de compilación dentro de MoodFlix/MoodFlix/
 MoodFlix/MoodFlix/bin/
 MoodFlix/MoodFlix/obj/
-MoodFlix/MoodFlix/API_KEYS/keys.xml
+
+# Carpetas y archivos de salida de compilación de Debug/Release dentro de MoodFlix/MoodFlix/
+MoodFlix/MoodFlix/[Dd]ebug/
+MoodFlix/MoodFlix/[Dd]ebugPublic/
+MoodFlix/MoodFlix/[Dd]ist/
+MoodFlix/MoodFlix/[Dd]istPublic/
+MoodFlix/MoodFlix/[Dd]ebugFinal/
+MoodFlix/MoodFlix/[Dd]ebugServer/
+MoodFlix/MoodFlix/[Dd]ebug_x86/
+MoodFlix/MoodFlix/[Dd]ebug_x64/
+MoodFlix/MoodFlix/[Dd]ebug_arm/
+MoodFlix/MoodFlix/[Dd]ebug_ARM64/
+MoodFlix/MoodFlix/[Dd]Release/
+MoodFlix/MoodFlix/[Dd]ReleasePublic/
+MoodFlix/MoodFlix/x64/
+MoodFlix/MoodFlix/x86/
+MoodFlix/MoodFlix/arm/
+MoodFlix/MoodFlix/ARM64/
+
+# Archivos de usuario específicos de Visual Studio dentro de MoodFlix/MoodFlix/
+MoodFlix/MoodFlix/.vs2019/
+MoodFlix/MoodFlix/.vs2017/
+MoodFlix/MoodFlix/.vs2015/
+MoodFlix/MoodFlix/.vscode/
+MoodFlix/MoodFlix/.idea/
+
+# Archivos de configuración de usuario de Visual Studio
+MoodFlix/MoodFlix/*.suo
+MoodFlix/MoodFlix/*.user
+MoodFlix/MoodFlix/*.userosscache
+MoodFlix/MoodFlix/*.sln.docstates
+MoodFlix/MoodFlix/.vsconfig
+
+# Archivos de instalación de Windows dentro de MoodFlix/MoodFlix/
+MoodFlix/MoodFlix/*.cab
+MoodFlix/MoodFlix/*.msi
+MoodFlix/MoodFlix/*.msm
+MoodFlix/MoodFlix/*.msp
+MoodFlix/MoodFlix/*.vsix
+
+# Archivos generados por herramientas de construcción dentro de MoodFlix/MoodFlix/
+MoodFlix/MoodFlix/build/
+MoodFlix/MoodFlix/bld/
+
+# Archivos generados por Visual Studio para NuGet dentro de MoodFlix/MoodFlix/
+MoodFlix/MoodFlix/packages/
+
+# Archivos temporales de Visual Studio dentro de MoodFlix/MoodFlix/
+MoodFlix/MoodFlix/.vs2019/
+MoodFlix/MoodFlix/.vs2017/
+MoodFlix/MoodFlix/.vs2015/
+
+# Archivos de dependencias de herramientas de contenedores y máquinas virtuales
+MoodFlix/MoodFlix/Dockerfile*
+MoodFlix/MoodFlix/.vagrant/
+
+# Archivos generados por JetBrains Rider
+MoodFlix/MoodFlix/.idea/
+
+# Archivos temporales de usuario dentro de MoodFlix/MoodFlix/
+MoodFlix/MoodFlix/Thumbs.db
+MoodFlix/MoodFlix/ehthumbs.db
