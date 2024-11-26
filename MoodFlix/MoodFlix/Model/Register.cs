@@ -9,7 +9,7 @@ namespace MoodFlix.Model
         [Key]
         public int RegisterId { get; set; }
         public DateTime Date { get; set; }
-        public int Rating { get; set; }
+        public int? Rating { get; set; }
 
         public int UserId { get; set; }
         [JsonIgnore]
