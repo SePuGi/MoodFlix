@@ -1,7 +1,7 @@
 # Api keys - Security
 MoodFlix/MoodFlix/API_KEYS/keys.xml
 # Ignorar la carpeta .vs dentro de MoodFlix/MoodFlix/
-MoodFlix/MoodFlix/.vs/
+MoodFlix/.vs/
 
 # Archivos y carpetas de compilación dentro de MoodFlix/MoodFlix/
 MoodFlix/MoodFlix/bin/
