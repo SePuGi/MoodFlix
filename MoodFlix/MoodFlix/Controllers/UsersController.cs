@@ -313,8 +313,6 @@ namespace MoodFlix.Controllers
                 //Deserialize the response
                 var services = JsonConvert.DeserializeObject<ServiceWrapper> (responseString);
 
-                //Get the countryName and the services
-
                 List<string> serviceNames = new List<string>();
                 foreach (var service in services.Services)
                 {
