@@ -64,12 +64,13 @@ namespace MoodFlix.Utilities
              * </ApiKey>
              */
 
-            string path = Path.Combine(Directory.GetCurrentDirectory(), "API_KEYS/keys.xml");
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "res/API_KEYS/keys.xml");
             string keysXml = System.IO.File.ReadAllText(path);
 
             string Key = XElement.Parse(keysXml).Elements("API").Where(x => x.Attribute("name").Value == apiName).Select(x => x.Element("key").Value).FirstOrDefault();
 
             return Key;
         }
+
     }
 }
