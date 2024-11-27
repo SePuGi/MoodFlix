@@ -314,7 +314,6 @@ namespace MoodFlix.Controllers
                 var services = JsonConvert.DeserializeObject<ServiceWrapper> (responseString);
 
                 //Get the countryName and the services
-                string countryName = services.Name;
 
                 List<string> serviceNames = new List<string>();
                 foreach (var service in services.Services)
@@ -323,7 +322,7 @@ namespace MoodFlix.Controllers
                 }
 
                 //Get the countryId //countryName can have whitespaces inside, and the data on the database is without whitespacesz
-                int countryId = _context.Country.FirstOrDefault(c => c.CountryName == countryName).CountryId;
+                int countryId = _context.Country.FirstOrDefault(c => c.CountryName == countryCode).CountryId;
 
                 //Add the services to the database with the relationship with the country
                 foreach (var service in serviceNames)
