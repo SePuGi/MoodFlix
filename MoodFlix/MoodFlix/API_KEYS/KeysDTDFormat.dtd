@@ -1,4 +1,0 @@
-<!ELEMENT ApiKey (API+)>
-<!ELEMENT API (key)>
-<!ATTLIST API name CDATA #REQUIRED>
-<!ELEMENT key (#PCDATA)>
