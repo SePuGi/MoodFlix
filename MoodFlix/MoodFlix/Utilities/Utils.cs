@@ -1,4 +1,6 @@
-﻿using System.Security.Cryptography;
+﻿using MoodFlix.Model.Questionary;
+using MoodFlix.Model;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -72,5 +74,43 @@ namespace MoodFlix.Utilities
             return Key;
         }
 
+        /*
+         * questions.xml file structure
+         * <questions>
+         *  <question>
+         *      <text>How would you describe your emotional connection with the immediate environment?</text>
+         *      <answers>
+         *          <answer key="A" primary="9" secondary="22" tertiary="23">I take time to observe and relax in the moment</answer>
+         *          <answer key="B" primary="6" secondary="20" tertiary="15">I think about everything I have to do and worry</answer>
+         *          <answer key="C" primary="19" secondary="3" tertiary="1">I’m interested in exploring what’s happening</answer>
+         *          <answer key="D" primary="24" secondary="0" tertiary="10">I feel disconnected and prefer to isolate myself</answer>
+         *      </answers>
+         *  </question>
+         */
+
+        public static Questionary GetQuestionaryFromXml()
+        {
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "res/questions/questions.xml");
+            // Cargar el archivo XML
+            var xml = XElement.Load(path);
+
+            var questionary = new Questionary
+            {
+                Questions = xml.Elements("question").Select(q => new Question
+                {
+                    Text = q.Element("text")?.Value,
+                    Options = q.Element("answers")?.Elements("answer").Select(a => new Option
+                    {
+                        Key = a.Attribute("key")?.Value,
+                        Text = a.Value,
+                        PrimaryEmotion = (EnumEmotion)int.Parse(a.Attribute("primary")?.Value ?? "0"),
+                        SecondaryEmotion = (EnumEmotion)int.Parse(a.Attribute("secondary")?.Value ?? "0"),
+                        TertiaryEmotion = (EnumEmotion)int.Parse(a.Attribute("tertiary")?.Value ?? "0")
+                    }).ToList()
+                }).ToList()
+            };
+
+            return questionary;
+        }
     }
 }

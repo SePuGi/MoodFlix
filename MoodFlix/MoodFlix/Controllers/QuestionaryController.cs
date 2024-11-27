@@ -15,17 +15,21 @@ using System.Text;
 
 namespace MoodFlix.Controllers
 {
-    [Authorize]//This will make the controller only accessible to authenticated users (JWT)
+    //[Authorize]//This will make the controller only accessible to authenticated users (JWT)
     [Route("api/questionary")]
     [ApiController]
     public class QuestionaryController : ControllerBase
     {
-        private readonly Questionary _questionary;
+        private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public QuestionaryController()
+        public QuestionaryController(ApplicationDbContext context, IConfiguration configuration)
         {
+            _context = context;
+            _configuration = configuration;
             _questionary = QuestionaryInitializer.CreateQuestionary();
         }
+        private readonly Questionary _questionary;
 
         [HttpGet]
         public IActionResult GetQuestionnaire()
@@ -40,40 +44,81 @@ namespace MoodFlix.Controllers
         }
 
         [HttpPost]
-        public IActionResult SubmitAnswers([FromBody] List<int> selectedAnswers)
+        public IActionResult SubmitQuestionnaire([FromBody] List<QuestionaryResponseDTO> responses, [FromQuery] int registerId)
         {
-            if (selectedAnswers == null || selectedAnswers.Count != _questionary.Questions.Count)
-                return BadRequest("Invalid number of answers");
-
-            // Calculate scores
-            var scores = new Dictionary<EnumEmotion, int>();
-
-            for (int i = 0; i < selectedAnswers.Count; i++)
+            if (responses == null || responses.Count == 0)
             {
-                var question = _questionary.Questions[i];
-                var selectedOption = question.Options[selectedAnswers[i]];
-
-                void AddPoints(EnumEmotion emotion, int points)
-                {
-                    if (!scores.ContainsKey(emotion))
-                        scores[emotion] = 0;
-                    scores[emotion] += points;
-                }
-
-                AddPoints(selectedOption.PrimaryEmotion, 3);
-                AddPoints(selectedOption.SecondaryEmotion, 2);
-                AddPoints(selectedOption.TertiaryEmotion, 1);
+                return BadRequest("The questionnaire responses are invalid or empty.");
             }
 
-            // Determine top 4 emotions
-            var topEmotions = scores
+            // Dictionay to get sum of scores of emotions
+            var emotionScores = new Dictionary<int, int>();
+
+            foreach (var response in responses)
+            {
+                // Find the correct question
+                var question = _questionary.Questions.FirstOrDefault(q => q.Text == response.Question);
+                if (question == null)
+                {
+                    return NotFound($"Question '{response.Question}' not found.");
+                }
+
+                // Find the option selected by the user
+                var selectedOption = question.Options.FirstOrDefault(o => o.Text == response.Answer);
+                if (selectedOption == null)
+                {
+                    return NotFound($"Answer '{response.Answer}' for question '{response.Question}' not found.");
+                }
+
+                // Sum scores of emotions
+                AddEmotionScore(emotionScores, (int)selectedOption.PrimaryEmotion, 3); // Primary: 3 points
+                AddEmotionScore(emotionScores, (int)selectedOption.SecondaryEmotion, 2); // Secondary: 2 points
+                AddEmotionScore(emotionScores, (int)selectedOption.TertiaryEmotion, 1); // Tertiary: 1 point
+            }
+
+            // Order emotions by score (max  to min)
+            var sortedEmotions = emotionScores
                 .OrderByDescending(e => e.Value)
-                .TakeWhile((e, index) =>
-                    index < 4 || (index > 0 && e.Value == scores.ElementAt(index - 1).Value))
-                .Select(e => new { Emotion = e.Key.ToString(), Score = e.Value })
+                .Take(3)
+                .Select(e => new EmotionDTO
+                {
+                    Id = e.Key,
+                    Name = ((EnumEmotion)e.Key).ToString(),
+                    Score = e.Value
+                })
                 .ToList();
 
-            return Ok(topEmotions);
+            //// Save emotions with its scores in history
+            //foreach (var emotion in sortedEmotions)
+            //{
+            //    var historyEmotion = new HistoryEmotion
+            //    {
+            //        RegisterId = registerId, 
+            //        EmotionId = emotion.EmotionId 
+            //    };
+
+            //    _context.HistoryEmotion.Add(historyEmotion); 
+            //}
+
+            //_context.SaveChanges();
+
+
+            var firstEmotion = sortedEmotions.FirstOrDefault();
+
+            // Return only first emotion
+            return Ok(sortedEmotions);
+        }
+
+        private void AddEmotionScore(Dictionary<int, int> scores, int emotionId, int points)
+        {
+            if (scores.ContainsKey(emotionId))
+            {
+                scores[emotionId] += points;
+            }
+            else
+            {
+                scores[emotionId] = points;
+            }
         }
     }
 }

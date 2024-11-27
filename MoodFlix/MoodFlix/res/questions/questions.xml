@@ -1,0 +1,92 @@
+<questions>
+    <question>
+        <text>How would you describe your emotional connection with the immediate environment?</text>
+        <answers>
+            <answer key="A" primary="9" secondary="22" tertiary="23">I take time to observe and relax in the moment</answer>
+            <answer key="B" primary="6" secondary="20" tertiary="15">I think about everything I have to do and worry</answer>
+            <answer key="C" primary="19" secondary="3" tertiary="1">I’m interested in exploring what’s happening</answer>
+            <answer key="D" primary="24" secondary="0" tertiary="10">I feel disconnected and prefer to isolate myself</answer>
+        </answers>
+    </question>
+    <question>
+        <text>How do you feel about the people around you right now?</text>
+        <answers>
+            <answer key="A" primary="4" secondary="23" tertiary="22">I express closeness and affection towards others</answer>
+            <answer key="B" primary="0" secondary="24" tertiary="10">I remain silent, preferring not to interact</answer>
+            <answer key="C" primary="1" secondary="3" tertiary="19">I observe and admire some people</answer>
+            <answer key="D" primary="15" secondary="6" tertiary="20">I express frustration with my words or attitudes</answer>
+        </answers>
+    </question>
+    <question>
+        <text>How do you feel emotionally when facing a new or unexpected situation?</text>
+        <answers>
+            <answer key="A" primary="8" secondary="3" tertiary="19">I explore with enthusiasm and curiosity</answer>
+            <answer key="B" primary="6" secondary="19" tertiary="20">I do my best, despite my nerves</answer>
+            <answer key="C" primary="10" secondary="0" tertiary="24">I feel confused and find it hard to decide what to do</answer>
+            <answer key="D" primary="9" secondary="22" tertiary="23">I face the situation with calm and confidence</answer>
+        </answers>
+    </question>
+    <question>
+        <text>How do you feel when receiving good news or achievements?</text>
+        <answers>
+            <answer key="A" primary="3" secondary="22" tertiary="25">I celebrate openly and share my joy</answer>
+            <answer key="B" primary="22" secondary="3" tertiary="4">I smile and quietly express gratitude</answer>
+            <answer key="C" primary="17" secondary="8" tertiary="1">I express my surprise with enthusiasm</answer>
+            <answer key="D" primary="0" secondary="24" tertiary="12">I don’t give much importance to the event</answer>
+        </answers>
+    </question>
+    <question>
+        <text>How do you feel when facing a stressful or challenging situation?</text>
+        <answers>
+            <answer key="A" primary="6" secondary="20" tertiary="19">I face the challenge even though I am nervous</answer>
+            <answer key="B" primary="9" secondary="22" tertiary="25">I remain calm and focus on finding a solution</answer>
+            <answer key="C" primary="15" secondary="20" tertiary="6">I complain or react with anger</answer>
+            <answer key="D" primary="0" secondary="24" tertiary="14">I give up and lose interest in continuing</answer>
+        </answers>
+    </question>
+    <question>
+        <text>When facing a difficulty or problem, how do you react?</text>
+        <answers>
+            <answer key="A" primary="9" secondary="22" tertiary="25">I solve the problem with patience</answer>
+            <answer key="B" primary="24" secondary="0" tertiary="14">I feel too weak to continue</answer>
+            <answer key="C" primary="15" secondary="6" tertiary="20">I vent my frustration in the moment</answer>
+            <answer key="D" primary="19" secondary="3" tertiary="1">I think of creative and possible solutions</answer>
+        </answers>
+    </question>
+    <question>
+        <text>How do you feel right now about the people you care about?</text>
+        <answers>
+            <answer key="A" primary="4" secondary="23" tertiary="22">I express closeness and affection toward them</answer>
+            <answer key="B" primary="15" secondary="6" tertiary="20">I let them know that something about their behavior bothers me</answer>
+            <answer key="C" primary="0" secondary="24" tertiary="10">I remain indifferent and avoid getting too involved</answer>
+            <answer key="D" primary="10" secondary="19" tertiary="21">I think about different emotions regarding them</answer>
+        </answers>
+    </question>
+    <question>
+        <text>How do you feel when you see someone going through a difficult time?</text>
+        <answers>
+            <answer key="A" primary="14" secondary="23" tertiary="4">I try to help and offer emotional support</answer>
+            <answer key="B" primary="24" secondary="14" tertiary="21">I reflect on their situation and feel sad for them</answer>
+            <answer key="C" primary="0" secondary="10" tertiary="12">I carry on with my own life and don’t get too involved</answer>
+            <answer key="D" primary="20" secondary="6" tertiary="15">I feel uncomfortable and prefer to avoid the situation</answer>
+        </answers>
+    </question>
+    <question>
+        <text>How do you feel right now about your own achievements or efforts?</text>
+        <answers>
+            <answer key="A" primary="25" secondary="22" tertiary="3">I celebrate my achievements and share my satisfaction</answer>
+            <answer key="B" primary="24" secondary="0" tertiary="15">I blame myself for not doing more</answer>
+            <answer key="C" primary="6" secondary="20" tertiary="19">I am excited about what I can accomplish next</answer>
+            <answer key="D" primary="12" secondary="0" tertiary="10">I remain neutral and don’t think much about it</answer>
+        </answers>
+    </question>
+    <question>
+        <text>How would you describe your emotional state when facing an unexpected high-pressure situation?</text>
+        <answers>
+            <answer key="A" primary="9" secondary="22" tertiary="23">I act with determination and confidence</answer>
+            <answer key="B" primary="6" secondary="20" tertiary="15">I feel overwhelmed and extremely worried</answer>
+            <answer key="C" primary="20" secondary="6" tertiary="10">I face the pressure with discomfort, but without giving up</answer>
+            <answer key="D" primary="0" secondary="14" tertiary="24">I freeze and feel like I have no control</answer>
+        </answers>
+    </question>
+</questions>

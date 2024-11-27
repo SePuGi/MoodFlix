@@ -10,5 +10,10 @@
             Text = text;
             Options = new List<Option>();
         }
+
+        public Question()
+        {
+            Options = new List<Option>();
+        }
     }
 }
