@@ -13,7 +13,7 @@ namespace MoodFlix
          *       
          * Execute this command in the terminal to create the controllers
          * 
-         * dotnet aspnet-codegenerator controller -name UsersController -async -api -m User -dc ApplicationDbContext -outDir Controllers
+         *       dotnet aspnet-codegenerator controller -name UsersController -async -api -m User -dc ApplicationDbContext -outDir Controllers
          * 
          */
 
