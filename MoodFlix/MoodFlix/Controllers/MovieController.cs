@@ -67,7 +67,7 @@ namespace MoodFlix.Controllers
         /// <returns></returns>
         private async Task<List<string>> GetMoviesOpenAI(int total_movies, List<int> emotionId)
         {
-            string KEY = "";
+            string openAIKey = Utils.GetApiKey("OpenAI");
             string apiEndpoint = "https://api.openai.com/v1/chat/completions";
             /*
             int userId = 1;//GetLoggedUserId();
@@ -94,7 +94,7 @@ namespace MoodFlix.Controllers
             //Prompt
             RequestOpenAi request = new RequestOpenAi() 
             { 
-                Model = "gpt-3.5-turbo", //gpt-4o-mini
+                Model = "gpt-3.5-turbo", //gpt-4o-mini        gpt-3.5-turbo
                 Messages = new List<Message>()
                 {
                     new Message() { Role = "user", Content = "Recommend me a movie" }
@@ -102,7 +102,7 @@ namespace MoodFlix.Controllers
                 MaxTokens = 30,
                 Temperature = 0.6f
             };
-
+            
             //Create the request
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {openAIKey}");
@@ -110,23 +110,60 @@ namespace MoodFlix.Controllers
 
             var json = System.Text.Json.JsonSerializer.Serialize(request);
             var body = new StringContent(json, Encoding.UTF8, "application/json");
-
+            
             //Send the request
-            var response = await client.PostAsJsonAsync(apiEndpoint, body);
+            var response = await client.PostAsync(apiEndpoint, body);
 
+            
             if (response.IsSuccessStatusCode)
             {
                 //Get the response
                 var responseString = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(responseString);
-
+                /*
+                 RESPUESTA
+                 {
+  "id": "chatcmpl-AYgZZFZL2TyEU3Nuoegb4ZzZqaoZ7",
+  "object": "chat.completion",
+  "created": 1732830165,
+  "model": "gpt-3.5-turbo-0125",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "I recommend the movie \"The Shawshank Redemption.\" It is a classic drama film that tells the story of a man who is wrongly imprisoned for a",
+        "refusal": null
+      },
+      "logprobs": null,
+      "finish_reason": "length"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 11,
+    "completion_tokens": 30,
+    "total_tokens": 41,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "system_fingerprint": null
+}
+                */
             }
             else
             {
                 //Error
                 Console.WriteLine("Error:" + response.StatusCode);
             }
-
+            
             //response: only the movie names
             return new List<string>(){"The godfather"};
         }
