@@ -22,6 +22,7 @@ namespace MoodFlix.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly Questionary _questionary;
 
         public QuestionaryController(ApplicationDbContext context, IConfiguration configuration)
         {
@@ -29,10 +30,15 @@ namespace MoodFlix.Controllers
             _configuration = configuration;
             _questionary = QuestionaryInitializer.CreateQuestionary();
         }
-        private readonly Questionary _questionary;
 
+        #region GetQuestionary
+
+        /// <summary>
+        /// Retrieve the questionary with its questions and options.
+        /// </summary>
+        /// <returns>A list of questions with their available answers.</returns>
         [HttpGet]
-        public IActionResult GetQuestionnaire()
+        public IActionResult GetQuestionary()
         {
             var response = _questionary.Questions.Select(q => new
             {
@@ -43,40 +49,50 @@ namespace MoodFlix.Controllers
             return Ok(response);
         }
 
+        #endregion
+
+        #region SubmitQuestionary
+
+        /// <summary>
+        /// Process the responses of the questionary and calculate the emotion scores.
+        /// </summary>
+        /// <param name="responses">A list of user responses to the questionary.</param>
+        /// <param name="registerId">An optional register ID for storing the history.</param>
+        /// <returns>The top three emotions based on the user's responses.</returns>
         [HttpPost]
-        public IActionResult SubmitQuestionnaire([FromBody] List<QuestionaryResponseDTO> responses, [FromQuery] int registerId)
+        public IActionResult SubmitQuestionary([FromBody] List<QuestionaryResponseDTO> responses, [FromQuery] int registerId)
         {
             if (responses == null || responses.Count == 0)
             {
                 return BadRequest("The questionnaire responses are invalid or empty.");
             }
 
-            // Dictionay to get sum of scores of emotions
+            // Dictionary to accumulate emotion scores
             var emotionScores = new Dictionary<int, int>();
 
             foreach (var response in responses)
             {
-                // Find the correct question
+                // Find the corresponding question
                 var question = _questionary.Questions.FirstOrDefault(q => q.Text == response.Question);
                 if (question == null)
                 {
                     return NotFound($"Question '{response.Question}' not found.");
                 }
 
-                // Find the option selected by the user
+                // Find the user's selected answer
                 var selectedOption = question.Options.FirstOrDefault(o => o.Text == response.Answer);
                 if (selectedOption == null)
                 {
                     return NotFound($"Answer '{response.Answer}' for question '{response.Question}' not found.");
                 }
 
-                // Sum scores of emotions
+                // Add scores for each associated emotion
                 AddEmotionScore(emotionScores, (int)selectedOption.PrimaryEmotion, 3); // Primary: 3 points
                 AddEmotionScore(emotionScores, (int)selectedOption.SecondaryEmotion, 2); // Secondary: 2 points
                 AddEmotionScore(emotionScores, (int)selectedOption.TertiaryEmotion, 1); // Tertiary: 1 point
             }
 
-            // Order emotions by score (max  to min)
+            // Sort emotions by score and select the top three
             var sortedEmotions = emotionScores
                 .OrderByDescending(e => e.Value)
                 .Take(3)
@@ -88,27 +104,35 @@ namespace MoodFlix.Controllers
                 })
                 .ToList();
 
-            //// Save emotions with its scores in history
-            //foreach (var emotion in sortedEmotions)
-            //{
-            //    var historyEmotion = new HistoryEmotion
-            //    {
-            //        RegisterId = registerId, 
-            //        EmotionId = emotion.EmotionId 
-            //    };
+            // Save emotion scores to the database (optional, commented out)
+            /*
+            foreach (var emotion in sortedEmotions)
+            {
+                var historyEmotion = new HistoryEmotion
+                {
+                    RegisterId = registerId,
+                    EmotionId = emotion.Id,
+                    Score = emotion.Score
+                };
+                _context.HistoryEmotion.Add(historyEmotion);
+            }
+            _context.SaveChanges();
+            */
 
-            //    _context.HistoryEmotion.Add(historyEmotion); 
-            //}
-
-            //_context.SaveChanges();
-
-
-            var firstEmotion = sortedEmotions.FirstOrDefault();
-
-            // Return only first emotion
+            // Return the calculated emotions
             return Ok(sortedEmotions);
         }
 
+        #endregion
+
+        #region Utils
+
+        /// <summary>
+        /// Increment the score of an emotion in the dictionary.
+        /// </summary>
+        /// <param name="scores">The dictionary storing emotion scores.</param>
+        /// <param name="emotionId">The ID of the emotion.</param>
+        /// <param name="points">The number of points to add.</param>
         private void AddEmotionScore(Dictionary<int, int> scores, int emotionId, int points)
         {
             if (scores.ContainsKey(emotionId))
@@ -120,5 +144,7 @@ namespace MoodFlix.Controllers
                 scores[emotionId] = points;
             }
         }
+
+        #endregion
     }
 }
