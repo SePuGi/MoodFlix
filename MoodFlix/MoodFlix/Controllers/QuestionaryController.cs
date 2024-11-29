@@ -43,7 +43,12 @@ namespace MoodFlix.Controllers
             var response = _questionary.Questions.Select(q => new
             {
                 question = q.Text,
-                answers = q.Options.Select(o => o.Text).ToList()
+                answers = q.Options.Select(o => new
+                {
+                    key = o.Key,
+                    text = o.Text,
+                })
+                .ToList()
             }).ToList();
 
             return Ok(response);
