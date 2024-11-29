@@ -74,40 +74,16 @@ namespace MoodFlix.Controllers
             string openAIKey = Utils.GetApiKey("OpenAI");
             string apiEndpoint = "https://api.openai.com/v1/chat/completions";
             
-            int userId = 1;//GetLoggedUserId();
-
-            //Get the movies watched by the user
-            var moviesWatched = _context.History.Where(h => h.UserId == userId).Select(h => h.Movie.Title).ToList();
-            List<MoviesWatched> mw = new List<MoviesWatched>();
-            foreach (var movie in moviesWatched)
-                mw.Add(new MoviesWatched() { Title = movie });
             
-            List<Genre> userPreferredGenres = _context.UserGenre.Where(ug => ug.UserId == userId && ug.IsPreferred == true).Select(ug => ug.Genre).ToList();
-            List<Genre> userNotPreferredGenres = _context.UserGenre.Where(ug => ug.UserId == userId && ug.IsPreferred == false).Select(ug => ug.Genre).ToList();
 
-            //erase:
-            emotionId.Add(24);
-            emotionId.Add(20);
-            emotionId.Add(6);
+            List<Message> prompt= new List<Message>();
+            prompt = await CreatePrompt(total_movies, emotionId);
 
-            //Get the emotions from the enum
-            List<string> userEmotions = new List<string>();
-            foreach (var emotion in emotionId)
-                userEmotions.Add(((EnumEmotion)emotion).ToString());
-            
             //Prompt
             RequestOpenAi request = new RequestOpenAi() 
             { 
                 Model = "gpt-3.5-turbo", //gpt-4o-mini        gpt-3.5-turbo
-                Messages = new List<Message>()
-                {
-                    new Message() { Role = "system", Content = "You are an expert movie recommender. Your job is to suggest movies based on the streaming platforms the user has, the user's genre preferences, avoiding the genres they don't want, and considering their current emotions to improve their mood. You must also take into account the movies they have already watched to avoid recommending them again. The recommendations should be useful and in JSON format." },
-                    new Message() { Role = "system", Content = $"I have seen this movies: {string.Join(",",moviesWatched)}" },
-                    new Message() { Role = "system", Content = $"My favorite movie genre are: {string.Join(",",userPreferredGenres)}" },
-                    new Message() { Role = "system", Content = $"I don't want movies with the genres: {string.Join(",",userNotPreferredGenres)}" },
-                    new Message() { Role = "system", Content = $"This emotions can resume my feelings: {string.Join(",",userEmotions)}" },
-                    new Message() { Role = "user", Content = $"Generate a list of {total_movies} movies that meet these criteria. The output format should be JSON with the following structure: {{ \"movies\": [\"Movie Name 1\", \"Movie Name 2\", ...] }}." }
-                },
+                Messages = prompt,
                 MaxTokens = 100,
                 Temperature = 0.6f
             };
@@ -141,6 +117,50 @@ namespace MoodFlix.Controllers
 
             //response: only the movie names
             return moviesResponse;
+        }
+
+        private async Task<List<Message>> CreatePrompt(int totalMovies, List<int> emotionId)
+        {
+            /*
+{
+    new Message() { Role = "system", Content = "You are an expert movie recommender. Your job is to suggest movies based on the streaming platforms the user has, the user's genre preferences, avoiding the genres they don't want, and considering their current emotions to improve their mood. You must also take into account the movies they have already watched to avoid recommending them again. The recommendations should be useful and in JSON format." },
+    new Message() { Role = "system", Content = $"I have seen this movies: {string.Join(",",moviesWatched)}" },
+    new Message() { Role = "system", Content = $"My favorite movie genre are: {string.Join(",",userPreferredGenres)}" },
+    new Message() { Role = "system", Content = $"I don't want movies with the genres: {string.Join(",",userNotPreferredGenres)}" },
+    new Message() { Role = "system", Content = $"This emotions can resume my feelings: {string.Join(",",userEmotions)}" },
+    new Message() { Role = "user", Content = $"Generate a list of {total_movies} movies that meet these criteria. The output format should be JSON with the following structure: {{ \"movies\": [\"Movie Name 1\", \"Movie Name 2\", ...] }}." }
+}
+             */
+            int userId = 1;//GetLoggedUserId();
+
+            //Get the movies watched by the user
+            var moviesWatched = _context.History.Where(h => h.UserId == userId).Select(h => h.Movie.Title).ToList();
+            List<MoviesWatched> mw = new List<MoviesWatched>();
+            foreach (var movie in moviesWatched)
+                mw.Add(new MoviesWatched() { Title = movie });
+
+            List<Genre> userPreferredGenres = _context.UserGenre.Where(ug => ug.UserId == userId && ug.IsPreferred == true).Select(ug => ug.Genre).ToList();
+            List<Genre> userNotPreferredGenres = _context.UserGenre.Where(ug => ug.UserId == userId && ug.IsPreferred == false).Select(ug => ug.Genre).ToList();
+
+            //erase:
+            emotionId.Add(24);
+            emotionId.Add(20);
+            emotionId.Add(6);
+
+            //Get the emotions from the enum
+            List<string> userEmotions = new List<string>();
+            foreach (var emotion in emotionId)
+                userEmotions.Add(((EnumEmotion)emotion).ToString());
+
+            List<Message> message = new List<Message>();
+
+            //Add conversation context (you are a movie expert...)
+            //Add the movies watched if there are any, if not, do no add this message
+            //Add the user genre preferences if there are any, if not, do no add this message
+            //Add emotions context if there are any, if not, do no add this message
+
+
+            return null;
         }
 
         /// <summary>
@@ -229,7 +249,6 @@ namespace MoodFlix.Controllers
 
             return false;
         }
-
 
         private MovieDataDTO GetMovieInfoFromJArray(JArray moviesResponse, string userCountry)
         {

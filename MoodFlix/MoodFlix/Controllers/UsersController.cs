@@ -193,11 +193,29 @@ namespace MoodFlix.Controllers
         #region UserHistory
 
         /*
-         * GET/api/user/{id}/history
-         * POST/api/user/{id}/addToHistory
          * PATCH/api/user/movieRating
          * DELETE/api/user/{id}/history
          */
+
+        //PATCH: api/user/movieRating
+        [AllowAnonymous]
+        [HttpPatch("movieRating")]
+        public async Task<ActionResult<Register>> UpdateMovieRating(RatingDTO rating)
+        {
+            //int logged_id = GetLoggedUserId();
+            int logged_id = 1;
+            //if user is not logged or the user is not the same as the one in the token, it will return Unauthorized
+            if (logged_id == -1)
+                return Unauthorized();
+
+            //Update the rating in the register
+            var register = await _context.History.FindAsync(rating.RegisterID);
+            register.Rating = rating.Rating;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
 
         //GET: api/user/{id}/history
         [AllowAnonymous]
@@ -299,7 +317,6 @@ namespace MoodFlix.Controllers
 
             return NoContent();
         }
-
 
         #endregion
 
