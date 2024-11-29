@@ -8,45 +8,66 @@ Content-Type: application/json
 POST http://localhost:5091/api/questionary
 Content-Type: application/json
 [
-        {
-  "question": "How would you describe your emotional connection with the immediate environment?",
-  "answer": "I think about everything I have to do and worry"
-},
-{
-  "question": "How do you feel about the people around you right now?",
-  "answer": "I express frustration with my words or attitudes"
-},
-{
-  "question": "How do you feel emotionally when facing a new or unexpected situation?",
-  "answer": "I face the situation with calm and confidence"
-},
-{
-  "question": "How do you feel when receiving good news or achievements?",
-  "answer": "I express my surprise with enthusiasm"
-},
-{
-  "question": "How do you feel when facing a stressful or challenging situation?",
-  "answer": "I complain or react with anger"
-},
-{
-  "question": "When facing a difficulty or problem, how do you react?",
-  "answer": "I feel too weak to continue"
-},
-{
-  "question": "How do you feel right now about the people you care about?",
-  "answer": "I let them know that something about their behavior bothers me"
-},
-{
-  "question": "How do you feel when you see someone going through a difficult time?",
-  "answer": "I carry on with my own life and don’t get too involved"
-},
-{
-  "question": "How do you feel right now about your own achievements or efforts?",
-  "answer": "I remain neutral and don’t think much about it"
-},
-{
-  "question": "How would you describe your emotional state when facing an unexpected high-pressure situation?",
-  "answer": "I freeze and feel like I have no control"
-}
+  {
+    "question": "How would you describe your emotional connection with your immediate environment?",
+    "answer": "A"
+  },
+  {
+    "question": "How do you usually respond when faced with a stressful situation?",
+    "answer": "D"
+  },
+  {
+    "question": "How do you react when something unexpected happens?",
+    "answer": "B"
+  },
+  {
+    "question": "How do you feel after achieving something meaningful?",
+    "answer": "C"
+  },
+  {
+    "question": "How do you usually feel when spending time with close friends?",
+    "answer": "A"
+  },
+  {
+    "question": "How do you approach learning something new?",
+    "answer": "B"
+  },
+  {
+    "question": "How do you usually feel when you are in a large crowd?",
+    "answer": "D"
+  },
+  {
+    "question": "How do you respond when you face an intense challenge at work or school?",
+    "answer": "B"
+  },
+  {
+    "question": "How do you feel when you watch an inspiring movie or read a powerful story?",
+    "answer": "D"
+  },
+  {
+    "question": "How do you act when you feel someone has treated you unfairly?",
+    "answer": "C"
+  },
+  {
+    "question": "How do you react when you're in a beautiful natural setting?",
+    "answer": "A"
+  },
+  {
+    "question": "How do you feel after making a mistake in front of others?",
+    "answer": "C"
+  },
+  {
+    "question": "How do you act when you're enjoying a great meal with others?",
+    "answer": "A"
+  },
+  {
+    "question": "How do you behave when someone asks for your help?",
+    "answer": "D"
+  },
+  {
+    "question": "How do you feel when you remember a meaningful past event?",
+    "answer": "D"
+  }
 ]
+
 

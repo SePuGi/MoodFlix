@@ -80,14 +80,14 @@ namespace MoodFlix.Controllers
                 }
 
                 // Find the user's selected answer
-                var selectedOption = question.Options.FirstOrDefault(o => o.Text == response.Answer);
+                var selectedOption = question.Options.FirstOrDefault(o => o.Key == response.Answer);
                 if (selectedOption == null)
                 {
                     return NotFound($"Answer '{response.Answer}' for question '{response.Question}' not found.");
                 }
 
                 // Add scores for each associated emotion
-                AddEmotionScore(emotionScores, (int)selectedOption.PrimaryEmotion, 3); // Primary: 3 points
+                AddEmotionScore(emotionScores, (int)selectedOption.PrimaryEmotion, 4); // Primary: 4 points
                 AddEmotionScore(emotionScores, (int)selectedOption.SecondaryEmotion, 2); // Secondary: 2 points
                 AddEmotionScore(emotionScores, (int)selectedOption.TertiaryEmotion, 1); // Tertiary: 1 point
             }
