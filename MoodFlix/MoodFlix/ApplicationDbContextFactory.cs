@@ -10,7 +10,7 @@ namespace MoodFlix
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
             // Proporciona aquí tu cadena de conexión explícitamente
-            optionsBuilder.UseSqlServer("Server=192.168.99.100;Database=MoodFlixDB;User=sa;Password=Passw0rd!;TrustServerCertificate=True;MultipleActiveResultSets=true");
+            optionsBuilder.UseSqlServer("Server=localhost,1433;Database=MoodFlixDB;User=sa;Password=Passw0rd!;TrustServerCertificate=true;MultipleActiveResultSets =true");
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }
