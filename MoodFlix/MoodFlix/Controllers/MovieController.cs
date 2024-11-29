@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NuGet.Protocol;
 using System.Collections.Generic;
+using System.Security.AccessControl;
 using System.Text;
 using System.Text.Json;
 using System.Xml.Linq;
@@ -44,6 +45,9 @@ namespace MoodFlix.Controllers
             // "movies" have a list of the movie titles
             var movies = await GetMoviesOpenAI(total_movies, new List<int>()); //TODO: Add the emotions
 
+            if(movies.Count == 0)
+                return NotFound("No movies found");
+
             //GetMoviesinfo
             var moviesInfo = await GetMovieInfo(movies);
             
@@ -69,7 +73,7 @@ namespace MoodFlix.Controllers
         {
             string openAIKey = Utils.GetApiKey("OpenAI");
             string apiEndpoint = "https://api.openai.com/v1/chat/completions";
-            /*
+            
             int userId = 1;//GetLoggedUserId();
 
             //Get the movies watched by the user
@@ -90,23 +94,28 @@ namespace MoodFlix.Controllers
             List<string> userEmotions = new List<string>();
             foreach (var emotion in emotionId)
                 userEmotions.Add(((EnumEmotion)emotion).ToString());
-            */
+            
             //Prompt
             RequestOpenAi request = new RequestOpenAi() 
             { 
                 Model = "gpt-3.5-turbo", //gpt-4o-mini        gpt-3.5-turbo
                 Messages = new List<Message>()
                 {
-                    new Message() { Role = "user", Content = "Recommend me a movie" }
+                    new Message() { Role = "system", Content = "You are an expert movie recommender. Your job is to suggest movies based on the streaming platforms the user has, the user's genre preferences, avoiding the genres they don't want, and considering their current emotions to improve their mood. You must also take into account the movies they have already watched to avoid recommending them again. The recommendations should be useful and in JSON format." },
+                    new Message() { Role = "system", Content = $"I have seen this movies: {string.Join(",",moviesWatched)}" },
+                    new Message() { Role = "system", Content = $"My favorite movie genre are: {string.Join(",",userPreferredGenres)}" },
+                    new Message() { Role = "system", Content = $"I don't want movies with the genres: {string.Join(",",userNotPreferredGenres)}" },
+                    new Message() { Role = "system", Content = $"This emotions can resume my feelings: {string.Join(",",userEmotions)}" },
+                    new Message() { Role = "user", Content = $"Generate a list of {total_movies} movies that meet these criteria. The output format should be JSON with the following structure: {{ \"movies\": [\"Movie Name 1\", \"Movie Name 2\", ...] }}." }
                 },
-                MaxTokens = 30,
+                MaxTokens = 100,
                 Temperature = 0.6f
             };
-            
+           
+           
             //Create the request
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {openAIKey}");
-            //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", openAIKey);
 
             var json = System.Text.Json.JsonSerializer.Serialize(request);
             var body = new StringContent(json, Encoding.UTF8, "application/json");
@@ -114,58 +123,24 @@ namespace MoodFlix.Controllers
             //Send the request
             var response = await client.PostAsync(apiEndpoint, body);
 
-            
+            List<string> moviesResponse = new List<string>();
+
             if (response.IsSuccessStatusCode)
             {
                 //Get the response
                 var responseString = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(responseString);
-                /*
-                 RESPUESTA
-                 {
-  "id": "chatcmpl-AYgZZFZL2TyEU3Nuoegb4ZzZqaoZ7",
-  "object": "chat.completion",
-  "created": 1732830165,
-  "model": "gpt-3.5-turbo-0125",
-  "choices": [
-    {
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "I recommend the movie \"The Shawshank Redemption.\" It is a classic drama film that tells the story of a man who is wrongly imprisoned for a",
-        "refusal": null
-      },
-      "logprobs": null,
-      "finish_reason": "length"
-    }
-  ],
-  "usage": {
-    "prompt_tokens": 11,
-    "completion_tokens": 30,
-    "total_tokens": 41,
-    "prompt_tokens_details": {
-      "cached_tokens": 0,
-      "audio_tokens": 0
-    },
-    "completion_tokens_details": {
-      "reasoning_tokens": 0,
-      "audio_tokens": 0,
-      "accepted_prediction_tokens": 0,
-      "rejected_prediction_tokens": 0
-    }
-  },
-  "system_fingerprint": null
-}
-                */
+                
+                //Get the content from the response using RequestOpenAi class
+                var responseObj = JsonConvert.DeserializeObject<ResponseOpenAi>(responseString);
+
+                //Get the movies from the response (responseObj.Choices[0].Message.Content) <- this is a json string with the movies titles
+                var movies = JsonConvert.DeserializeObject<MovieContent>(responseObj.Choices[0].Message.Content);
+
+                moviesResponse = movies.Movie;
             }
-            else
-            {
-                //Error
-                Console.WriteLine("Error:" + response.StatusCode);
-            }
-            
+
             //response: only the movie names
-            return new List<string>(){"The godfather"};
+            return moviesResponse;
         }
 
         /// <summary>
@@ -296,6 +271,14 @@ namespace MoodFlix.Controllers
                 W480 = verticalPosterInfo["w480"].ToString(),
             };
 
+            var horizontalPosterInfo = imageSet["horizontalPoster"];
+            HorizontalPoster horizontalPoster = new HorizontalPoster() //Movie info!
+            {
+                W360 = horizontalPosterInfo["w360"].ToString(),
+                W480 = horizontalPosterInfo["w480"].ToString(),
+                W720 = horizontalPosterInfo["w720"].ToString(),
+            };
+
             //Get the streaming options
             var streamingOptions = movie["streamingOptions"];
             var countryStremingOptions = streamingOptions[userCountry];
@@ -305,7 +288,8 @@ namespace MoodFlix.Controllers
                 //foreach streaming service need to get the service name and the url
                 streamingServices.Add(new StreamingService()
                 {
-                    ServiceName = streamingService["service"]["name"]?.ToString(),//this get the service name ???
+                    ServiceName = streamingService["service"]["name"]?.ToString(),//this get the service name
+                    AccesType = streamingService["type"]?.ToString(),
                     Link = streamingService["link"]?.ToString(),
                     ImageSet = new ServiceImageSet()
                     {
@@ -326,7 +310,8 @@ namespace MoodFlix.Controllers
                 Runtime = runtime,
                 ImageSet = new ImageSet()
                 {
-                    VerticalPoster = verticalPoster
+                    VerticalPoster = verticalPoster,
+                    HorizontalPoster = horizontalPoster
                 },
                 StreamingOptions = new StreamingOptions()
                 {

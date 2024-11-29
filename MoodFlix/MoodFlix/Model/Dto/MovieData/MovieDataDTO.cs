@@ -15,11 +15,19 @@
     public class ImageSet
     {
         public VerticalPoster VerticalPoster { get; set; }
+        public HorizontalPoster HorizontalPoster { get; set; }
     }
 
     public class StreamingOptions
     {
         public List<StreamingService> ServiceOptions { get; set; }
+    }
+
+    public class HorizontalPoster
+    {
+        public string W360 { get; set; }
+        public string W480 { get; set; }
+        public string W720 { get; set; }
     }
 
 
