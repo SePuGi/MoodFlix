@@ -42,7 +42,7 @@ function BottomNavBar({isLoggedIn}: { isLoggedIn: boolean }) {
       </BottomNavigation>
     </Paper>
   );
-};
+}
 
 export default BottomNavBar;
 
