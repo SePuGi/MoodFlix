@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Win32;
 using MoodFlix.Model;
 using MoodFlix.Model.Dto;
+using MoodFlix.Model.Dto.MovieData;
 using MoodFlix.Utilities;
 using MoodFlix.Wrapper;
 using Newtonsoft.Json;
@@ -199,40 +200,78 @@ namespace MoodFlix.Controllers
          */
 
         //GET: api/user/{id}/history
+        [AllowAnonymous]
         [HttpGet("{id}/history")]
         public async Task<ActionResult<IEnumerable<Register>>> GetUserHistory(int id)
         {
-            int logged_id = GetLoggedUserId();
-
+            //int logged_id = GetLoggedUserId();
+            int logged_id = 1;
             //if user is not logged or the user is not the same as the one in the token, it will return Unauthorized
             if (logged_id == -1 || logged_id != id)
                 return Unauthorized();
 
-            return NotFound(); // Not implemented yet
             //Get the user history
-            var userHistory = await _context.History
+          /*  var userHistory = await _context.History
                 .Where(r => r.UserId == logged_id)
                 .Include(r => r.Movie)
-                .ToListAsync();
+                .ToListAsync();*/
 
+            List<RegisterHistoryDTO> history = new List<RegisterHistoryDTO>();
+            history.AddRange(_context.History
+                .Where(r => r.UserId == logged_id)
+                .Select(r => new RegisterHistoryDTO
+                {
+                    RegisterId = r.RegisterId,
+                    UserId = r.UserId,
+                    MovieId = r.MovieId,
+                    RegisterDate = r.Date,
+                    EmotionName = r.HistoryEmotions.Select(he => he.Emotion.EmotionName).FirstOrDefault()
+                })
+                .ToList());
 
-            return userHistory;
+            return Ok(history);
         }
 
         //GET: api/user/{id}/addToHistory
+        [AllowAnonymous]
         [HttpPost("{id}/addToHistory")]
-        public async Task<ActionResult<Register>> AddToHistory(RegisterDTO register)
+        public async Task<ActionResult<Register>> AddToHistory(MovieDataDTO movieData, int emotionId)
         {
-            int logged_id = GetLoggedUserId();
-
+            //int logged_id = GetLoggedUserId();
+            int logged_id = 1;
             //if user is not logged or the user is not the same as the one in the token, it will return Unauthorized
-            if (logged_id == -1 || logged_id != register.UserId)
+            if (logged_id == -1)
                 return Unauthorized();
+
+            RegisterDTO register = new RegisterDTO();
 
             try 
             {
+                Model.Dto.MovieInfoDTO movieInfo = new Model.Dto.MovieInfoDTO
+                {
+                    Movie = new Movie
+                    {
+                        Title = movieData.Title,
+                        Overview = movieData.Overview,
+                        HorizontalPosterw360 = movieData.ImageSet.HorizontalPoster.W360,
+                        HorizontalPosterw480 = movieData.ImageSet.HorizontalPoster.W480,
+                        HorizontalPosterw720 = movieData.ImageSet.HorizontalPoster.W720
+                    },
+                    Genres = movieData.Genres.Select(g => new Genre { GenreName = g }).ToList(),
+                    Directors = movieData.Directors.Select(d => new Director { DirectorName = d }).ToList()
+                };
+
+                register = new RegisterDTO
+                {
+                    MovieInfo = movieInfo,
+                    UserId = logged_id,
+                    EmotionId = emotionId,
+                    Rating = null,
+                    Date = DateTime.Now
+                };
+
                 //Add the movie to the database
-                await AddMovie(register.MovieInfo);
+                await AddMovie(register.MovieInfo); //need a registerDTO
             }
             catch(Exception e)
             {
@@ -313,8 +352,6 @@ namespace MoodFlix.Controllers
                 //Deserialize the response
                 var services = JsonConvert.DeserializeObject<ServiceWrapper> (responseString);
 
-                //Get the countryName and the services
-
                 List<string> serviceNames = new List<string>();
                 foreach (var service in services.Services)
                 {
@@ -379,7 +416,7 @@ namespace MoodFlix.Controllers
             return idUser;
         }
 
-        private async Task AddMovie(MovieInfoDTO movieInfo)
+        private async Task AddMovie(Model.Dto.MovieInfoDTO movieInfo)
         {
             _context.Movie.Add(movieInfo.Movie);
             _context.SaveChanges();
