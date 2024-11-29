@@ -1,5 +1,5 @@
 // src/pages/Login.tsx
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   Box,
   Button,
@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import {LuClapperboard} from 'react-icons/lu'
 
+// TODO LOGIN LOGICA
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +20,6 @@ function Login() {
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = (event: React.FormEvent) => {
-    // TODO LOGIN LOGIC
     event.preventDefault();
     setError(null);
     setLoading(true);
@@ -51,8 +51,8 @@ function Login() {
           marginBottom: 4,
         }}
       >
-        <LuClapperboard size={48} color="#4CAF50" />
-        <Typography variant="h1" sx={{ fontSize: '1.5rem', fontWeight: 500, marginTop: 1 }}>
+        <LuClapperboard size={48} color="#4CAF50"/>
+        <Typography variant="h1" sx={{marginTop: 1}}>
           Welcome Back
         </Typography>
         <Typography variant="body1" color="text.secondary">
@@ -73,7 +73,7 @@ function Login() {
         }}
       >
         {error && (
-          <Alert severity="error" sx={{ marginBottom: 2 }}>
+          <Alert severity="error" sx={{marginBottom: 2}}>
             {error}
           </Alert>
         )}
@@ -101,9 +101,9 @@ function Login() {
           variant="contained"
           color="primary"
           disabled={loading}
-          sx={{ marginTop: 2 }}
+          sx={{marginTop: 2}}
         >
-          {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Login'}
+          {loading ? <CircularProgress size={24} sx={{color: 'white'}}/> : 'Login'}
         </Button>
       </Box>
 

@@ -22,7 +22,12 @@ const countries = [
   // Add more countries as needed
 ];
 
-// TODO implement the Register component and segregate
+  /**************
+  * TODO
+  ** - implement the Register
+  ** - segregate different compoonents(form)
+  ** - create hook for the validate function
+  * */
 function Register() {
   const [formData, setFormData] = useState({
     userName: '',
