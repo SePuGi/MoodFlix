@@ -26,7 +26,7 @@ function OptionCard({title, description, buttonText, onClick, icon}: OptionCardP
       <CardContent>
         <Box sx={{display: 'flex', alignItems: 'center', gap: 2}}>
           {icon}
-          <Typography variant="h2" sx={{fontSize: '1.25rem', fontWeight: 600}}>
+          <Typography variant="h2" sx={{fontWeight: 600}}>
             {title}
           </Typography>
         </Box>

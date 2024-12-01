@@ -1,0 +1,3 @@
+const MOBILEBAR_HEIGHT = 56;
+
+export {MOBILEBAR_HEIGHT};

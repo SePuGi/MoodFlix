@@ -10,6 +10,7 @@ import {
   Typography,
   Alert,
 } from '@mui/material';
+import {MOBILEBAR_HEIGHT} from "../constants/constants.ts";
 
 
 // A list of country codes
@@ -82,7 +83,7 @@ function Register() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '100vh',
+        minHeight: `calc(100vh - ${MOBILEBAR_HEIGHT}px)`,
       }}
     >
       <Typography variant="h1" sx={{fontSize: '1.5rem', marginBottom: 3}}>

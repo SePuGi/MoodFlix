@@ -1,20 +1,31 @@
 // src/components/BottomNavBar.tsx
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {BottomNavigation, BottomNavigationAction, Paper} from '@mui/material';
 import {FaHome, FaUser, FaRegUser, FaFilm, FaHistory} from 'react-icons/fa';
+import {MOBILEBAR_HEIGHT} from "../constants/constants.ts";
+import {useNavigate} from "react-router-dom";
 
 function BottomNavBar({isLoggedIn}: { isLoggedIn: boolean }) {
   const [value, setValue] = useState(0); // State to track the selected tab
+  const navigate = useNavigate();
+
+  const handleNavigation = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+    if (newValue === 0) navigate("/");
+    if (newValue === 1) navigate("/login");
+    if (newValue === 2) navigate("/");
+  }
 
   return (
     <Paper
-      sx={{position: 'fixed', bottom: 0, left: 0, right: 0}}
+      sx={{position: 'fixed', bottom: 0, left: 0, right: 0, height: MOBILEBAR_HEIGHT,}}
       elevation={3}
     >
       <BottomNavigation
         showLabels
         value={value}
-        onChange={(event, newValue) => setValue(newValue)}
+        onChange={handleNavigation}
+
       >
         {/* Home */}
         <BottomNavigationAction

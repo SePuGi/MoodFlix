@@ -11,6 +11,8 @@ import {
   Link,
 } from '@mui/material';
 import {LuClapperboard} from 'react-icons/lu'
+import {MOBILEBAR_HEIGHT} from "../constants/constants.ts";
+import {useNavigate} from "react-router-dom";
 
 // TODO LOGIN LOGICA
 function Login() {
@@ -18,6 +20,8 @@ function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -41,7 +45,7 @@ function Login() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '100vh',
+        minHeight: `calc(100vh - ${MOBILEBAR_HEIGHT}px)`
       }}
     >
       {/* Icon and Title */}
@@ -117,7 +121,7 @@ function Login() {
       >
         <Typography variant="body2" color="text.secondary">
           Not registered yet?{' '}
-          <Link href="/register" underline="hover">
+          <Link underline="hover" onClick={() => navigate("/register")}>
             Register
           </Link>
         </Typography>
