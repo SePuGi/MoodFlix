@@ -155,12 +155,19 @@ namespace MoodFlix.Controllers
             List<Message> message = new List<Message>();
 
             //Add conversation context (you are a movie expert...)
+            message.Add(new Message() { Role = "system", Content = "You are an expert movie recommender. Your job is to suggest movies based on the streaming platforms the user has, the user's genre preferences, avoiding the genres they don't want, and considering their current emotions to improve their mood. You must also take into account the movies they have already watched to avoid recommending them again. The recommendations should be useful and in JSON format." });
+
             //Add the movies watched if there are any, if not, do no add this message
+            if (mw.Count != 0)
+                message.Add(new Message() { Role = "system", Content = $"I have seen this movies: {string.Join(",", moviesWatched)}" });
+
             //Add the user genre preferences if there are any, if not, do no add this message
+            if(userPreferredGenres.Count == 0)
+                message.Add(new Message() { Role = "system", Content = $"My favorite movie genre are: {string.Join(",", userPreferredGenres)}" });
             //Add emotions context if there are any, if not, do no add this message
 
 
-            return null;
+            return message;
         }
 
         /// <summary>
@@ -355,6 +362,7 @@ namespace MoodFlix.Controllers
 
             return idUser;
         }
+
         #endregion
     }
 }

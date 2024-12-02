@@ -38,6 +38,7 @@ namespace MoodFlix.Controllers
         }
 
         // GET: api/Users/5
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
@@ -55,7 +56,8 @@ namespace MoodFlix.Controllers
             }]
         }
 */
-            int logged_id = GetLoggedUserId();
+            int logged_id = 1;
+            //int logged_id = GetLoggedUserId();
 
             //if user is not logged or the user is not the same as the one in the token, it will return Unauthorized
             if (logged_id == -1 || logged_id != id) 
@@ -192,11 +194,6 @@ namespace MoodFlix.Controllers
 
         #region UserHistory
 
-        /*
-         * PATCH/api/user/movieRating
-         * DELETE/api/user/{id}/history
-         */
-
         //PATCH: api/user/movieRating
         [AllowAnonymous]
         [HttpPatch("movieRating")]
@@ -320,7 +317,115 @@ namespace MoodFlix.Controllers
 
         #endregion
 
+        #region UserPreferences
+
+        [AllowAnonymous] //quit this
+        [HttpGet("userPreferences")]
+        public async Task<ActionResult<UserPreferencesDTO>> GetUserPreferences()
+        {
+            //int logged_id = GetLoggedUserId();
+            int logged_id = 1;
+            //if user is not logged or the user is not the same as the one in the token, it will return Unauthorized
+            if (logged_id == -1)
+                return Unauthorized();
+
+            //Get the user preferences
+            UserPreferencesDTO userPreferences = new UserPreferencesDTO
+            {
+                Genres = _context.Genre.Where(g => _context.UserGenre.Any(ug => ug.UserId == logged_id && ug.GenreId == g.GenreId))
+                    .Select(g => new UserGenreDTO { GenreId = g.GenreId, GenreName = g.GenreName, IsPreferred = _context.UserGenre.FirstOrDefault(ug => ug.UserId == logged_id && ug.GenreId == g.GenreId).IsPreferred })
+                    .ToList(),
+                Platforms = _context.Platform
+                    .Where(p => _context.UserPlatform.Any(up => up.UserId == logged_id && up.PlatformId == p.PlatformId))
+                    .ToList()
+            };
+
+            return Ok(userPreferences);
+        }
+
+        //POST: api/configUserGenres
+        [AllowAnonymous]
+        [HttpPost("configUserGenres")]
+        public async Task<ActionResult<List<Genre>>> ConfigUserGenres(List<UserGenreDTO> userGenres)
+        {
+            int userId = 1;
+
+            //get the user genres
+            var userGenresPreferences = _context.UserGenre
+                .Where(ug => ug.UserId == userId)
+                .Select(ug => new { ug.GenreId, ug.Genre.GenreName, ug.IsPreferred })
+                .ToList();
+
+            foreach(var newUserGenre in userGenres)
+            {
+                //if the gerne is in the database, check if isPreferred is different
+                if (userGenresPreferences.Any(ug => ug.GenreId == newUserGenre.GenreId))
+                {
+                    var userGenre = userGenresPreferences.FirstOrDefault(ug => ug.GenreId == newUserGenre.GenreId);
+
+                    if (userGenre.IsPreferred != newUserGenre.IsPreferred)//if isPreferred is different, update the value
+                        _context.UserGenre.FirstOrDefault(ug => ug.UserId == userId && ug.GenreId == newUserGenre.GenreId).IsPreferred = newUserGenre.IsPreferred;
+                }
+                else   // if the genre is not in the database, add it
+                {
+                    _context.UserGenre.Add(new UserGenre { UserId = userId, GenreId = newUserGenre.GenreId, IsPreferred = newUserGenre.IsPreferred });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        //POST: api/configUserPlatforms
+        [AllowAnonymous]
+        [HttpPost("configUserPlatforms")]
+        public async Task<ActionResult<List<Platform>>> ConfigUserPlatforms(List<int> userPlatformsId)
+        {
+            //userPlatforms need to be a int list with the UserPlatform ID !!!!!!!!
+            int userId = 1;
+
+            //get the user platformsId
+            var userPlatforms = _context.UserPlatform
+                .Where(up => up.UserId == userId)
+                .Select(up => up.PlatformId)
+                .ToList();
+
+            var platformsToAdd = userPlatformsId.Except(userPlatforms).ToList();
+            var platformsToRemove = userPlatforms.Except(userPlatformsId).ToList();
+
+            //add the platforms to the database
+            foreach (var platformId in platformsToAdd)
+                _context.UserPlatform.Add(new UserPlatform { UserId = userId, PlatformId = platformId });
+
+            //remove the platforms to the database
+            foreach (var platformId in platformsToRemove)
+                _context.UserPlatform.Remove(_context.UserPlatform.FirstOrDefault(up => up.UserId == userId && up.PlatformId == platformId));
+            
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        #endregion
+
         #region Utils
+
+        //GET: api/Countries
+        [AllowAnonymous]
+        [HttpGet("Countries")]
+        public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
+        {
+            return await _context.Country.ToListAsync();
+        }
+
+        //GET: api/Genres
+        [AllowAnonymous]
+        [HttpGet("Genres")]
+        public async Task<ActionResult<IEnumerable<Genre>>> GetGenres()
+        {
+            return await _context.Genre.ToListAsync();
+        }
 
         /// <summary>
         /// Add to database the platforms and countrycode of a country only if they are not already in the database
@@ -375,8 +480,8 @@ namespace MoodFlix.Controllers
                     serviceNames.Add(service.Name);
                 }
 
-                //Get the countryId //countryName can have whitespaces inside, and the data on the database is without whitespacesz
-                int countryId = _context.Country.FirstOrDefault(c => c.CountryName == countryCode).CountryId;
+                //Get the countryId 
+                int countryId = _context.Country.FirstOrDefault(c => c.CountryCode == countryCode).CountryId;
 
                 //Add the services to the database with the relationship with the country
                 foreach (var service in serviceNames)

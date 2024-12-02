@@ -8,6 +8,7 @@ namespace MoodFlix.Model
     {
         [Key]
         public int CountryId { get; set; }
+        public string CountryCode { get; set; }
         public string CountryName { get; set; }
 
         //This does not create a column in the database, only is used to set the relationship

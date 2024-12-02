@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MoodFlix;
 
@@ -11,9 +12,11 @@ using MoodFlix;
 namespace MoodFlix.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241202152613_AddedCountryNameColumnOnCountryTable")]
+    partial class AddedCountryNameColumnOnCountryTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,7 +77,7 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 5,
                             CountryCode = "AG",
-                            CountryName = "Antigua And Barbuda"
+                            CountryName = "AntiguaAndBarbuda"
                         },
                         new
                         {
@@ -170,7 +173,7 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 21,
                             CountryCode = "BA",
-                            CountryName = "Bosnia And Herzegovina"
+                            CountryName = "BosniaAndHerzegovina"
                         },
                         new
                         {
@@ -236,7 +239,7 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 32,
                             CountryCode = "CF",
-                            CountryName = "Central African Republic"
+                            CountryName = "CentralAfricanRepublic"
                         },
                         new
                         {
@@ -272,13 +275,13 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 38,
                             CountryCode = "CD",
-                            CountryName = "Congo Democratic Republic"
+                            CountryName = "CongoDemocraticRepublic"
                         },
                         new
                         {
                             CountryId = 39,
                             CountryCode = "CG",
-                            CountryName = "Congo Republic"
+                            CountryName = "CongoRepublic"
                         },
                         new
                         {
@@ -308,7 +311,7 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 44,
                             CountryCode = "CZ",
-                            CountryName = "Czech Republic"
+                            CountryName = "CzechRepublic"
                         },
                         new
                         {
@@ -332,7 +335,7 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 48,
                             CountryCode = "DO",
-                            CountryName = "Dominican Republic"
+                            CountryName = "DominicanRepublic"
                         },
                         new
                         {
@@ -350,13 +353,13 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 51,
                             CountryCode = "SV",
-                            CountryName = "El Salvador"
+                            CountryName = "ElSalvador"
                         },
                         new
                         {
                             CountryId = 52,
                             CountryCode = "GQ",
-                            CountryName = "Equatorial Guinea"
+                            CountryName = "EquatorialGuinea"
                         },
                         new
                         {
@@ -458,7 +461,7 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 69,
                             CountryCode = "GW",
-                            CountryName = "Guinea Bissau"
+                            CountryName = "GuineaBissau"
                         },
                         new
                         {
@@ -572,13 +575,13 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 88,
                             CountryCode = "KP",
-                            CountryName = "Korea North"
+                            CountryName = "KoreaNorth"
                         },
                         new
                         {
                             CountryId = 89,
                             CountryCode = "KR",
-                            CountryName = "Korea South"
+                            CountryName = "KoreaSouth"
                         },
                         new
                         {
@@ -686,7 +689,7 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 107,
                             CountryCode = "MH",
-                            CountryName = "Marshall Islands"
+                            CountryName = "MarshallIslands"
                         },
                         new
                         {
@@ -782,7 +785,7 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 123,
                             CountryCode = "NZ",
-                            CountryName = "New Zealand"
+                            CountryName = "NewZealand"
                         },
                         new
                         {
@@ -806,7 +809,7 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 127,
                             CountryCode = "MK",
-                            CountryName = "North Macedonia"
+                            CountryName = "NorthMacedonia"
                         },
                         new
                         {
@@ -848,7 +851,7 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 134,
                             CountryCode = "PG",
-                            CountryName = "Papua New Guinea"
+                            CountryName = "PapuaNewGuinea"
                         },
                         new
                         {
@@ -908,19 +911,19 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 144,
                             CountryCode = "KN",
-                            CountryName = "SaintKitts And Nevis"
+                            CountryName = "SaintKittsAndNevis"
                         },
                         new
                         {
                             CountryId = 145,
                             CountryCode = "LC",
-                            CountryName = "Saint Lucia"
+                            CountryName = "SaintLucia"
                         },
                         new
                         {
                             CountryId = 146,
                             CountryCode = "VC",
-                            CountryName = "Saint Vincent And The Grenadines"
+                            CountryName = "SaintVincentAndTheGrenadines"
                         },
                         new
                         {
@@ -932,19 +935,19 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 148,
                             CountryCode = "SM",
-                            CountryName = "San Marino"
+                            CountryName = "SanMarino"
                         },
                         new
                         {
                             CountryId = 149,
                             CountryCode = "ST",
-                            CountryName = "Sao Tome And Principe"
+                            CountryName = "SaoTomeAndPrincipe"
                         },
                         new
                         {
                             CountryId = 150,
                             CountryCode = "SA",
-                            CountryName = "Saudi Arabia"
+                            CountryName = "SaudiArabia"
                         },
                         new
                         {
@@ -968,7 +971,7 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 154,
                             CountryCode = "SL",
-                            CountryName = "Sierra Leone"
+                            CountryName = "SierraLeone"
                         },
                         new
                         {
@@ -992,7 +995,7 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 158,
                             CountryCode = "SB",
-                            CountryName = "Solomon Is lands"
+                            CountryName = "SolomonIslands"
                         },
                         new
                         {
@@ -1004,13 +1007,13 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 160,
                             CountryCode = "ZA",
-                            CountryName = "South Africa"
+                            CountryName = "SouthAfrica"
                         },
                         new
                         {
                             CountryId = 161,
                             CountryCode = "SS",
-                            CountryName = "South Sudan"
+                            CountryName = "SouthSudan"
                         },
                         new
                         {
@@ -1082,7 +1085,7 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 173,
                             CountryCode = "TL",
-                            CountryName = "Timor Leste"
+                            CountryName = "TimorLeste"
                         },
                         new
                         {
@@ -1100,7 +1103,7 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 176,
                             CountryCode = "TT",
-                            CountryName = "Trinidad And Tobago"
+                            CountryName = "TrinidadAndTobago"
                         },
                         new
                         {
@@ -1142,19 +1145,19 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 183,
                             CountryCode = "AE",
-                            CountryName = "United Arab Emirates"
+                            CountryName = "UnitedArabEmirates"
                         },
                         new
                         {
                             CountryId = 184,
                             CountryCode = "GB",
-                            CountryName = "United Kingdom"
+                            CountryName = "UnitedKingdom"
                         },
                         new
                         {
                             CountryId = 185,
                             CountryCode = "US",
-                            CountryName = "United States"
+                            CountryName = "UnitedStates"
                         },
                         new
                         {
@@ -1178,7 +1181,7 @@ namespace MoodFlix.Migrations
                         {
                             CountryId = 189,
                             CountryCode = "VA",
-                            CountryName = "Vatican City"
+                            CountryName = "VaticanCity"
                         },
                         new
                         {
