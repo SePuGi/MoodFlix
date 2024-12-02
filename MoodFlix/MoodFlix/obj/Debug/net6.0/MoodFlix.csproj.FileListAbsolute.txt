@@ -291,3 +291,5 @@ C:\Users\Sergi\Desktop\FE\PROYECTO_FINAL\MoodFlix backend\MoodFlix\MoodFlix\obj\
 C:\Users\Sergi\Desktop\FE\PROYECTO_FINAL\MoodFlix backend\MoodFlix\MoodFlix\obj\Debug\net6.0\MoodFlix.pdb
 C:\Users\Sergi\Desktop\FE\PROYECTO_FINAL\MoodFlix backend\MoodFlix\MoodFlix\obj\Debug\net6.0\MoodFlix.genruntimeconfig.cache
 C:\Users\Sergi\Desktop\FE\PROYECTO_FINAL\MoodFlix backend\MoodFlix\MoodFlix\obj\Debug\net6.0\ref\MoodFlix.dll
+C:\Users\Sergi\Desktop\FE\PROYECTO_FINAL\MoodFlix backend\MoodFlix\MoodFlix\bin\Debug\net6.0\MySqlConnector.dll
+C:\Users\Sergi\Desktop\FE\PROYECTO_FINAL\MoodFlix backend\MoodFlix\MoodFlix\bin\Debug\net6.0\Pomelo.EntityFrameworkCore.MySql.dll
