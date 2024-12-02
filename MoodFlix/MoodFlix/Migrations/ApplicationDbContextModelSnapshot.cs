@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MoodFlix;
 
@@ -17,19 +16,21 @@ namespace MoodFlix.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+                .HasAnnotation("ProductVersion", "7.0.2")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("MoodFlix.Model.Country", b =>
                 {
                     b.Property<int>("CountryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CountryCode")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("CountryName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("CountryId");
 
@@ -39,977 +40,1172 @@ namespace MoodFlix.Migrations
                         new
                         {
                             CountryId = 0,
-                            CountryName = "AF"
+                            CountryCode = "AF",
+                            CountryName = "Afghanistan"
                         },
                         new
                         {
                             CountryId = 1,
-                            CountryName = "AL"
+                            CountryCode = "AL",
+                            CountryName = "Albania"
                         },
                         new
                         {
                             CountryId = 2,
-                            CountryName = "DZ"
+                            CountryCode = "DZ",
+                            CountryName = "Algeria"
                         },
                         new
                         {
                             CountryId = 3,
-                            CountryName = "AD"
+                            CountryCode = "AD",
+                            CountryName = "Andorra"
                         },
                         new
                         {
                             CountryId = 4,
-                            CountryName = "AO"
+                            CountryCode = "AO",
+                            CountryName = "Angola"
                         },
                         new
                         {
                             CountryId = 5,
-                            CountryName = "AG"
+                            CountryCode = "AG",
+                            CountryName = "Antigua And Barbuda"
                         },
                         new
                         {
                             CountryId = 6,
-                            CountryName = "AR"
+                            CountryCode = "AR",
+                            CountryName = "Argentina"
                         },
                         new
                         {
                             CountryId = 7,
-                            CountryName = "AM"
+                            CountryCode = "AM",
+                            CountryName = "Armenia"
                         },
                         new
                         {
                             CountryId = 8,
-                            CountryName = "AU"
+                            CountryCode = "AU",
+                            CountryName = "Australia"
                         },
                         new
                         {
                             CountryId = 9,
-                            CountryName = "AT"
+                            CountryCode = "AT",
+                            CountryName = "Austria"
                         },
                         new
                         {
                             CountryId = 10,
-                            CountryName = "AZ"
+                            CountryCode = "AZ",
+                            CountryName = "Azerbaijan"
                         },
                         new
                         {
                             CountryId = 11,
-                            CountryName = "BS"
+                            CountryCode = "BS",
+                            CountryName = "Bahamas"
                         },
                         new
                         {
                             CountryId = 12,
-                            CountryName = "BH"
+                            CountryCode = "BH",
+                            CountryName = "Bahrain"
                         },
                         new
                         {
                             CountryId = 13,
-                            CountryName = "BD"
+                            CountryCode = "BD",
+                            CountryName = "Bangladesh"
                         },
                         new
                         {
                             CountryId = 14,
-                            CountryName = "BB"
+                            CountryCode = "BB",
+                            CountryName = "Barbados"
                         },
                         new
                         {
                             CountryId = 15,
-                            CountryName = "BY"
+                            CountryCode = "BY",
+                            CountryName = "Belarus"
                         },
                         new
                         {
                             CountryId = 16,
-                            CountryName = "BE"
+                            CountryCode = "BE",
+                            CountryName = "Belgium"
                         },
                         new
                         {
                             CountryId = 17,
-                            CountryName = "BZ"
+                            CountryCode = "BZ",
+                            CountryName = "Belize"
                         },
                         new
                         {
                             CountryId = 18,
-                            CountryName = "BJ"
+                            CountryCode = "BJ",
+                            CountryName = "Benin"
                         },
                         new
                         {
                             CountryId = 19,
-                            CountryName = "BT"
+                            CountryCode = "BT",
+                            CountryName = "Bhutan"
                         },
                         new
                         {
                             CountryId = 20,
-                            CountryName = "BO"
+                            CountryCode = "BO",
+                            CountryName = "Bolivia"
                         },
                         new
                         {
                             CountryId = 21,
-                            CountryName = "BA"
+                            CountryCode = "BA",
+                            CountryName = "Bosnia And Herzegovina"
                         },
                         new
                         {
                             CountryId = 22,
-                            CountryName = "BW"
+                            CountryCode = "BW",
+                            CountryName = "Botswana"
                         },
                         new
                         {
                             CountryId = 23,
-                            CountryName = "BR"
+                            CountryCode = "BR",
+                            CountryName = "Brazil"
                         },
                         new
                         {
                             CountryId = 24,
-                            CountryName = "BN"
+                            CountryCode = "BN",
+                            CountryName = "Brunei"
                         },
                         new
                         {
                             CountryId = 25,
-                            CountryName = "BG"
+                            CountryCode = "BG",
+                            CountryName = "Bulgaria"
                         },
                         new
                         {
                             CountryId = 26,
-                            CountryName = "BF"
+                            CountryCode = "BF",
+                            CountryName = "BurkinaFaso"
                         },
                         new
                         {
                             CountryId = 27,
-                            CountryName = "BI"
+                            CountryCode = "BI",
+                            CountryName = "Burundi"
                         },
                         new
                         {
                             CountryId = 28,
-                            CountryName = "KH"
+                            CountryCode = "KH",
+                            CountryName = "Cambodia"
                         },
                         new
                         {
                             CountryId = 29,
-                            CountryName = "CM"
+                            CountryCode = "CM",
+                            CountryName = "Cameroon"
                         },
                         new
                         {
                             CountryId = 30,
-                            CountryName = "CA"
+                            CountryCode = "CA",
+                            CountryName = "Canada"
                         },
                         new
                         {
                             CountryId = 31,
-                            CountryName = "CV"
+                            CountryCode = "CV",
+                            CountryName = "CapeVerde"
                         },
                         new
                         {
                             CountryId = 32,
-                            CountryName = "CF"
+                            CountryCode = "CF",
+                            CountryName = "Central African Republic"
                         },
                         new
                         {
                             CountryId = 33,
-                            CountryName = "TD"
+                            CountryCode = "TD",
+                            CountryName = "Chad"
                         },
                         new
                         {
                             CountryId = 34,
-                            CountryName = "CL"
+                            CountryCode = "CL",
+                            CountryName = "Chile"
                         },
                         new
                         {
                             CountryId = 35,
-                            CountryName = "CN"
+                            CountryCode = "CN",
+                            CountryName = "China"
                         },
                         new
                         {
                             CountryId = 36,
-                            CountryName = "CO"
+                            CountryCode = "CO",
+                            CountryName = "Colombia"
                         },
                         new
                         {
                             CountryId = 37,
-                            CountryName = "KM"
+                            CountryCode = "KM",
+                            CountryName = "Comoros"
                         },
                         new
                         {
                             CountryId = 38,
-                            CountryName = "CD"
+                            CountryCode = "CD",
+                            CountryName = "Congo Democratic Republic"
                         },
                         new
                         {
                             CountryId = 39,
-                            CountryName = "CG"
+                            CountryCode = "CG",
+                            CountryName = "Congo Republic"
                         },
                         new
                         {
                             CountryId = 40,
-                            CountryName = "CR"
+                            CountryCode = "CR",
+                            CountryName = "CostaRica"
                         },
                         new
                         {
                             CountryId = 41,
-                            CountryName = "HR"
+                            CountryCode = "HR",
+                            CountryName = "Croatia"
                         },
                         new
                         {
                             CountryId = 42,
-                            CountryName = "CU"
+                            CountryCode = "CU",
+                            CountryName = "Cuba"
                         },
                         new
                         {
                             CountryId = 43,
-                            CountryName = "CY"
+                            CountryCode = "CY",
+                            CountryName = "Cyprus"
                         },
                         new
                         {
                             CountryId = 44,
-                            CountryName = "CZ"
+                            CountryCode = "CZ",
+                            CountryName = "Czech Republic"
                         },
                         new
                         {
                             CountryId = 45,
-                            CountryName = "DK"
+                            CountryCode = "DK",
+                            CountryName = "Denmark"
                         },
                         new
                         {
                             CountryId = 46,
-                            CountryName = "DJ"
+                            CountryCode = "DJ",
+                            CountryName = "Djibouti"
                         },
                         new
                         {
                             CountryId = 47,
-                            CountryName = "DM"
+                            CountryCode = "DM",
+                            CountryName = "Dominica"
                         },
                         new
                         {
                             CountryId = 48,
-                            CountryName = "DO"
+                            CountryCode = "DO",
+                            CountryName = "Dominican Republic"
                         },
                         new
                         {
                             CountryId = 49,
-                            CountryName = "EC"
+                            CountryCode = "EC",
+                            CountryName = "Ecuador"
                         },
                         new
                         {
                             CountryId = 50,
-                            CountryName = "EG"
+                            CountryCode = "EG",
+                            CountryName = "Egypt"
                         },
                         new
                         {
                             CountryId = 51,
-                            CountryName = "SV"
+                            CountryCode = "SV",
+                            CountryName = "El Salvador"
                         },
                         new
                         {
                             CountryId = 52,
-                            CountryName = "GQ"
+                            CountryCode = "GQ",
+                            CountryName = "Equatorial Guinea"
                         },
                         new
                         {
                             CountryId = 53,
-                            CountryName = "ER"
+                            CountryCode = "ER",
+                            CountryName = "Eritrea"
                         },
                         new
                         {
                             CountryId = 54,
-                            CountryName = "EE"
+                            CountryCode = "EE",
+                            CountryName = "Estonia"
                         },
                         new
                         {
                             CountryId = 55,
-                            CountryName = "SZ"
+                            CountryCode = "SZ",
+                            CountryName = "Eswatini"
                         },
                         new
                         {
                             CountryId = 56,
-                            CountryName = "ET"
+                            CountryCode = "ET",
+                            CountryName = "Ethiopia"
                         },
                         new
                         {
                             CountryId = 57,
-                            CountryName = "FJ"
+                            CountryCode = "FJ",
+                            CountryName = "Fiji"
                         },
                         new
                         {
                             CountryId = 58,
-                            CountryName = "FI"
+                            CountryCode = "FI",
+                            CountryName = "Finland"
                         },
                         new
                         {
                             CountryId = 59,
-                            CountryName = "FR"
+                            CountryCode = "FR",
+                            CountryName = "France"
                         },
                         new
                         {
                             CountryId = 60,
-                            CountryName = "GA"
+                            CountryCode = "GA",
+                            CountryName = "Gabon"
                         },
                         new
                         {
                             CountryId = 61,
-                            CountryName = "GM"
+                            CountryCode = "GM",
+                            CountryName = "Gambia"
                         },
                         new
                         {
                             CountryId = 62,
-                            CountryName = "GE"
+                            CountryCode = "GE",
+                            CountryName = "Georgia"
                         },
                         new
                         {
                             CountryId = 63,
-                            CountryName = "DE"
+                            CountryCode = "DE",
+                            CountryName = "Germany"
                         },
                         new
                         {
                             CountryId = 64,
-                            CountryName = "GH"
+                            CountryCode = "GH",
+                            CountryName = "Ghana"
                         },
                         new
                         {
                             CountryId = 65,
-                            CountryName = "GR"
+                            CountryCode = "GR",
+                            CountryName = "Greece"
                         },
                         new
                         {
                             CountryId = 66,
-                            CountryName = "GD"
+                            CountryCode = "GD",
+                            CountryName = "Grenada"
                         },
                         new
                         {
                             CountryId = 67,
-                            CountryName = "GT"
+                            CountryCode = "GT",
+                            CountryName = "Guatemala"
                         },
                         new
                         {
                             CountryId = 68,
-                            CountryName = "GN"
+                            CountryCode = "GN",
+                            CountryName = "Guinea"
                         },
                         new
                         {
                             CountryId = 69,
-                            CountryName = "GW"
+                            CountryCode = "GW",
+                            CountryName = "Guinea Bissau"
                         },
                         new
                         {
                             CountryId = 70,
-                            CountryName = "GY"
+                            CountryCode = "GY",
+                            CountryName = "Guyana"
                         },
                         new
                         {
                             CountryId = 71,
-                            CountryName = "HT"
+                            CountryCode = "HT",
+                            CountryName = "Haiti"
                         },
                         new
                         {
                             CountryId = 72,
-                            CountryName = "HN"
+                            CountryCode = "HN",
+                            CountryName = "Honduras"
                         },
                         new
                         {
                             CountryId = 73,
-                            CountryName = "HU"
+                            CountryCode = "HU",
+                            CountryName = "Hungary"
                         },
                         new
                         {
                             CountryId = 74,
-                            CountryName = "IS"
+                            CountryCode = "IS",
+                            CountryName = "Iceland"
                         },
                         new
                         {
                             CountryId = 75,
-                            CountryName = "IN"
+                            CountryCode = "IN",
+                            CountryName = "India"
                         },
                         new
                         {
                             CountryId = 76,
-                            CountryName = "ID"
+                            CountryCode = "ID",
+                            CountryName = "Indonesia"
                         },
                         new
                         {
                             CountryId = 77,
-                            CountryName = "IR"
+                            CountryCode = "IR",
+                            CountryName = "Iran"
                         },
                         new
                         {
                             CountryId = 78,
-                            CountryName = "IQ"
+                            CountryCode = "IQ",
+                            CountryName = "Iraq"
                         },
                         new
                         {
                             CountryId = 79,
-                            CountryName = "IE"
+                            CountryCode = "IE",
+                            CountryName = "Ireland"
                         },
                         new
                         {
                             CountryId = 80,
-                            CountryName = "IL"
+                            CountryCode = "IL",
+                            CountryName = "Israel"
                         },
                         new
                         {
                             CountryId = 81,
-                            CountryName = "IT"
+                            CountryCode = "IT",
+                            CountryName = "Italy"
                         },
                         new
                         {
                             CountryId = 82,
-                            CountryName = "JM"
+                            CountryCode = "JM",
+                            CountryName = "Jamaica"
                         },
                         new
                         {
                             CountryId = 83,
-                            CountryName = "JP"
+                            CountryCode = "JP",
+                            CountryName = "Japan"
                         },
                         new
                         {
                             CountryId = 84,
-                            CountryName = "JO"
+                            CountryCode = "JO",
+                            CountryName = "Jordan"
                         },
                         new
                         {
                             CountryId = 85,
-                            CountryName = "KZ"
+                            CountryCode = "KZ",
+                            CountryName = "Kazakhstan"
                         },
                         new
                         {
                             CountryId = 86,
-                            CountryName = "KE"
+                            CountryCode = "KE",
+                            CountryName = "Kenya"
                         },
                         new
                         {
                             CountryId = 87,
-                            CountryName = "KI"
+                            CountryCode = "KI",
+                            CountryName = "Kiribati"
                         },
                         new
                         {
                             CountryId = 88,
-                            CountryName = "KP"
+                            CountryCode = "KP",
+                            CountryName = "Korea North"
                         },
                         new
                         {
                             CountryId = 89,
-                            CountryName = "KR"
+                            CountryCode = "KR",
+                            CountryName = "Korea South"
                         },
                         new
                         {
                             CountryId = 90,
-                            CountryName = "KW"
+                            CountryCode = "KW",
+                            CountryName = "Kuwait"
                         },
                         new
                         {
                             CountryId = 91,
-                            CountryName = "KG"
+                            CountryCode = "KG",
+                            CountryName = "Kyrgyzstan"
                         },
                         new
                         {
                             CountryId = 92,
-                            CountryName = "LA"
+                            CountryCode = "LA",
+                            CountryName = "Laos"
                         },
                         new
                         {
                             CountryId = 93,
-                            CountryName = "LV"
+                            CountryCode = "LV",
+                            CountryName = "Latvia"
                         },
                         new
                         {
                             CountryId = 94,
-                            CountryName = "LB"
+                            CountryCode = "LB",
+                            CountryName = "Lebanon"
                         },
                         new
                         {
                             CountryId = 95,
-                            CountryName = "LS"
+                            CountryCode = "LS",
+                            CountryName = "Lesotho"
                         },
                         new
                         {
                             CountryId = 96,
-                            CountryName = "LR"
+                            CountryCode = "LR",
+                            CountryName = "Liberia"
                         },
                         new
                         {
                             CountryId = 97,
-                            CountryName = "LY"
+                            CountryCode = "LY",
+                            CountryName = "Libya"
                         },
                         new
                         {
                             CountryId = 98,
-                            CountryName = "LI"
+                            CountryCode = "LI",
+                            CountryName = "Liechtenstein"
                         },
                         new
                         {
                             CountryId = 99,
-                            CountryName = "LT"
+                            CountryCode = "LT",
+                            CountryName = "Lithuania"
                         },
                         new
                         {
                             CountryId = 100,
-                            CountryName = "LU"
+                            CountryCode = "LU",
+                            CountryName = "Luxembourg"
                         },
                         new
                         {
                             CountryId = 101,
-                            CountryName = "MG"
+                            CountryCode = "MG",
+                            CountryName = "Madagascar"
                         },
                         new
                         {
                             CountryId = 102,
-                            CountryName = "MW"
+                            CountryCode = "MW",
+                            CountryName = "Malawi"
                         },
                         new
                         {
                             CountryId = 103,
-                            CountryName = "MY"
+                            CountryCode = "MY",
+                            CountryName = "Malaysia"
                         },
                         new
                         {
                             CountryId = 104,
-                            CountryName = "MV"
+                            CountryCode = "MV",
+                            CountryName = "Maldives"
                         },
                         new
                         {
                             CountryId = 105,
-                            CountryName = "ML"
+                            CountryCode = "ML",
+                            CountryName = "Mali"
                         },
                         new
                         {
                             CountryId = 106,
-                            CountryName = "MT"
+                            CountryCode = "MT",
+                            CountryName = "Malta"
                         },
                         new
                         {
                             CountryId = 107,
-                            CountryName = "MH"
+                            CountryCode = "MH",
+                            CountryName = "Marshall Islands"
                         },
                         new
                         {
                             CountryId = 108,
-                            CountryName = "MR"
+                            CountryCode = "MR",
+                            CountryName = "Mauritania"
                         },
                         new
                         {
                             CountryId = 109,
-                            CountryName = "MU"
+                            CountryCode = "MU",
+                            CountryName = "Mauritius"
                         },
                         new
                         {
                             CountryId = 110,
-                            CountryName = "MX"
+                            CountryCode = "MX",
+                            CountryName = "Mexico"
                         },
                         new
                         {
                             CountryId = 111,
-                            CountryName = "FM"
+                            CountryCode = "FM",
+                            CountryName = "Micronesia"
                         },
                         new
                         {
                             CountryId = 112,
-                            CountryName = "MD"
+                            CountryCode = "MD",
+                            CountryName = "Moldova"
                         },
                         new
                         {
                             CountryId = 113,
-                            CountryName = "MC"
+                            CountryCode = "MC",
+                            CountryName = "Monaco"
                         },
                         new
                         {
                             CountryId = 114,
-                            CountryName = "MN"
+                            CountryCode = "MN",
+                            CountryName = "Mongolia"
                         },
                         new
                         {
                             CountryId = 115,
-                            CountryName = "ME"
+                            CountryCode = "ME",
+                            CountryName = "Montenegro"
                         },
                         new
                         {
                             CountryId = 116,
-                            CountryName = "MA"
+                            CountryCode = "MA",
+                            CountryName = "Morocco"
                         },
                         new
                         {
                             CountryId = 117,
-                            CountryName = "MZ"
+                            CountryCode = "MZ",
+                            CountryName = "Mozambique"
                         },
                         new
                         {
                             CountryId = 118,
-                            CountryName = "MM"
+                            CountryCode = "MM",
+                            CountryName = "Myanmar"
                         },
                         new
                         {
                             CountryId = 119,
-                            CountryName = "NA"
+                            CountryCode = "NA",
+                            CountryName = "Namibia"
                         },
                         new
                         {
                             CountryId = 120,
-                            CountryName = "NR"
+                            CountryCode = "NR",
+                            CountryName = "Nauru"
                         },
                         new
                         {
                             CountryId = 121,
-                            CountryName = "NP"
+                            CountryCode = "NP",
+                            CountryName = "Nepal"
                         },
                         new
                         {
                             CountryId = 122,
-                            CountryName = "NL"
+                            CountryCode = "NL",
+                            CountryName = "Netherlands"
                         },
                         new
                         {
                             CountryId = 123,
-                            CountryName = "NZ"
+                            CountryCode = "NZ",
+                            CountryName = "New Zealand"
                         },
                         new
                         {
                             CountryId = 124,
-                            CountryName = "NI"
+                            CountryCode = "NI",
+                            CountryName = "Nicaragua"
                         },
                         new
                         {
                             CountryId = 125,
-                            CountryName = "NE"
+                            CountryCode = "NE",
+                            CountryName = "Niger"
                         },
                         new
                         {
                             CountryId = 126,
-                            CountryName = "NG"
+                            CountryCode = "NG",
+                            CountryName = "Nigeria"
                         },
                         new
                         {
                             CountryId = 127,
-                            CountryName = "MK"
+                            CountryCode = "MK",
+                            CountryName = "North Macedonia"
                         },
                         new
                         {
                             CountryId = 128,
-                            CountryName = "NO"
+                            CountryCode = "NO",
+                            CountryName = "Norway"
                         },
                         new
                         {
                             CountryId = 129,
-                            CountryName = "OM"
+                            CountryCode = "OM",
+                            CountryName = "Oman"
                         },
                         new
                         {
                             CountryId = 130,
-                            CountryName = "PK"
+                            CountryCode = "PK",
+                            CountryName = "Pakistan"
                         },
                         new
                         {
                             CountryId = 131,
-                            CountryName = "PW"
+                            CountryCode = "PW",
+                            CountryName = "Palau"
                         },
                         new
                         {
                             CountryId = 132,
-                            CountryName = "PS"
+                            CountryCode = "PS",
+                            CountryName = "Palestine"
                         },
                         new
                         {
                             CountryId = 133,
-                            CountryName = "PA"
+                            CountryCode = "PA",
+                            CountryName = "Panama"
                         },
                         new
                         {
                             CountryId = 134,
-                            CountryName = "PG"
+                            CountryCode = "PG",
+                            CountryName = "Papua New Guinea"
                         },
                         new
                         {
                             CountryId = 135,
-                            CountryName = "PY"
+                            CountryCode = "PY",
+                            CountryName = "Paraguay"
                         },
                         new
                         {
                             CountryId = 136,
-                            CountryName = "PE"
+                            CountryCode = "PE",
+                            CountryName = "Peru"
                         },
                         new
                         {
                             CountryId = 137,
-                            CountryName = "PH"
+                            CountryCode = "PH",
+                            CountryName = "Philippines"
                         },
                         new
                         {
                             CountryId = 138,
-                            CountryName = "PL"
+                            CountryCode = "PL",
+                            CountryName = "Poland"
                         },
                         new
                         {
                             CountryId = 139,
-                            CountryName = "PT"
+                            CountryCode = "PT",
+                            CountryName = "Portugal"
                         },
                         new
                         {
                             CountryId = 140,
-                            CountryName = "QA"
+                            CountryCode = "QA",
+                            CountryName = "Qatar"
                         },
                         new
                         {
                             CountryId = 141,
-                            CountryName = "RO"
+                            CountryCode = "RO",
+                            CountryName = "Romania"
                         },
                         new
                         {
                             CountryId = 142,
-                            CountryName = "RU"
+                            CountryCode = "RU",
+                            CountryName = "Russia"
                         },
                         new
                         {
                             CountryId = 143,
-                            CountryName = "RW"
+                            CountryCode = "RW",
+                            CountryName = "Rwanda"
                         },
                         new
                         {
                             CountryId = 144,
-                            CountryName = "KN"
+                            CountryCode = "KN",
+                            CountryName = "SaintKitts And Nevis"
                         },
                         new
                         {
                             CountryId = 145,
-                            CountryName = "LC"
+                            CountryCode = "LC",
+                            CountryName = "Saint Lucia"
                         },
                         new
                         {
                             CountryId = 146,
-                            CountryName = "VC"
+                            CountryCode = "VC",
+                            CountryName = "Saint Vincent And The Grenadines"
                         },
                         new
                         {
                             CountryId = 147,
-                            CountryName = "WS"
+                            CountryCode = "WS",
+                            CountryName = "Samoa"
                         },
                         new
                         {
                             CountryId = 148,
-                            CountryName = "SM"
+                            CountryCode = "SM",
+                            CountryName = "San Marino"
                         },
                         new
                         {
                             CountryId = 149,
-                            CountryName = "ST"
+                            CountryCode = "ST",
+                            CountryName = "Sao Tome And Principe"
                         },
                         new
                         {
                             CountryId = 150,
-                            CountryName = "SA"
+                            CountryCode = "SA",
+                            CountryName = "Saudi Arabia"
                         },
                         new
                         {
                             CountryId = 151,
-                            CountryName = "SN"
+                            CountryCode = "SN",
+                            CountryName = "Senegal"
                         },
                         new
                         {
                             CountryId = 152,
-                            CountryName = "RS"
+                            CountryCode = "RS",
+                            CountryName = "Serbia"
                         },
                         new
                         {
                             CountryId = 153,
-                            CountryName = "SC"
+                            CountryCode = "SC",
+                            CountryName = "Seychelles"
                         },
                         new
                         {
                             CountryId = 154,
-                            CountryName = "SL"
+                            CountryCode = "SL",
+                            CountryName = "Sierra Leone"
                         },
                         new
                         {
                             CountryId = 155,
-                            CountryName = "SG"
+                            CountryCode = "SG",
+                            CountryName = "Singapore"
                         },
                         new
                         {
                             CountryId = 156,
-                            CountryName = "SK"
+                            CountryCode = "SK",
+                            CountryName = "Slovakia"
                         },
                         new
                         {
                             CountryId = 157,
-                            CountryName = "SI"
+                            CountryCode = "SI",
+                            CountryName = "Slovenia"
                         },
                         new
                         {
                             CountryId = 158,
-                            CountryName = "SB"
+                            CountryCode = "SB",
+                            CountryName = "Solomon Is lands"
                         },
                         new
                         {
                             CountryId = 159,
-                            CountryName = "SO"
+                            CountryCode = "SO",
+                            CountryName = "Somalia"
                         },
                         new
                         {
                             CountryId = 160,
-                            CountryName = "ZA"
+                            CountryCode = "ZA",
+                            CountryName = "South Africa"
                         },
                         new
                         {
                             CountryId = 161,
-                            CountryName = "SS"
+                            CountryCode = "SS",
+                            CountryName = "South Sudan"
                         },
                         new
                         {
                             CountryId = 162,
-                            CountryName = "ES"
+                            CountryCode = "ES",
+                            CountryName = "Spain"
                         },
                         new
                         {
                             CountryId = 163,
-                            CountryName = "LK"
+                            CountryCode = "LK",
+                            CountryName = "SriLanka"
                         },
                         new
                         {
                             CountryId = 164,
-                            CountryName = "SD"
+                            CountryCode = "SD",
+                            CountryName = "Sudan"
                         },
                         new
                         {
                             CountryId = 165,
-                            CountryName = "SR"
+                            CountryCode = "SR",
+                            CountryName = "Suriname"
                         },
                         new
                         {
                             CountryId = 166,
-                            CountryName = "SE"
+                            CountryCode = "SE",
+                            CountryName = "Sweden"
                         },
                         new
                         {
                             CountryId = 167,
-                            CountryName = "CH"
+                            CountryCode = "CH",
+                            CountryName = "Switzerland"
                         },
                         new
                         {
                             CountryId = 168,
-                            CountryName = "SY"
+                            CountryCode = "SY",
+                            CountryName = "Syria"
                         },
                         new
                         {
                             CountryId = 169,
-                            CountryName = "TW"
+                            CountryCode = "TW",
+                            CountryName = "Taiwan"
                         },
                         new
                         {
                             CountryId = 170,
-                            CountryName = "TJ"
+                            CountryCode = "TJ",
+                            CountryName = "Tajikistan"
                         },
                         new
                         {
                             CountryId = 171,
-                            CountryName = "TZ"
+                            CountryCode = "TZ",
+                            CountryName = "Tanzania"
                         },
                         new
                         {
                             CountryId = 172,
-                            CountryName = "TH"
+                            CountryCode = "TH",
+                            CountryName = "Thailand"
                         },
                         new
                         {
                             CountryId = 173,
-                            CountryName = "TL"
+                            CountryCode = "TL",
+                            CountryName = "Timor Leste"
                         },
                         new
                         {
                             CountryId = 174,
-                            CountryName = "TG"
+                            CountryCode = "TG",
+                            CountryName = "Togo"
                         },
                         new
                         {
                             CountryId = 175,
-                            CountryName = "TO"
+                            CountryCode = "TO",
+                            CountryName = "Tonga"
                         },
                         new
                         {
                             CountryId = 176,
-                            CountryName = "TT"
+                            CountryCode = "TT",
+                            CountryName = "Trinidad And Tobago"
                         },
                         new
                         {
                             CountryId = 177,
-                            CountryName = "TN"
+                            CountryCode = "TN",
+                            CountryName = "Tunisia"
                         },
                         new
                         {
                             CountryId = 178,
-                            CountryName = "TR"
+                            CountryCode = "TR",
+                            CountryName = "Turkey"
                         },
                         new
                         {
                             CountryId = 179,
-                            CountryName = "TM"
+                            CountryCode = "TM",
+                            CountryName = "Turkmenistan"
                         },
                         new
                         {
                             CountryId = 180,
-                            CountryName = "TV"
+                            CountryCode = "TV",
+                            CountryName = "Tuvalu"
                         },
                         new
                         {
                             CountryId = 181,
-                            CountryName = "UG"
+                            CountryCode = "UG",
+                            CountryName = "Uganda"
                         },
                         new
                         {
                             CountryId = 182,
-                            CountryName = "UA"
+                            CountryCode = "UA",
+                            CountryName = "Ukraine"
                         },
                         new
                         {
                             CountryId = 183,
-                            CountryName = "AE"
+                            CountryCode = "AE",
+                            CountryName = "United Arab Emirates"
                         },
                         new
                         {
                             CountryId = 184,
-                            CountryName = "GB"
+                            CountryCode = "GB",
+                            CountryName = "United Kingdom"
                         },
                         new
                         {
                             CountryId = 185,
-                            CountryName = "US"
+                            CountryCode = "US",
+                            CountryName = "United States"
                         },
                         new
                         {
                             CountryId = 186,
-                            CountryName = "UY"
+                            CountryCode = "UY",
+                            CountryName = "Uruguay"
                         },
                         new
                         {
                             CountryId = 187,
-                            CountryName = "UZ"
+                            CountryCode = "UZ",
+                            CountryName = "Uzbekistan"
                         },
                         new
                         {
                             CountryId = 188,
-                            CountryName = "VU"
+                            CountryCode = "VU",
+                            CountryName = "Vanuatu"
                         },
                         new
                         {
                             CountryId = 189,
-                            CountryName = "VA"
+                            CountryCode = "VA",
+                            CountryName = "Vatican City"
                         },
                         new
                         {
                             CountryId = 190,
-                            CountryName = "VE"
+                            CountryCode = "VE",
+                            CountryName = "Venezuela"
                         },
                         new
                         {
                             CountryId = 191,
-                            CountryName = "VN"
+                            CountryCode = "VN",
+                            CountryName = "Vietnam"
                         },
                         new
                         {
                             CountryId = 192,
-                            CountryName = "YE"
+                            CountryCode = "YE",
+                            CountryName = "Yemen"
                         },
                         new
                         {
                             CountryId = 193,
-                            CountryName = "ZM"
+                            CountryCode = "ZM",
+                            CountryName = "Zambia"
                         },
                         new
                         {
                             CountryId = 194,
-                            CountryName = "ZW"
+                            CountryCode = "ZW",
+                            CountryName = "Zimbabwe"
                         });
                 });
 
@@ -1023,7 +1219,7 @@ namespace MoodFlix.Migrations
 
                     b.Property<string>("CountryCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("CountryId", "PlatformId");
 
@@ -1038,11 +1234,9 @@ namespace MoodFlix.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DirectorId"));
-
                     b.Property<string>("DirectorName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("DirectorId");
 
@@ -1071,7 +1265,7 @@ namespace MoodFlix.Migrations
 
                     b.Property<string>("EmotionName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("EmotionId");
 
@@ -1222,7 +1416,7 @@ namespace MoodFlix.Migrations
 
                     b.Property<string>("GenreName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("GenreId");
 
@@ -1357,8 +1551,6 @@ namespace MoodFlix.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HistoryEmotionId"));
-
                     b.Property<int>("EmotionId")
                         .HasColumnType("int");
 
@@ -1380,27 +1572,25 @@ namespace MoodFlix.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MovieId"));
-
                     b.Property<string>("HorizontalPosterw360")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("HorizontalPosterw480")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("HorizontalPosterw720")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Overview")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("MovieId");
 
@@ -1413,11 +1603,9 @@ namespace MoodFlix.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PlatformId"));
-
                     b.Property<string>("PlatformName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("PlatformId");
 
@@ -1430,10 +1618,8 @@ namespace MoodFlix.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RegisterId"));
-
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
@@ -1459,25 +1645,23 @@ namespace MoodFlix.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
-
                     b.Property<DateTime>("BirthDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("CountryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("UserId");
 
@@ -1495,7 +1679,7 @@ namespace MoodFlix.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("IsPreferred")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("UserId", "GenreId");
 

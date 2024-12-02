@@ -11,9 +11,8 @@ namespace MoodFlix
          *       dotnet ef migrations add InitialCreate
          *       dotnet ef database update
          *       
-         * Execute this command in the terminal to create the controllers
-         * 
-         *       dotnet aspnet-codegenerator controller -name UsersController -async -api -m User -dc ApplicationDbContext -outDir Controllers
+         *       
+         *  Table Country, genre and emotion are created with the Enum values
          * 
          */
 
@@ -47,16 +46,18 @@ namespace MoodFlix
             modelBuilder.Entity<Country>()
                 .Property(c => c.CountryId)
                 .ValueGeneratedNever();
-            //create a table named Country with the EnumCountry values
+            //create a table named Country with the EnumCountry and EnumCoutryNamevalues
             modelBuilder.Entity<Country>().HasData(
             Enum.GetValues(typeof(EnumCountry))
                 .Cast<EnumCountry>()
-                .Select(e => new Country
-                {
-                    CountryId = (int)e,
-                    CountryName = e.ToString()
-                })
-            );
+                .Select(cc => new Country
+                    {
+                        CountryId = (int)cc,
+                        CountryCode = cc.ToString(),
+                        CountryName = Enum.GetName(typeof(EnumCountryName), cc).Replace("_", " ")
+                    }
+                 )
+               );
 
             //This does not autoGenerate the Id
             modelBuilder.Entity<Genre>()
