@@ -9,10 +9,8 @@ namespace MoodFlix
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
-            // Proporciona aquí tu cadena de conexión explícitamente
-            //optionsBuilder.UseSqlServer("Server=testfundacion.mysql.database.azure.com,3306;Database=MoodFlixDB;User=carlos;Password=$nqbAgY1Kzsyk0$Z;SslMode=Required;TrustServerCertificate=true;");
             optionsBuilder.UseMySql(
-                "Server=testfundacion.mysql.database.azure.com;Port=3306;Database=MoodFlixDB;User=carlos;Password=$nqbAgY1Kzsyk0$Z;SslMode=Required;",
+                Utilities.Utils.GetConnectionString(),
                 new MySqlServerVersion(new Version(8, 0, 39))
             );
 

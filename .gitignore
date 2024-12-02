@@ -1,5 +1,9 @@
 # Api keys - Security
 MoodFlix/MoodFlix/res/API_KEYS/keys.xml
+
+# Server connection string
+MoodFlix/MoodFlix/res/SERVER_INFO/connection_string.xml
+
 # Ignorar la carpeta .vs dentro de MoodFlix/MoodFlix/
 MoodFlix/.vs/
 

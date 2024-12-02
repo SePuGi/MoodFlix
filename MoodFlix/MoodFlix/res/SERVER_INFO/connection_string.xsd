@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <!-- Definición de un tipo simple para la cadena de conexión -->
+    <xs:element name="connectionString">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <!-- Aquí se pueden añadir restricciones adicionales si es necesario -->
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+</xs:schema>

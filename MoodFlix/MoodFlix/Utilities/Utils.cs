@@ -72,5 +72,15 @@ namespace MoodFlix.Utilities
             return Key;
         }
 
+        public static string GetConnectionString()
+        {
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "res/SERVER_INFO/connection_string.xml");
+            string connectionStringXml = System.IO.File.ReadAllText(path);
+
+            string connectionString = XElement.Parse(connectionStringXml).Value;
+
+            return connectionString;
+        }
+
     }
 }
