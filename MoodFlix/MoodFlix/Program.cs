@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
  //   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 39))));
+    options.UseMySql(MoodFlix.Utilities.Utils.GetConnectionString(), new MySqlServerVersion(new Version(8, 0, 39))));
 
 
 // Add services to the container.
