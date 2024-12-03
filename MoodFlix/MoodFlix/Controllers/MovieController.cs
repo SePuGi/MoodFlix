@@ -36,14 +36,19 @@ namespace MoodFlix.Controllers
 
         #region GetMovies
 
+        /// <summary>
+        /// Get 1 or 5 movies based on user preferences
+        /// </summary>
+        /// <param name="total_movies"></param>
+        /// <param name="emotionsId"></param>
+        /// <returns></returns>
         //POST: /api/movies/{total_movies}
         [AllowAnonymous]
-        [HttpPost("{total_movies}")]
-        public async Task<IActionResult> GetMovies(int total_movies)//, [FromBody] List<Emotion> emotions
+        [HttpPatch("GetMoviesWithPreferences/{total_movies}")]
+        public async Task<IActionResult> GetMoviesWithPreferences(int total_movies)
         {
-            //TODO: Use OpenAI API to get movie recommendations based on emotions and user preferences (platforms, genres and movies watched (history))
             // "movies" have a list of the movie titles
-            var movies = await GetMoviesOpenAI(total_movies, new List<int>()); //TODO: Add the emotions
+            var movies = await GetMoviesOpenAI(total_movies);
 
             if(movies.Count == 0)
                 return NotFound("No movies found");
@@ -52,6 +57,33 @@ namespace MoodFlix.Controllers
             var moviesInfo = await GetMovieInfo(movies);
             
             if(moviesInfo.Count == total_movies)
+                return Ok(moviesInfo);
+
+            //Get more movies?
+            return Ok(moviesInfo);
+        }
+
+        /// <summary>
+        /// Get 1 or 5 movies based on user preferences and emotions
+        /// </summary>
+        /// <param name="total_movies"></param>
+        /// <param name="emotionsId"></param>
+        /// <returns></returns>
+        //POST: /api/movies/{total_movies}
+        [AllowAnonymous]
+        [HttpPatch("GetMoviesWithEmotions/{total_movies}")]
+        public async Task<IActionResult> GetMoviesWithEmotions(int total_movies, List<int> emotionsId)
+        {
+            // "movies" have a list of the movie titles
+            var movies = await GetMoviesOpenAI(total_movies, emotionsId);
+
+            if (movies.Count == 0)
+                return NotFound("No movies found");
+
+            //GetMoviesinfo
+            var moviesInfo = await GetMovieInfo(movies);
+
+            if (moviesInfo.Count == total_movies)
                 return Ok(moviesInfo);
 
             //Get more movies?
@@ -69,7 +101,7 @@ namespace MoodFlix.Controllers
         /// <param name="total_movies"></param>
         /// <param name="emotionId"></param>
         /// <returns></returns>
-        private async Task<List<string>> GetMoviesOpenAI(int total_movies, List<int> emotionId)
+        private async Task<List<string>> GetMoviesOpenAI(int total_movies, List<int> emotionId = null)
         {
             string openAIKey = Utils.GetApiKey("OpenAI");
             string apiEndpoint = "https://api.openai.com/v1/chat/completions";
@@ -120,45 +152,49 @@ namespace MoodFlix.Controllers
         {
             int userId = 1;//GetLoggedUserId();
 
+            List<Message> message = new List<Message>();
+
+            //Add conversation context (you are a movie expert...)
+            if(emotionId != null)
+                message.Add(new Message() { Role = "system", Content = "You are an expert movie recommender. Your job is to suggest movies based on the streaming platforms the user has, the user's genre preferences, avoiding the genres they don't want, and considering their current emotions to improve their mood. You must also take into account the movies they have already watched to avoid recommending them again. The recommendations should be useful and in JSON format." });
+            else
+                message.Add(new Message() { Role = "system", Content = "You are an expert movie recommender. Your job is to suggest movies based on the streaming platforms the user has, the user's genre preferences and avoiding the genres they don't want. You must also take into account the movies they have already watched to avoid recommending them again. The recommendations should be useful and in JSON format." });
+
             //Get the movies watched by the user
             var moviesWatched = _context.History.Where(h => h.UserId == userId).Select(h => h.Movie.Title).ToList();
             List<MoviesWatched> mw = new List<MoviesWatched>();
             foreach (var movie in moviesWatched)
                 mw.Add(new MoviesWatched() { Title = movie });
 
+            //Get the user platforms preferences
+            var platforms = _context.UserPlatform.Where(up => up.UserId == userId).Select(up => up.Platform.PlatformName).ToList();
+
+            //Get the user genre preferences
             List<Genre> userPreferredGenres = _context.UserGenre.Where(ug => ug.UserId == userId && ug.IsPreferred == true).Select(ug => ug.Genre).ToList();
             List<Genre> userNotPreferredGenres = _context.UserGenre.Where(ug => ug.UserId == userId && ug.IsPreferred == false).Select(ug => ug.Genre).ToList();
-
-            //erase:
-            emotionId.Add(24);
-            emotionId.Add(20);
-            emotionId.Add(6);
-
-            //Get the emotions from the enum
-            List<string> userEmotions = new List<string>();
-            foreach (var emotion in emotionId)
-                userEmotions.Add(((EnumEmotion)emotion).ToString());
-
-            List<Message> message = new List<Message>();
-
-            //Add conversation context (you are a movie expert...)
-            message.Add(new Message() { Role = "system", Content = "You are an expert movie recommender. Your job is to suggest movies based on the streaming platforms the user has, the user's genre preferences, avoiding the genres they don't want, and considering their current emotions to improve their mood. You must also take into account the movies they have already watched to avoid recommending them again. The recommendations should be useful and in JSON format." });
 
             //Add the movies watched if there are any, if not, do no add this message
             if (mw.Count != 0)
                 message.Add(new Message() { Role = "system", Content = $"I have seen this movies: {string.Join(",", moviesWatched)}" });
 
             //Add the user genre preferences if there are any, if not, do no add this message
-            if(userPreferredGenres.Count != 0)
+            if (userPreferredGenres.Count != 0)
                 message.Add(new Message() { Role = "system", Content = $"My favorite movie genre are: {string.Join(",", userPreferredGenres)}" });
 
             //Add the user not preferred genres if there are any, if not, do no add this message
             if (userNotPreferredGenres.Count != 0)
                 message.Add(new Message() { Role = "system", Content = $"I don't want movies with the genres: {string.Join(",", userNotPreferredGenres)}" });
-            
-            //Add emotions context if there are any, if not, do no add this message
-            if(userEmotions.Count != 0)
-                message.Add(new Message() { Role = "system", Content = $"This emotions can resume my feelings: {string.Join(",", userEmotions)}" });
+           
+            if (emotionId != null)
+            {
+                //Get the emotions from the enum
+                var emotions = _context.Emotion.Where(e => emotionId.Contains(e.EmotionId)).Select(e => e.EmotionName).ToList();
+
+                //Add emotions context if there are any
+                message.Add(new Message() { Role = "system", Content = $"This emotions can resume my feelings: {string.Join(",", emotions)}" });
+            }
+            //else
+            //Only get the movies with moviesWatched, genre and platform preferences
 
             //Generate json with the total movies
             message.Add(new Message() { Role = "user", Content = $"Generate a list of {totalMovies} movies that meet these criteria. The output format should be JSON with the following structure: {{ \"movies\": [\"Movie Name 1\", \"Movie Name 2\", ...] }}." }); 

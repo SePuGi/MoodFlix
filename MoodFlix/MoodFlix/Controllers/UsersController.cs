@@ -240,7 +240,7 @@ namespace MoodFlix.Controllers
 
         //GET: api/user//addToHistory
         [HttpPost("addToHistory")]
-        public async Task<ActionResult<Register>> AddToHistory(MovieDataDTO movieData)
+        public async Task<ActionResult<Register>> AddToHistory(MovieDataDTO movieData, List<int> emotionId)
         {
             int logged_id = GetLoggedUserId();
             //if user is not logged or the user is not the same as the one in the token, it will return Unauthorized
@@ -269,7 +269,7 @@ namespace MoodFlix.Controllers
                 {
                     MovieInfo = movieInfo,
                     UserId = logged_id,
-                    EmotionId = movieData.EmotionId,
+                    EmotionId = emotionId,
                     Rating = null,
                     Date = DateTime.Now
                 };
@@ -564,7 +564,9 @@ namespace MoodFlix.Controllers
             await _context.SaveChangesAsync();
 
             //Add the relationship with the emotions
-            _context.HistoryEmotion.Add(new HistoryEmotion { RegisterId = registerDb.RegisterId, EmotionId = register.EmotionId });
+            foreach (var emotionId in register.EmotionId)
+                _context.HistoryEmotion.Add(new HistoryEmotion { RegisterId = registerDb.RegisterId, EmotionId = emotionId });
+
             await _context.SaveChangesAsync();
         }
         #endregion

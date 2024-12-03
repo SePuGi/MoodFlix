@@ -1,8 +1,9 @@
-﻿namespace MoodFlix.Model.Dto.MovieData
+﻿using System.Text.Json.Serialization;
+
+namespace MoodFlix.Model.Dto.MovieData
 {
     public class MovieDataDTO
     {
-        public int EmotionId { get; set; }
         public int Id { get; set; }
         public string Title { get; set; }
         public string Overview { get; set; }
