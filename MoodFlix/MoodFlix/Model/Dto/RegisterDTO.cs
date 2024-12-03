@@ -10,7 +10,7 @@
 
         public MovieInfoDTO MovieInfo { get; set; }
         public int UserId { get; set; }
-        public int EmotionId { get; set; }
+        public List<int> EmotionId { get; set; }
         public int? Rating { get; set; }     //At first, this value will be null
         public DateTime Date { get; set; }  //Date of the register
     }

@@ -30,59 +30,48 @@ namespace MoodFlix.Controllers
         }
 
         #region UserCRUD-Login-Register
-        // GET: api/Users
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUser()
-        {
-            return await _context.User.ToListAsync();
-        }
-
+        
         // GET: api/Users/5
-        [AllowAnonymous]
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        [HttpGet()]
+        public async Task<ActionResult<Object>> GetUser()
         {
-            /*return: 
-		{
-            userId: int
-            name: string
-            birthDate: string
-            email: string
-            genre : 
-            [{
-		            genreId: int
-		            genreName: string
-		            isPreferred: bool
-            }]
-        }
-*/
-            int logged_id = 1;
-            //int logged_id = GetLoggedUserId();
+            int logged_id = GetLoggedUserId();
 
             //if user is not logged or the user is not the same as the one in the token, it will return Unauthorized
-            if (logged_id == -1 || logged_id != id) 
+            if (logged_id == -1) 
                 return Unauthorized();
             
-
-            var user = await _context.User.FindAsync(id);
-
+            var user = await _context.User.FindAsync(logged_id);
+                
             if (user == null)
                 return NotFound();
-            
 
-            return user;
+            var userData = new {
+                user.UserId ,
+                user.Email,
+                user.UserName,
+                user.BirthDate,
+                user.CountryId
+            };
+            
+            return userData;
         }
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        [HttpPut]
+        public async Task<IActionResult> PutUser(User user)
         {
-            if (id != user.UserId)
-            {
-                return BadRequest();
-            }
+            int userId = GetLoggedUserId();
 
+            if (userId != user.UserId)
+                return Unauthorized();
+
+            //if email is already in the database, return BadRequest
+            if (_context.User.Any(u => u.Email == user.Email && u.UserId != user.UserId))
+                return BadRequest();
+
+            //update the user
             _context.Entry(user).State = EntityState.Modified;
 
             try
@@ -91,14 +80,10 @@ namespace MoodFlix.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
-                {
+                if (!UserExists(user.UserId))
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
 
             return NoContent();
@@ -112,17 +97,21 @@ namespace MoodFlix.Controllers
             //check if the password is valid
             if (!Utils.CheckPassword(user.Password))
                 return BadRequest();
-            
+
+            //if email is already in the database, return BadRequest
+            if (_context.User.Any(u => u.Email == user.Email))
+                return BadRequest();
+
             //If the password is valid, encrypt it
-            user.Password = Utils.EncryptPassword(user.Password);
-            
+            user.Password = Utils.EncryptPassword(user.Password);            
+
             //Add the user to the database
             User userDb = new User(user.UserName, user.Email, user.Password, user.BirthDate, user.CountryId);
             _context.User.Add(userDb);
 
             //save the changes, to get the UserId and save it in the relational tables
             await _context.SaveChangesAsync();
-
+            /*
             //Add UserGenres to the database
             foreach (var genre in user.UserGenres)
             {
@@ -134,7 +123,7 @@ namespace MoodFlix.Controllers
             {
                 _context.UserPlatform.Add(new UserPlatform { UserId = userDb.UserId, PlatformId = platform });
             }
-
+            */
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("RegisterUser", new { id = userDb.UserId });
@@ -174,11 +163,13 @@ namespace MoodFlix.Controllers
             return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) }); //return the token
         }
 
-        // DELETE: api/Users/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        // DELETE: api/Users/
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteUser()
         {
-            var user = await _context.User.FindAsync(id);
+            int userId = GetLoggedUserId();
+
+            var user = await _context.User.FindAsync(userId);
             if (user == null)
             {
                 return NotFound();
@@ -195,12 +186,10 @@ namespace MoodFlix.Controllers
         #region UserHistory
 
         //PATCH: api/user/movieRating
-        [AllowAnonymous]
         [HttpPatch("movieRating")]
         public async Task<ActionResult<Register>> UpdateMovieRating(RatingDTO rating)
         {
-            //int logged_id = GetLoggedUserId();
-            int logged_id = 1;
+            int logged_id = GetLoggedUserId();
             //if user is not logged or the user is not the same as the one in the token, it will return Unauthorized
             if (logged_id == -1)
                 return Unauthorized();
@@ -214,23 +203,16 @@ namespace MoodFlix.Controllers
             return NoContent();
         }
 
-        //GET: api/user/{id}/history
-        [AllowAnonymous]
-        [HttpGet("{id}/history")]
-        public async Task<ActionResult<IEnumerable<Register>>> GetUserHistory(int id)
+        //GET: api/user/history
+        [HttpGet("history")]
+        public async Task<ActionResult<IEnumerable<Register>>> GetUserHistory()
         {
-            //int logged_id = GetLoggedUserId();
-            int logged_id = 1;
+            int logged_id = GetLoggedUserId();
             //if user is not logged or the user is not the same as the one in the token, it will return Unauthorized
-            if (logged_id == -1 || logged_id != id)
+            if (logged_id == -1)
                 return Unauthorized();
 
             //Get the user history
-          /*  var userHistory = await _context.History
-                .Where(r => r.UserId == logged_id)
-                .Include(r => r.Movie)
-                .ToListAsync();*/
-
             List<RegisterHistoryDTO> history = new List<RegisterHistoryDTO>();
             history.AddRange(_context.History
                 .Where(r => r.UserId == logged_id)
@@ -247,13 +229,11 @@ namespace MoodFlix.Controllers
             return Ok(history);
         }
 
-        //GET: api/user/{id}/addToHistory
-        [AllowAnonymous]
-        [HttpPost("{id}/addToHistory")]
-        public async Task<ActionResult<Register>> AddToHistory(MovieDataDTO movieData, int emotionId)
+        //GET: api/user//addToHistory
+        [HttpPost("addToHistory")]
+        public async Task<ActionResult<Register>> AddToHistory(Model.Dto.MovieData.MovieInfoDTO movieData)
         {
-            //int logged_id = GetLoggedUserId();
-            int logged_id = 1;
+            int logged_id = GetLoggedUserId();
             //if user is not logged or the user is not the same as the one in the token, it will return Unauthorized
             if (logged_id == -1)
                 return Unauthorized();
@@ -280,7 +260,7 @@ namespace MoodFlix.Controllers
                 {
                     MovieInfo = movieInfo,
                     UserId = logged_id,
-                    EmotionId = emotionId,
+                    EmotionId = movieData.EmotionId,
                     Rating = null,
                     Date = DateTime.Now
                 };
@@ -319,12 +299,10 @@ namespace MoodFlix.Controllers
 
         #region UserPreferences
 
-        [AllowAnonymous] //quit this
         [HttpGet("userPreferences")]
         public async Task<ActionResult<UserPreferencesDTO>> GetUserPreferences()
         {
-            //int logged_id = GetLoggedUserId();
-            int logged_id = 1;
+            int logged_id = GetLoggedUserId();
             //if user is not logged or the user is not the same as the one in the token, it will return Unauthorized
             if (logged_id == -1)
                 return Unauthorized();
@@ -344,11 +322,10 @@ namespace MoodFlix.Controllers
         }
 
         //POST: api/configUserGenres
-        [AllowAnonymous]
         [HttpPost("configUserGenres")]
         public async Task<ActionResult<List<Genre>>> ConfigUserGenres(List<UserGenreDTO> userGenres)
         {
-            int userId = 1;
+            int userId = GetLoggedUserId();
 
             //get the user genres
             var userGenresPreferences = _context.UserGenre
@@ -378,12 +355,11 @@ namespace MoodFlix.Controllers
         }
 
         //POST: api/configUserPlatforms
-        [AllowAnonymous]
         [HttpPost("configUserPlatforms")]
         public async Task<ActionResult<List<Platform>>> ConfigUserPlatforms(List<int> userPlatformsId)
         {
             //userPlatforms need to be a int list with the UserPlatform ID !!!!!!!!
-            int userId = 1;
+            int userId = GetLoggedUserId();
 
             //get the user platformsId
             var userPlatforms = _context.UserPlatform
@@ -412,7 +388,6 @@ namespace MoodFlix.Controllers
         #region Utils
 
         //GET: api/Countries
-        [AllowAnonymous]
         [HttpGet("Countries")]
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
@@ -420,7 +395,6 @@ namespace MoodFlix.Controllers
         }
 
         //GET: api/Genres
-        [AllowAnonymous]
         [HttpGet("Genres")]
         public async Task<ActionResult<IEnumerable<Genre>>> GetGenres()
         {
@@ -433,21 +407,15 @@ namespace MoodFlix.Controllers
         /// <param name="countryCode"></param>
         /// <returns></returns>
         //GET: api/Platforms/{countryCode}
-        [AllowAnonymous]
         [HttpGet("Platforms/{countryCode}")]
-        public async Task<ActionResult<IEnumerable<string>>> GetPlatformsByCountry(string countryCode)
+        public async Task<ActionResult<IEnumerable<PlatformDTO>>> GetPlatformsByCountry(string countryCode)
         {
             //Get the platforms from "https://streaming-availability.p.rapidapi.com/countries/es?output_language=en"
-            
-            if(_context.CountryPlatform.Any(cp => cp.CountryCode == countryCode))
-            {
-                var platforms = _context.CountryPlatform
-                    .Where(cp => cp.CountryCode == countryCode)
-                    .Select(cp => cp.Platform.PlatformName)
-                    .ToList();
 
-                return platforms;
-            }
+            //If the country is already in the database search the platforms in the database
+            if (_context.CountryPlatform.Any(cp => cp.CountryCode == countryCode))
+                return GetPlatformsFromDatabase(countryCode);
+            
             //Create the request
             var apiKey = Utils.GetApiKey("StreamingAvailability");
 
@@ -507,10 +475,20 @@ namespace MoodFlix.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return serviceNames;
+                return GetPlatformsFromDatabase(countryCode);
             }
             
             return NotFound();
+        }
+
+        private List<PlatformDTO> GetPlatformsFromDatabase(string countryCode)
+        {
+            var platforms = _context.CountryPlatform
+                    .Where(cp => cp.CountryCode == countryCode)
+                    .Select(cp => new PlatformDTO { PlatformId = cp.PlatformId, PlatformName = cp.Platform.PlatformName })
+                    .ToList();
+
+            return platforms;
         }
 
         private bool UserExists(int id)
@@ -573,7 +551,9 @@ namespace MoodFlix.Controllers
             await _context.SaveChangesAsync();
 
             //Add the relationship with the emotions
-            _context.HistoryEmotion.Add(new HistoryEmotion { RegisterId = registerDb.RegisterId, EmotionId = register.EmotionId });
+            foreach (var emotionId in register.EmotionId)
+                _context.HistoryEmotion.Add(new HistoryEmotion { RegisterId = registerDb.RegisterId, EmotionId = emotionId });
+
             await _context.SaveChangesAsync();
         }
         #endregion
