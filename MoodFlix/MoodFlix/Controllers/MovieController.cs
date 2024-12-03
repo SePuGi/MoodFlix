@@ -43,18 +43,22 @@ namespace MoodFlix.Controllers
         /// <param name="emotionsId"></param>
         /// <returns></returns>
         //POST: /api/movies/{total_movies}
-        [AllowAnonymous]
         [HttpPatch("GetMoviesWithPreferences/{total_movies}")]
         public async Task<IActionResult> GetMoviesWithPreferences(int total_movies)
         {
+            int userId = GetLoggedUserId();
+
+            if (userId == -1)
+                return Unauthorized("User not found");
+
             // "movies" have a list of the movie titles
-            var movies = await GetMoviesOpenAI(total_movies);
+            var movies = await GetMoviesOpenAI(userId, total_movies);
 
             if(movies.Count == 0)
                 return NotFound("No movies found");
 
             //GetMoviesinfo
-            var moviesInfo = await GetMovieInfo(movies);
+            var moviesInfo = await GetMovieInfo(userId, movies);
             
             if(moviesInfo.Count == total_movies)
                 return Ok(moviesInfo);
@@ -70,18 +74,22 @@ namespace MoodFlix.Controllers
         /// <param name="emotionsId"></param>
         /// <returns></returns>
         //POST: /api/movies/{total_movies}
-        [AllowAnonymous]
         [HttpPatch("GetMoviesWithEmotions/{total_movies}")]
         public async Task<IActionResult> GetMoviesWithEmotions(int total_movies, List<int> emotionsId)
         {
+            int userId = GetLoggedUserId();
+
+            if(userId == -1)
+                return Unauthorized("User not found");
+
             // "movies" have a list of the movie titles
-            var movies = await GetMoviesOpenAI(total_movies, emotionsId);
+            var movies = await GetMoviesOpenAI(userId,total_movies, emotionsId);
 
             if (movies.Count == 0)
                 return NotFound("No movies found");
 
             //GetMoviesinfo
-            var moviesInfo = await GetMovieInfo(movies);
+            var moviesInfo = await GetMovieInfo(userId, movies);
 
             if (moviesInfo.Count == total_movies)
                 return Ok(moviesInfo);
@@ -101,13 +109,13 @@ namespace MoodFlix.Controllers
         /// <param name="total_movies"></param>
         /// <param name="emotionId"></param>
         /// <returns></returns>
-        private async Task<List<string>> GetMoviesOpenAI(int total_movies, List<int> emotionId = null)
+        private async Task<List<string>> GetMoviesOpenAI(int userId, int total_movies, List<int> emotionId = null)
         {
             string openAIKey = Utils.GetApiKey("OpenAI");
             string apiEndpoint = "https://api.openai.com/v1/chat/completions";
             
             List<Message> prompt= new List<Message>();
-            prompt = await CreatePrompt(total_movies, emotionId);
+            prompt = await CreatePrompt(userId, total_movies, emotionId);
 
             //Prompt
             RequestOpenAi request = new RequestOpenAi() 
@@ -148,10 +156,8 @@ namespace MoodFlix.Controllers
             return moviesResponse;
         }
 
-        private async Task<List<Message>> CreatePrompt(int totalMovies, List<int> emotionId)
+        private async Task<List<Message>> CreatePrompt(int userId, int totalMovies, List<int> emotionId)
         {
-            int userId = 1;//GetLoggedUserId();
-
             List<Message> message = new List<Message>();
 
             //Add conversation context (you are a movie expert...)
@@ -207,14 +213,11 @@ namespace MoodFlix.Controllers
         /// </summary>
         /// <param name="movies"></param>
         /// <returns></returns>
-        private async Task<List<MovieDataDTO>> GetMovieInfo(List<string> moviesTitles)
+        private async Task<List<MovieDataDTO>> GetMovieInfo(int userId, List<string> moviesTitles)
         {
-        //Get the platforms from "
-        //https://streaming-availability.p.rapidapi.com/shows/search/title?country=es&title=inception&series_granularity=show&show_type=movie&output_language=en"
+            //Get the platforms from "
+            //https://streaming-availability.p.rapidapi.com/shows/search/title?country=es&title=inception&series_granularity=show&show_type=movie&output_language=en"
             
-            //var userId = GetLoggedUserId();
-            var userId = 1;
-
             //Get the user country code
             //string userCountry = _context.User.Where(u => u.UserId == userId).Select(u => u.Country.CountryName).FirstOrDefault();
 
@@ -294,8 +297,9 @@ namespace MoodFlix.Controllers
             //Get the first movie
             JObject movie = (JObject)moviesResponse[0];
 
+            MovieDataDTO movieData2 = movie.ToObject<MovieDataDTO>();
+            /*
             //Get the movie info
-
             int id = movie["id"]?.Value<int>() ?? 0;//Movie info!
             string title = movie["title"]?.ToString();//Movie info!
             string overview = movie["overview"]?.ToString();//Movie info!
@@ -336,7 +340,7 @@ namespace MoodFlix.Controllers
                 W480 = horizontalPosterInfo["w480"].ToString(),
                 W720 = horizontalPosterInfo["w720"].ToString(),
             };
-
+            */
             //Get the streaming options
             var streamingOptions = movie["streamingOptions"];
             var countryStremingOptions = streamingOptions[userCountry];
@@ -357,7 +361,7 @@ namespace MoodFlix.Controllers
                     }
                 });
             }
-
+            /*
             MovieDataDTO movieData = new MovieDataDTO()
             {
                 Id = id,
@@ -376,8 +380,12 @@ namespace MoodFlix.Controllers
                     ServiceOptions = streamingServices
                 }
             };
-
-            return movieData;
+            */
+            movieData2.StreamingOptions = new StreamingOptions()
+            {
+                ServiceOptions = streamingServices
+            };
+            return movieData2;
         }
 
         private int GetLoggedUserId()

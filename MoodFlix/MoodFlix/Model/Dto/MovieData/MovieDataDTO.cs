@@ -7,11 +7,12 @@ namespace MoodFlix.Model.Dto.MovieData
         public int Id { get; set; }
         public string Title { get; set; }
         public string Overview { get; set; }
-        public List<string> Genres { get; set; }
-        public List<string> Directors { get; set; }
+        public List<GenreDTO> Genres { get; set; }
+        public List<DirectorDTO> Directors { get; set; }
         public int Runtime { get; set; }
         public ImageSet ImageSet { get; set; }
         public StreamingOptions StreamingOptions { get; set; }
+
     }
 
     public class ImageSet
@@ -32,5 +33,20 @@ namespace MoodFlix.Model.Dto.MovieData
         public string W720 { get; set; }
     }
 
+    public class GenreDTO
+    {
+        [JsonPropertyName("id")]
+        public int GenreId { get; set; }
+        [JsonPropertyName("name")]
+        public string GenreName { get; set; }
+    }
+
+    public class DirectorDTO 
+    {
+        [JsonPropertyName("id")]
+        public int DirectorId { get; set; }
+        [JsonPropertyName("name")]
+        public string DirectorName { get; set; }
+    }
 
 }
