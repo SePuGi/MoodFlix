@@ -2,6 +2,7 @@
 {
     public class MovieDataDTO
     {
+        public int EmotionId { get; set; }
         public int Id { get; set; }
         public string Title { get; set; }
         public string Overview { get; set; }

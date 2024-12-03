@@ -240,7 +240,7 @@ namespace MoodFlix.Controllers
 
         //GET: api/user//addToHistory
         [HttpPost("addToHistory")]
-        public async Task<ActionResult<Register>> AddToHistory(MovieDataDTO movieData, int emotionId)
+        public async Task<ActionResult<Register>> AddToHistory(MovieDataDTO movieData)
         {
             int logged_id = GetLoggedUserId();
             //if user is not logged or the user is not the same as the one in the token, it will return Unauthorized
@@ -269,7 +269,7 @@ namespace MoodFlix.Controllers
                 {
                     MovieInfo = movieInfo,
                     UserId = logged_id,
-                    EmotionId = emotionId,
+                    EmotionId = movieData.EmotionId,
                     Rating = null,
                     Date = DateTime.Now
                 };
@@ -308,12 +308,10 @@ namespace MoodFlix.Controllers
 
         #region UserPreferences
 
-        [AllowAnonymous] //quit this
         [HttpGet("userPreferences")]
         public async Task<ActionResult<UserPreferencesDTO>> GetUserPreferences()
         {
-            //int logged_id = GetLoggedUserId();
-            int logged_id = 1;
+            int logged_id = GetLoggedUserId();
             //if user is not logged or the user is not the same as the one in the token, it will return Unauthorized
             if (logged_id == -1)
                 return Unauthorized();
@@ -333,11 +331,10 @@ namespace MoodFlix.Controllers
         }
 
         //POST: api/configUserGenres
-        [AllowAnonymous]
         [HttpPost("configUserGenres")]
         public async Task<ActionResult<List<Genre>>> ConfigUserGenres(List<UserGenreDTO> userGenres)
         {
-            int userId = 1;
+            int userId = GetLoggedUserId();
 
             //get the user genres
             var userGenresPreferences = _context.UserGenre
@@ -372,7 +369,7 @@ namespace MoodFlix.Controllers
         public async Task<ActionResult<List<Platform>>> ConfigUserPlatforms(List<int> userPlatformsId)
         {
             //userPlatforms need to be a int list with the UserPlatform ID !!!!!!!!
-            int userId = 1;
+            int userId = GetLoggedUserId();
 
             //get the user platformsId
             var userPlatforms = _context.UserPlatform
@@ -424,19 +421,14 @@ namespace MoodFlix.Controllers
         //GET: api/Platforms/{countryCode}
         [AllowAnonymous]
         [HttpGet("Platforms/{countryCode}")]
-        public async Task<ActionResult<IEnumerable<string>>> GetPlatformsByCountry(string countryCode)
+        public async Task<ActionResult<IEnumerable<PlatformDTO>>> GetPlatformsByCountry(string countryCode)
         {
             //Get the platforms from "https://streaming-availability.p.rapidapi.com/countries/es?output_language=en"
-            
-            if(_context.CountryPlatform.Any(cp => cp.CountryCode == countryCode))
-            {
-                var platforms = _context.CountryPlatform
-                    .Where(cp => cp.CountryCode == countryCode)
-                    .Select(cp => cp.Platform.PlatformName)
-                    .ToList();
 
-                return platforms;
-            }
+            //If the country is already in the database search the platforms in the database
+            if (_context.CountryPlatform.Any(cp => cp.CountryCode == countryCode))
+                return GetPlatformsFromDatabase(countryCode);
+            
             //Create the request
             var apiKey = Utils.GetApiKey("StreamingAvailability");
 
@@ -496,10 +488,20 @@ namespace MoodFlix.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return serviceNames;
+                return GetPlatformsFromDatabase(countryCode);
             }
             
             return NotFound();
+        }
+
+        private List<PlatformDTO> GetPlatformsFromDatabase(string countryCode)
+        {
+            var platforms = _context.CountryPlatform
+                    .Where(cp => cp.CountryCode == countryCode)
+                    .Select(cp => new PlatformDTO { PlatformId = cp.PlatformId, PlatformName = cp.Platform.PlatformName })
+                    .ToList();
+
+            return platforms;
         }
 
         private bool UserExists(int id)
