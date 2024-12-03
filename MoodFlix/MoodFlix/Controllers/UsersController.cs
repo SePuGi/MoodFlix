@@ -35,20 +35,6 @@ namespace MoodFlix.Controllers
         [HttpGet()]
         public async Task<ActionResult<Object>> GetUser()
         {
-            /*return: 
-		{
-            userId: int
-            name: string
-            birthDate: string
-            email: string
-            genre : 
-            [{
-		            genreId: int
-		            genreName: string
-		            isPreferred: bool
-            }]
-        }
-*/
             int logged_id = GetLoggedUserId();
 
             //if user is not logged or the user is not the same as the one in the token, it will return Unauthorized
@@ -369,7 +355,6 @@ namespace MoodFlix.Controllers
         }
 
         //POST: api/configUserPlatforms
-        [AllowAnonymous]
         [HttpPost("configUserPlatforms")]
         public async Task<ActionResult<List<Platform>>> ConfigUserPlatforms(List<int> userPlatformsId)
         {
