@@ -190,7 +190,8 @@ namespace MoodFlix.Controllers
             //Add the user not preferred genres if there are any, if not, do no add this message
             if (userNotPreferredGenres.Count != 0)
                 message.Add(new Message() { Role = "system", Content = $"I don't want movies with the genres: {string.Join(",", userNotPreferredGenres)}" });
-           
+
+            //Add the age of the user
             var birthDate = _context.User.Where(u => u.UserId == userId).Select(u => u.BirthDate).FirstOrDefault();
             var age = DateTime.Now.Year - birthDate.Year;
 
@@ -224,11 +225,10 @@ namespace MoodFlix.Controllers
             //https://streaming-availability.p.rapidapi.com/shows/search/title?country=es&title=inception&series_granularity=show&show_type=movie&output_language=en"
             
             //Get the user country code
-            //string userCountry = _context.User.Where(u => u.UserId == userId).Select(u => u.Country.CountryName).FirstOrDefault();
+            string userCountry = _context.User.Where(u => u.UserId == userId).Select(u => u.Country.CountryCode).FirstOrDefault();
 
             //Create the request
             var apiKey = Utils.GetApiKey("StreamingAvailability");
-            string userCountry = "es";
 
             bool movieFound = false;
 
@@ -307,7 +307,7 @@ namespace MoodFlix.Controllers
 
             //Get the streaming options from the object (streamingOptions atributte name is the countryCode, can't do a dto with a dynamic name)
             var streamingOptions = movie["streamingOptions"];
-            var countryStremingOptions = streamingOptions[userCountry];
+            var countryStremingOptions = streamingOptions[userCountry.ToLower()];
             List<StreamingService> streamingServices = new List<StreamingService>();//Movie info!
             foreach (var streamingService in countryStremingOptions)
             {
