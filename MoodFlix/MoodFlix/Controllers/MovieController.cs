@@ -74,8 +74,6 @@ namespace MoodFlix.Controllers
             string openAIKey = Utils.GetApiKey("OpenAI");
             string apiEndpoint = "https://api.openai.com/v1/chat/completions";
             
-            
-
             List<Message> prompt= new List<Message>();
             prompt = await CreatePrompt(total_movies, emotionId);
 
@@ -87,7 +85,6 @@ namespace MoodFlix.Controllers
                 MaxTokens = 100,
                 Temperature = 0.6f
             };
-           
            
             //Create the request
             var client = new HttpClient();
@@ -121,16 +118,6 @@ namespace MoodFlix.Controllers
 
         private async Task<List<Message>> CreatePrompt(int totalMovies, List<int> emotionId)
         {
-            /*
-{
-    new Message() { Role = "system", Content = "You are an expert movie recommender. Your job is to suggest movies based on the streaming platforms the user has, the user's genre preferences, avoiding the genres they don't want, and considering their current emotions to improve their mood. You must also take into account the movies they have already watched to avoid recommending them again. The recommendations should be useful and in JSON format." },
-    new Message() { Role = "system", Content = $"I have seen this movies: {string.Join(",",moviesWatched)}" },
-    new Message() { Role = "system", Content = $"My favorite movie genre are: {string.Join(",",userPreferredGenres)}" },
-    new Message() { Role = "system", Content = $"I don't want movies with the genres: {string.Join(",",userNotPreferredGenres)}" },
-    new Message() { Role = "system", Content = $"This emotions can resume my feelings: {string.Join(",",userEmotions)}" },
-    new Message() { Role = "user", Content = $"Generate a list of {total_movies} movies that meet these criteria. The output format should be JSON with the following structure: {{ \"movies\": [\"Movie Name 1\", \"Movie Name 2\", ...] }}." }
-}
-             */
             int userId = 1;//GetLoggedUserId();
 
             //Get the movies watched by the user
@@ -162,11 +149,20 @@ namespace MoodFlix.Controllers
                 message.Add(new Message() { Role = "system", Content = $"I have seen this movies: {string.Join(",", moviesWatched)}" });
 
             //Add the user genre preferences if there are any, if not, do no add this message
-            if(userPreferredGenres.Count == 0)
+            if(userPreferredGenres.Count != 0)
                 message.Add(new Message() { Role = "system", Content = $"My favorite movie genre are: {string.Join(",", userPreferredGenres)}" });
+
+            //Add the user not preferred genres if there are any, if not, do no add this message
+            if (userNotPreferredGenres.Count != 0)
+                message.Add(new Message() { Role = "system", Content = $"I don't want movies with the genres: {string.Join(",", userNotPreferredGenres)}" });
+            
             //Add emotions context if there are any, if not, do no add this message
+            if(userEmotions.Count != 0)
+                message.Add(new Message() { Role = "system", Content = $"This emotions can resume my feelings: {string.Join(",", userEmotions)}" });
 
-
+            //Generate json with the total movies
+            message.Add(new Message() { Role = "user", Content = $"Generate a list of {totalMovies} movies that meet these criteria. The output format should be JSON with the following structure: {{ \"movies\": [\"Movie Name 1\", \"Movie Name 2\", ...] }}." }); 
+            
             return message;
         }
 

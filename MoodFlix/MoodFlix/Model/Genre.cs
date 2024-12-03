@@ -16,5 +16,10 @@ namespace MoodFlix.Model
         // This is a one-to-many relationship
         [JsonIgnore]
         public List<GenreMovie> GenreMovies { get; set; }
+
+        public override string? ToString()
+        {
+            return GenreName;
+        }
     }
 }

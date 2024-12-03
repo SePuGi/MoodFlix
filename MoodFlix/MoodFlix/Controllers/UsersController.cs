@@ -63,26 +63,26 @@ namespace MoodFlix.Controllers
             if (logged_id == -1 || logged_id != id) 
                 return Unauthorized();
             
-
             var user = await _context.User.FindAsync(id);
 
             if (user == null)
                 return NotFound();
             
-
             return user;
         }
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        [HttpPut]
+        public async Task<IActionResult> PutUser(User user)
         {
-            if (id != user.UserId)
-            {
-                return BadRequest();
-            }
+            int userId = 1;
+            //int userId = GetLoggedUserId();
 
+            if (userId != user.UserId)
+                return Unauthorized();
+
+            //update the user
             _context.Entry(user).State = EntityState.Modified;
 
             try
@@ -91,14 +91,10 @@ namespace MoodFlix.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
-                {
+                if (!UserExists(user.UserId))
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
 
             return NoContent();
@@ -115,7 +111,11 @@ namespace MoodFlix.Controllers
             
             //If the password is valid, encrypt it
             user.Password = Utils.EncryptPassword(user.Password);
-            
+
+            //if email is already in the database, return BadRequest
+            if (_context.User.Any(u => u.Email == user.Email))
+                return BadRequest();
+
             //Add the user to the database
             User userDb = new User(user.UserName, user.Email, user.Password, user.BirthDate, user.CountryId);
             _context.User.Add(userDb);
