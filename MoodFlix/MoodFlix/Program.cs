@@ -42,9 +42,9 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
-// Agregar autorizaci�n //Required for JWT
+// Add Authorization //Required for JWT
 builder.Services.AddAuthorization();
-// Agregar controladores //Required for JWT
+// Add controllers //Required for JWT
 builder.Services.AddControllers();
 
 //CORS policy: AllowAllOrigins
@@ -58,12 +58,12 @@ builder.Services.AddCors(options =>
     });
 });
 
-//Incluir el authentication en el swagger //ESTO ES PARA QUE EN EL SWAGGER SE PUEDA AUTENTICAR
+//add Authorization in the swagger 
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "ChillRangers API", Version = "v1" });
 
-    // Configurar el esquema de autenticación JWT en Swagger
+    // auth with JWT in swagger
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -103,6 +103,8 @@ app.UseCors("AllowAllOrigins");
 
 app.UseHttpsRedirection();
 
+// JWT Authentication //Required for JWT
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
