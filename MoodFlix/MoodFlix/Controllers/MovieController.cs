@@ -191,6 +191,11 @@ namespace MoodFlix.Controllers
             if (userNotPreferredGenres.Count != 0)
                 message.Add(new Message() { Role = "system", Content = $"I don't want movies with the genres: {string.Join(",", userNotPreferredGenres)}" });
            
+            var birthDate = _context.User.Where(u => u.UserId == userId).Select(u => u.BirthDate).FirstOrDefault();
+            var age = DateTime.Now.Year - birthDate.Year;
+
+            message.Add(new Message() { Role = "system", Content = $"I am {age} years old" });
+
             if (emotionId != null)
             {
                 //Get the emotions from the enum
@@ -297,51 +302,10 @@ namespace MoodFlix.Controllers
             //Get the first movie
             JObject movie = (JObject)moviesResponse[0];
 
-            MovieDataDTO movieData2 = movie.ToObject<MovieDataDTO>();
-            /*
-            //Get the movie info
-            int id = movie["id"]?.Value<int>() ?? 0;//Movie info!
-            string title = movie["title"]?.ToString();//Movie info!
-            string overview = movie["overview"]?.ToString();//Movie info!
+            //Deserialize part of the movie to a DTO
+            MovieDataDTO movieData = movie.ToObject<MovieDataDTO>();
 
-            //Get the genres
-            JToken genresJToken = movie["genres"];
-            List<string> genresList = new List<string>(); //Movie info!
-            foreach (var genreJToken in genresJToken)
-            {
-                genresList.Add(genreJToken["name"].ToString());
-            }
-
-            //Get the directors
-            JToken directorsJToken = movie["directors"];
-            List<string> directors = new List<string>();//Movie info!
-            foreach (var directorJToken in directorsJToken)
-            {
-                directors.Add(directorJToken.ToString());
-            }
-
-            //Get the runtime
-            int runtime = movie["runtime"]?.Value<int>() ?? 0;
-
-            //Get the image
-            var imageSet = movie["imageSet"];
-            var verticalPosterInfo = imageSet["verticalPoster"];
-            VerticalPoster verticalPoster = new VerticalPoster() //Movie info!
-            {
-                W240 = verticalPosterInfo["w240"].ToString(),
-                W360 = verticalPosterInfo["w360"].ToString(),
-                W480 = verticalPosterInfo["w480"].ToString(),
-            };
-
-            var horizontalPosterInfo = imageSet["horizontalPoster"];
-            HorizontalPoster horizontalPoster = new HorizontalPoster() //Movie info!
-            {
-                W360 = horizontalPosterInfo["w360"].ToString(),
-                W480 = horizontalPosterInfo["w480"].ToString(),
-                W720 = horizontalPosterInfo["w720"].ToString(),
-            };
-            */
-            //Get the streaming options
+            //Get the streaming options from the object (streamingOptions atributte name is the countryCode, can't do a dto with a dynamic name)
             var streamingOptions = movie["streamingOptions"];
             var countryStremingOptions = streamingOptions[userCountry];
             List<StreamingService> streamingServices = new List<StreamingService>();//Movie info!
@@ -361,36 +325,18 @@ namespace MoodFlix.Controllers
                     }
                 });
             }
-            /*
-            MovieDataDTO movieData = new MovieDataDTO()
-            {
-                Id = id,
-                Title = title,
-                Overview = overview,
-                Genres = genresList,
-                Directors = directors,
-                Runtime = runtime,
-                ImageSet = new ImageSet()
-                {
-                    VerticalPoster = verticalPoster,
-                    HorizontalPoster = horizontalPoster
-                },
-                StreamingOptions = new StreamingOptions()
-                {
-                    ServiceOptions = streamingServices
-                }
-            };
-            */
-            movieData2.StreamingOptions = new StreamingOptions()
+
+            movieData.StreamingOptions = new StreamingOptions()
             {
                 ServiceOptions = streamingServices
             };
-            return movieData2;
+            return movieData;
         }
 
         private int GetLoggedUserId()
         {
             int idUser = 0;
+
             try
             {
                 idUser = int.Parse(User.FindFirst("UserId").Value);

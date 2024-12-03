@@ -76,11 +76,14 @@ namespace MoodFlix.Controllers
         [HttpPut]
         public async Task<IActionResult> PutUser(User user)
         {
-            int userId = 1;
-            //int userId = GetLoggedUserId();
+            int userId = GetLoggedUserId();
 
             if (userId != user.UserId)
                 return Unauthorized();
+
+            //if email is already in the database, return BadRequest
+            if (_context.User.Any(u => u.Email == user.Email && u.UserId != user.UserId))
+                return BadRequest();
 
             //update the user
             _context.Entry(user).State = EntityState.Modified;
@@ -108,13 +111,13 @@ namespace MoodFlix.Controllers
             //check if the password is valid
             if (!Utils.CheckPassword(user.Password))
                 return BadRequest();
-            
-            //If the password is valid, encrypt it
-            user.Password = Utils.EncryptPassword(user.Password);
 
             //if email is already in the database, return BadRequest
             if (_context.User.Any(u => u.Email == user.Email))
                 return BadRequest();
+
+            //If the password is valid, encrypt it
+            user.Password = Utils.EncryptPassword(user.Password);            
 
             //Add the user to the database
             User userDb = new User(user.UserName, user.Email, user.Password, user.BirthDate, user.CountryId);
@@ -174,11 +177,13 @@ namespace MoodFlix.Controllers
             return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) }); //return the token
         }
 
-        // DELETE: api/Users/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        // DELETE: api/Users/
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteUser()
         {
-            var user = await _context.User.FindAsync(id);
+            int userId = GetLoggedUserId();
+
+            var user = await _context.User.FindAsync(userId);
             if (user == null)
             {
                 return NotFound();
@@ -398,7 +403,6 @@ namespace MoodFlix.Controllers
         #region Utils
 
         //GET: api/Countries
-        [AllowAnonymous]
         [HttpGet("Countries")]
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
@@ -406,7 +410,6 @@ namespace MoodFlix.Controllers
         }
 
         //GET: api/Genres
-        [AllowAnonymous]
         [HttpGet("Genres")]
         public async Task<ActionResult<IEnumerable<Genre>>> GetGenres()
         {
@@ -419,7 +422,6 @@ namespace MoodFlix.Controllers
         /// <param name="countryCode"></param>
         /// <returns></returns>
         //GET: api/Platforms/{countryCode}
-        [AllowAnonymous]
         [HttpGet("Platforms/{countryCode}")]
         public async Task<ActionResult<IEnumerable<PlatformDTO>>> GetPlatformsByCountry(string countryCode)
         {
