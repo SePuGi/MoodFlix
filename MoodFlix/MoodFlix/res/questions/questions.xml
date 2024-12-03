@@ -22,7 +22,7 @@
         <answers>
             <answer key="A" primary="19" secondary="8" tertiary="1">I ask questions and explore what happened in detail</answer>
             <answer key="B" primary="20" secondary="10" tertiary="24">I freeze and find it difficult to respond immediately</answer>
-            <answer key="C" primary="3" secondary="13" tertiary="17">I laugh or make a joke to lighten the situation</answer>
+            <answer key="C" primary="3" secondary="20" tertiary="10">I make a joke but feel uncertain about the situation</answer>
             <answer key="D" primary="6" secondary="21" tertiary="0">I step back, avoid involvement, and look for escape routes</answer>
         </answers>
     </question>
@@ -41,13 +41,13 @@
             <answer key="A" primary="3" secondary="13" tertiary="1">I laugh, share stories, and create memories with them</answer>
             <answer key="B" primary="23" secondary="4" tertiary="14">I listen and feel deeply connected to their experiences</answer>
             <answer key="C" primary="24" secondary="10" tertiary="26">I sit silently, feeling left out of the conversations</answer>
-            <answer key="D" primary="16" secondary="15" tertiary="12">I feel jealous of their successes or attention</answer>
+            <answer key="D" primary="15" secondary="24" tertiary="12">I feel frustrated about my role in the group</answer>
         </answers>
     </question>
     <question>
         <text>How do you approach learning something new?</text>
         <answers>
-            <answer key="A" primary="19" secondary="3" tertiary="25">I immerse myself in it with excitement and focus</answer>
+            <answer key="A" primary="20" secondary="19" tertiary="25">I feel determined but cautious about mastering it</answer>
             <answer key="B" primary="6" secondary="20" tertiary="10">I hesitate, doubting my ability to understand it</answer>
             <answer key="C" primary="0" secondary="24" tertiary="21">I start but quickly lose focus and get bored</answer>
             <answer key="D" primary="1" secondary="13" tertiary="22">I explore creatively and share my findings with others</answer>
@@ -58,7 +58,7 @@
         <answers>
             <answer key="A" primary="9" secondary="22" tertiary="23">I take deep breaths and try to stay calm and present</answer>
             <answer key="B" primary="6" secondary="20" tertiary="15">I get overwhelmed and look for a way to leave</answer>
-            <answer key="C" primary="3" secondary="1" tertiary="13">I talk to people and enjoy the energy of the crowd</answer>
+            <answer key="C" primary="20" secondary="3" tertiary="13">I enjoy the energy but stay alert for possible risks</answer>
             <answer key="D" primary="24" secondary="10" tertiary="0">I avoid engaging with anyone and stay on the sidelines</answer>
         </answers>
     </question>
@@ -84,7 +84,7 @@
         <text>How do you act when you feel someone has treated you unfairly?</text>
         <answers>
             <answer key="A" primary="9" secondary="22" tertiary="25">I confront them calmly and explain my perspective</answer>
-            <answer key="B" primary="15" secondary="12" tertiary="16">I get angry and express my frustration openly</answer>
+            <answer key="B" primary="15" secondary="20" tertiary="9">I feel a strong need to assert myself calmly</answer>
             <answer key="C" primary="24" secondary="20" tertiary="26">I keep my feelings to myself and withdraw</answer>
             <answer key="D" primary="6" secondary="10" tertiary="23">I overanalyze the situation, trying to figure out what went wrong</answer>
         </answers>
@@ -93,7 +93,7 @@
         <text>How do you react when you're in a beautiful natural setting?</text>
         <answers>
             <answer key="A" primary="9" secondary="7" tertiary="1">I take a moment to appreciate the beauty around me</answer>
-            <answer key="B" primary="8" secondary="3" tertiary="17">I feel a sense of wonder and excitement</answer>
+            <answer key="B" primary="8" secondary="20" tertiary="3">I feel amazed but also introspective about life's challenges</answer>
             <answer key="C" primary="21" secondary="23" tertiary="24">I feel nostalgic, remembering similar moments in the past</answer>
             <answer key="D" primary="6" secondary="0" tertiary="10">I feel uneasy and prefer to focus on something else</answer>
         </answers>
