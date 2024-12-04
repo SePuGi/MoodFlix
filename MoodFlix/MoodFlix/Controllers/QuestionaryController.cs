@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Win32;
 using MoodFlix.Model;
 using MoodFlix.Model.Dto;
+using MoodFlix.Model.Dto.MovieData;
+using MoodFlix.Model.OpenAi;
 using MoodFlix.Model.Questionary;
 using MoodFlix.Utilities;
 using MoodFlix.Wrapper;
@@ -15,7 +17,7 @@ using System.Text;
 
 namespace MoodFlix.Controllers
 {
-    //[Authorize]//This will make the controller only accessible to authenticated users (JWT)
+    [Authorize]//This will make the controller only accessible to authenticated users (JWT)
     [Route("api/[controller]")]
     [ApiController]
     public class QuestionaryController : ControllerBase
@@ -40,6 +42,11 @@ namespace MoodFlix.Controllers
         [HttpGet]
         public IActionResult GetQuestionary()
         {
+            int userId = /*GetLoggedUserId();*/ 1;
+
+            //if (userId == -1)
+            //    return Unauthorized("User not found");
+
             var response = _questionary.Questions.Select(q => new
             {
                 question = q.Text,
@@ -64,12 +71,18 @@ namespace MoodFlix.Controllers
         /// <param name="responses">A list of user responses to the questionary.</param>
         /// <param name="registerId">An optional register ID for storing the history.</param>
         /// <returns>The top three emotions based on the user's responses.</returns>
+        [AllowAnonymous]
         [HttpPost]
-        public IActionResult SubmitQuestionary([FromBody] List<QuestionaryResponseDTO> responses, [FromQuery] int registerId)
+        public async Task<IActionResult> SubmitQuestionary([FromBody] List<QuestionaryResponseDTO> responses, [FromQuery] int registerId)
         {
+            int userId = /*GetLoggedUserId();*/ 1;
+
+            //if (userId == -1)
+            //    return Unauthorized("User not found");
+
             if (responses == null || responses.Count == 0)
             {
-                return BadRequest("The questionnaire responses are invalid or empty.");
+                return BadRequest("The questionary responses are invalid or empty.");
             }
 
             // Dictionary to accumulate emotion scores
@@ -99,23 +112,15 @@ namespace MoodFlix.Controllers
 
             List<EmotionDTO> sortedEmotions = CalculateEmotions(emotionScores);
 
-            // Save emotion scores to the database (optional, commented out)
-            /*
-            foreach (var emotion in sortedEmotions)
-            {
-                var historyEmotion = new HistoryEmotion
-                {
-                    RegisterId = registerId,
-                    EmotionId = emotion.Id,
-                    Score = emotion.Score
-                };
-                _context.HistoryEmotion.Add(historyEmotion);
-            }
-            _context.SaveChanges();
-            */
+            var description = await GetEmotionDescriptionOpenAI(userId, sortedEmotions);
 
+            var emotionDescription = new EmotionDescriptionDTO
+            {
+                Emotions = sortedEmotions,
+                Description = description
+            };
             // Return the calculated emotions
-            return Ok(sortedEmotions);
+            return Ok(emotionDescription);
         }
 
         #endregion
@@ -140,6 +145,11 @@ namespace MoodFlix.Controllers
             }
         }
 
+        /// <summary>
+        /// Calculates the top three emotions based on the given emotion scores.
+        /// </summary>
+        /// <param name="emotionScores">A dictionary containing emotion IDs as keys and their corresponding scores as values.</param>
+        /// <returns>A list of EmotionDTO objects representing the top emotions, including one truncal emotion and two secondary emotions.</returns>
         private static List<EmotionDTO> CalculateEmotions(Dictionary<int, int> emotionScores)
         {
             // Get the 4 truncal emotions
@@ -189,6 +199,116 @@ namespace MoodFlix.Controllers
             //    })
             //    .ToList();
             return sortedEmotions;
+        }
+
+        /// <summary>
+        /// Sends a request to the OpenAI API to get a description of emotions based on the user's emotional state.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user requesting the emotion description.</param>
+        /// <param name="emotions">A list of EmotionDTO objects representing the top emotions of the user.</param>
+        /// <returns>A task that represents the asynchronous operation, with a string result containing the description of the emotions provided by OpenAI.</returns>
+        private async Task<string> GetEmotionDescriptionOpenAI(int userId, List<EmotionDTO> emotions)
+        {
+            string openAIKey = Utils.GetApiKey("OpenAI");
+            string apiEndpoint = "https://api.openai.com/v1/chat/completions";
+
+            List<Message> prompt = new List<Message>();
+            prompt = await CreatePrompt(userId, emotions);
+
+            //Prompt
+            RequestOpenAi request = new RequestOpenAi()
+            {
+                Model = "gpt-3.5-turbo", //gpt-4o-mini        gpt-3.5-turbo
+                Messages = prompt,
+                MaxTokens = 100,
+                Temperature = 0.6f
+            };
+
+            //Create the request
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {openAIKey}");
+
+            var json = System.Text.Json.JsonSerializer.Serialize(request);
+            var body = new StringContent(json, Encoding.UTF8, "application/json");
+
+            //Send the request
+            var response = await client.PostAsync(apiEndpoint, body);
+
+            string emotionsDescriptionResponse = "";
+
+            if (response.IsSuccessStatusCode)
+            {
+                //Get the response
+                var responseString = await response.Content.ReadAsStringAsync();
+
+                //Get the content from the response using RequestOpenAi class
+                var responseObj = JsonConvert.DeserializeObject<ResponseOpenAi>(responseString);
+
+                //Get the description from the response (responseObj.Choices[0].Message.Content) <- this is a string with the description of the emotion
+                var description = responseObj.Choices[0].Message.Content;
+
+                emotionsDescriptionResponse = description;
+            }
+
+            //response
+            return emotionsDescriptionResponse;
+        }
+
+        /// <summary>
+        /// Creates a prompt for the OpenAI API based on the user's emotional state, including their age and emotion scores.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user for fetching their birth date and calculating their age.</param>
+        /// <param name="emotions">A list of EmotionDTO objects representing the user's top emotions, including a primary basic emotion and two secondary emotions with their respective scores.</param>
+        /// <returns>A task that represents the asynchronous operation, with a list of Message objects to be used as input for the OpenAI API request.</returns>
+        private async Task<List<Message>> CreatePrompt(int userId, List<EmotionDTO> emotions)
+        {
+            List<Message> message = new List<Message>();
+
+            //Add conversation context (you are a psychology expert...)
+            new Message() { Role = "system", Content = "You are analyzing emotions derived from a questionnaire. Each emotion has a score indicating its intensity. The input consists of a primary basic emotion (Joy, Sadness, Fear, or Anger) and two secondary emotions, along with their respective scores."};
+
+            //Add the age of the user
+            var birthDate = _context.User.Where(u => u.UserId == userId).Select(u => u.BirthDate).FirstOrDefault();
+            var age = DateTime.Now.Year - birthDate.Year;
+
+            message.Add(new Message() { Role = "system", Content = $"I am {age} years old" });
+
+            //Add emotions to the prompt with its scores
+            var basicEmotion = emotions[0];
+            var secondaryEmotions = emotions.Skip(1); // Skipping the first item (basic emotion)
+
+            string secondaryEmotionsText = string.Join(", ", secondaryEmotions.Select(e => $"{e.Name} (Score: {e.Score})"));
+
+            message.Add(new Message()
+            {
+                Role = "system",
+                Content = $"Basic Emotion: {basicEmotion.Name} (Score: {basicEmotion.Score})\r\nSecondary Emotions: {secondaryEmotionsText}\r\n\""
+            });
+
+            //Generate string with the description
+            message.Add(new Message() { Role = "user", Content = @"Based on the input:
+- Provide a brief and empathetic explanation of the emotional state.
+- Describe the significance of the primary emotion and how the secondary emotions, influenced by their scores, relate to the primary emotion.
+- Maximum of 40 words
+" });
+
+            return message;
+        }
+        
+        private int GetLoggedUserId()
+        {
+            int idUser = 0;
+
+            try
+            {
+                idUser = int.Parse(User.FindFirst("UserId").Value);
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+
+            return idUser;
         }
 
         #endregion
