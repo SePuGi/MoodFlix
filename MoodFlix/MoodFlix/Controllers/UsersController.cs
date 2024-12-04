@@ -220,9 +220,22 @@ namespace MoodFlix.Controllers
                 {
                     RegisterId = r.RegisterId,
                     UserId = r.UserId,
-                    MovieId = r.MovieId,
                     RegisterDate = r.Date,
-                    EmotionName = r.HistoryEmotions.Select(he => he.Emotion.EmotionName).FirstOrDefault()
+                    EmotionName = r.HistoryEmotions.Where(h => h.RegisterId == r.RegisterId).Select(he => he.Emotion.EmotionName).ToList(),
+                    Movie = new MovieHistoryDTO() 
+                    {
+                        MovieId = r.MovieId,
+                        Title = r.Movie.Title,
+                        Overview = r.Movie.Overview,
+                        Genres = _context.GenreMovie.Where(gm => gm.MovieId == r.MovieId).Select(gm => gm.Genre.GenreName).ToList(),
+                        Directors = _context.DirectorMovie.Where(dm => dm.MovieId == r.MovieId).Select(dm => dm.Director.DirectorName).ToList(),
+                        HorizontalPoster = new HorizontalPoster() 
+                        {
+                            W720 = r.Movie.HorizontalPosterw720,
+                            W480 = r.Movie.HorizontalPosterw480,
+                            W360 = r.Movie.HorizontalPosterw360
+                        }
+                    }                    
                 })
                 .ToList());
 
@@ -252,7 +265,7 @@ namespace MoodFlix.Controllers
                         HorizontalPosterw480 = movieData.ImageSet.HorizontalPoster.W480,
                         HorizontalPosterw720 = movieData.ImageSet.HorizontalPoster.W720
                     },
-                    Genres = movieData.Genres.Select(g => new Genre { GenreName = g }).ToList(),
+                    Genres = _context.Genre.Where(g => movieData.Genres.Contains(g.GenreName)).ToList(),
                     Directors = movieData.Directors.Select(d => new Director { DirectorName = d }).ToList()
                 };
 
@@ -518,9 +531,18 @@ namespace MoodFlix.Controllers
 
         private async Task AddMovie(Model.Dto.MovieInfoDTO movieInfo)
         {
-            _context.Movie.Add(movieInfo.Movie);
-            _context.SaveChanges();
-            _context.GenreMovie.AddRange(movieInfo.Genres.Select(g => new GenreMovie { GenreId = g.GenreId, MovieId = movieInfo.Movie.MovieId }));
+            //if the movie is not in the database, add it
+            if (!_context.Movie.Any(m => m.Title == movieInfo.Movie.Title))
+            {
+                _context.Movie.Add(movieInfo.Movie);
+                await _context.SaveChangesAsync();
+
+                foreach (var genre in movieInfo.Genres)
+                {
+                    _context.GenreMovie.Add(new GenreMovie { GenreId = genre.GenreId, MovieId = movieInfo.Movie.MovieId });
+                }
+                await _context.SaveChangesAsync();
+            }
         }
 
         private async Task AddDirector(List<Director> directors, int movieId)
@@ -533,7 +555,10 @@ namespace MoodFlix.Controllers
             await _context.SaveChangesAsync();
 
             //Add the directors of the movie to the database (add the relationship)
-            _context.DirectorMovie.AddRange(directors.Select(d => new DirectorMovie { DirectorId = d.DirectorId, MovieId = movieId }));
+            //Get a list of the directors from the database, to get de Id
+            List<Director> directorDb = _context.Director.Where(d => directors.Select(d => d.DirectorName).Contains(d.DirectorName)).ToList();
+            _context.DirectorMovie.AddRange(directorDb.Select(d => new DirectorMovie { DirectorId = d.DirectorId, MovieId = movieId }));
+
             await _context.SaveChangesAsync();
         }
 
