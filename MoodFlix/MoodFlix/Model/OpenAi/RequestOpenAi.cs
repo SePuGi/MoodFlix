@@ -12,5 +12,7 @@ namespace MoodFlix.Model.OpenAi
         public int MaxTokens { get; set; }
         [JsonPropertyName("temperature")]
         public float Temperature { get; set; }
+        [JsonPropertyName("top_p")]
+        public float TopP { get; set; }
     }
 }

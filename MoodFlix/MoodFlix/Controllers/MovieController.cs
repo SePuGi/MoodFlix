@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MoodFlix.Model;
+using MoodFlix.Model.Dto;
 using MoodFlix.Model.Dto.MovieData;
 using MoodFlix.Model.OpenAi;
 using MoodFlix.Utilities;
@@ -43,16 +45,17 @@ namespace MoodFlix.Controllers
         /// <param name="emotionsId"></param>
         /// <returns></returns>
         //POST: /api/movies/{total_movies}
-        [HttpGet("GetMoviesWithPreferences/{total_movies}")]
-        public async Task<IActionResult> GetMoviesWithPreferences(int total_movies)
+        [HttpPost("GetMoviesWithPreferences/{total_movies}")]
+        public async Task<IActionResult> GetMoviesWithPreferences(int total_movies, [FromBody]List<string> moviesSuggested)
         {
+            //int userId = 1;
             int userId = GetLoggedUserId();
 
             if (userId == -1)
                 return Unauthorized("User not found");
 
             // "movies" have a list of the movie titles
-            var movies = await GetMoviesOpenAI(userId, total_movies);
+            var movies = await GetMoviesOpenAI(userId, total_movies, moviesSuggested);
 
             if(movies.Count == 0)
                 return NotFound("No movies found");
@@ -75,7 +78,7 @@ namespace MoodFlix.Controllers
         /// <returns></returns>
         //POST: /api/movies/{total_movies}
         [HttpPatch("GetMoviesWithEmotions/{total_movies}")]
-        public async Task<IActionResult> GetMoviesWithEmotions(int total_movies, List<int> emotionsId)
+        public async Task<IActionResult> GetMoviesWithEmotions(int total_movies, EmotionMovieSuggestedDTO emotion_movie)
         {
             int userId = GetLoggedUserId();
 
@@ -83,7 +86,7 @@ namespace MoodFlix.Controllers
                 return Unauthorized("User not found");
 
             // "movies" have a list of the movie titles
-            var movies = await GetMoviesOpenAI(userId,total_movies, emotionsId);
+            var movies = await GetMoviesOpenAI(userId,total_movies, emotion_movie.MovieSuggested, emotion_movie.EmotionId);
 
             if (movies.Count == 0)
                 return NotFound("No movies found");
@@ -109,13 +112,13 @@ namespace MoodFlix.Controllers
         /// <param name="total_movies"></param>
         /// <param name="emotionId"></param>
         /// <returns></returns>
-        private async Task<List<string>> GetMoviesOpenAI(int userId, int total_movies, List<int> emotionId = null)
+        private async Task<List<string>> GetMoviesOpenAI(int userId, int total_movies, List<string> moviesSuggested , List<int> emotionId = null)
         {
             string openAIKey = Utils.GetApiKey("OpenAI");
             string apiEndpoint = "https://api.openai.com/v1/chat/completions";
             
             List<Message> prompt= new List<Message>();
-            prompt = await CreatePrompt(userId, total_movies, emotionId);
+            prompt = await CreatePrompt(userId, total_movies, moviesSuggested, emotionId);
 
             //Prompt
             RequestOpenAi request = new RequestOpenAi() 
@@ -123,9 +126,15 @@ namespace MoodFlix.Controllers
                 Model = "gpt-3.5-turbo", //gpt-4o-mini        gpt-3.5-turbo
                 Messages = prompt,
                 MaxTokens = 100,
-                Temperature = 0.6f
+                Temperature = 2f,
+                TopP = 0.9f
             };
-           
+
+            foreach (var message in prompt)
+            {
+               Console.WriteLine(message.Content); ;
+            }
+
             //Create the request
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {openAIKey}");
@@ -142,7 +151,7 @@ namespace MoodFlix.Controllers
             {
                 //Get the response
                 var responseString = await response.Content.ReadAsStringAsync();
-                
+
                 //Get the content from the response using RequestOpenAi class
                 var responseObj = JsonConvert.DeserializeObject<ResponseOpenAi>(responseString);
 
@@ -156,7 +165,7 @@ namespace MoodFlix.Controllers
             return moviesResponse;
         }
 
-        private async Task<List<Message>> CreatePrompt(int userId, int totalMovies, List<int> emotionId)
+        private async Task<List<Message>> CreatePrompt(int userId, int totalMovies, List<string> moviesSuggested, List<int> emotionId)
         {
             List<Message> message = new List<Message>();
 
@@ -164,7 +173,7 @@ namespace MoodFlix.Controllers
             if(emotionId != null)
                 message.Add(new Message() { Role = "system", Content = "You are an expert movie recommender. Your job is to suggest movies based on the streaming platforms the user has, the user's genre preferences, avoiding the genres they don't want, and considering their current emotions to improve their mood. You must also take into account the movies they have already watched to avoid recommending them again. The recommendations should be useful and in JSON format." });
             else
-                message.Add(new Message() { Role = "system", Content = "You are an expert movie recommender. Your job is to suggest movies based on the streaming platforms the user has, the user's genre preferences and avoiding the genres they don't want. You must also take into account the movies they have already watched to avoid recommending them again. The recommendations should be useful and in JSON format." });
+                message.Add(new Message() { Role = "system", Content = "You are an expert movie recommender. Your job is to suggest random movies based on the streaming platforms the user has, avoiding the genres they don't want. You must also take into account the movies they have already watched to avoid recommending them again. The recommendations should be in JSON format." });
 
             //Get the movies watched by the user
             var moviesWatched = _context.History.Where(h => h.UserId == userId).Select(h => h.Movie.Title).ToList();
@@ -176,16 +185,19 @@ namespace MoodFlix.Controllers
             var platforms = _context.UserPlatform.Where(up => up.UserId == userId).Select(up => up.Platform.PlatformName).ToList();
 
             //Get the user genre preferences
-            List<Genre> userPreferredGenres = _context.UserGenre.Where(ug => ug.UserId == userId && ug.IsPreferred == true).Select(ug => ug.Genre).ToList();
             List<Genre> userNotPreferredGenres = _context.UserGenre.Where(ug => ug.UserId == userId && ug.IsPreferred == false).Select(ug => ug.Genre).ToList();
+
+            //Add the platforms if there are any, if not, do no add this message
+            if (platforms.Count != 0)
+                message.Add(new Message() { Role = "system", Content = $"I have access to these platforms: {string.Join(",", platforms)}" });
 
             //Add the movies watched if there are any, if not, do no add this message
             if (mw.Count != 0)
-                message.Add(new Message() { Role = "system", Content = $"I have seen this movies: {string.Join(",", moviesWatched)}" });
+                message.Add(new Message() { Role = "system", Content = $"I have seen this movies (don't use it as a reference for the suggest): {string.Join(",", moviesWatched)}" });
 
-            //Add the user genre preferences if there are any, if not, do no add this message
-            if (userPreferredGenres.Count != 0)
-                message.Add(new Message() { Role = "system", Content = $"My favorite movie genre are: {string.Join(",", userPreferredGenres)}" });
+            //Add the movies suggested if there are any, if not, do no add this message
+            if (moviesSuggested.Count != 0)
+                message.Add(new Message() { Role = "system", Content = $"Don't recommend any of this: {string.Join(",", moviesSuggested)}" });
 
             //Add the user not preferred genres if there are any, if not, do no add this message
             if (userNotPreferredGenres.Count != 0)
@@ -209,8 +221,8 @@ namespace MoodFlix.Controllers
             //Only get the movies with moviesWatched, genre and platform preferences
 
             //Generate json with the total movies
-            message.Add(new Message() { Role = "user", Content = $"Generate a list of {totalMovies} movies that meet these criteria. The output format should be JSON with the following structure: {{ \"movies\": [\"Movie Name 1\", \"Movie Name 2\", ...] }}." }); 
-            
+            message.Add(new Message() { Role = "user", Content = $"Generate a list of {totalMovies} movies that meet these criteria. The output format should be JSON with the following structure: {{ \"movies\": [\"Movie Name 1\", \"Movie Name 2\", ...] }}." });
+
             return message;
         }
 
@@ -225,7 +237,7 @@ namespace MoodFlix.Controllers
             //https://streaming-availability.p.rapidapi.com/shows/search/title?country=es&title=inception&series_granularity=show&show_type=movie&output_language=en"
             
             //Get the user country code
-            string userCountry = _context.User.Where(u => u.UserId == userId).Select(u => u.Country.CountryCode).FirstOrDefault();
+            string userCountry = await _context.User.Where(u => u.UserId == userId).Select(u => u.Country.CountryCode).FirstOrDefaultAsync();
 
             //Create the request
             var apiKey = Utils.GetApiKey("StreamingAvailability");
@@ -261,7 +273,7 @@ namespace MoodFlix.Controllers
                     MovieDataDTO movieData = GetMovieInfoFromJArray(moviesResponse, userCountry);
 
                     //Check if the movie is in the platform
-                    movieFound = CheckMoviesPlatform(userId, movieData);
+                    movieFound = await CheckMoviesPlatform(userId, movieData);
 
                     if (movieFound)
                     {
@@ -283,11 +295,11 @@ namespace MoodFlix.Controllers
         /// </summary>
         /// <param name="movies"></param>
         /// <returns></returns>
-        private bool CheckMoviesPlatform(int userId, MovieDataDTO movie)
+        private async Task<bool> CheckMoviesPlatform(int userId, MovieDataDTO movie)
         {
             //Get the user platforms
-            var userPlatformsId = _context.UserPlatform.Where(up => up.UserId == userId).Select(up => up.PlatformId).ToList();
-            var userPlatforms = _context.Platform.Where(p => userPlatformsId.Contains(p.PlatformId)).ToList();
+            var userPlatformsId = await _context.UserPlatform.Where(up => up.UserId == userId).Select(up => up.PlatformId).ToListAsync();
+            var userPlatforms = await _context.Platform.Where(p => userPlatformsId.Contains(p.PlatformId)).ToListAsync();
 
             var moviePlatforms = movie.StreamingOptions.ServiceOptions.Select(s => s.ServiceName).ToList();
 
