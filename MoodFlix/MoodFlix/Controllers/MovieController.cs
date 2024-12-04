@@ -37,13 +37,13 @@ namespace MoodFlix.Controllers
         #region GetMovies
 
         /// <summary>
-        /// Get 1 or 5 movies based on user preferences
+        /// Get X movies based on user preferences
         /// </summary>
         /// <param name="total_movies"></param>
         /// <param name="emotionsId"></param>
         /// <returns></returns>
         //POST: /api/movies/{total_movies}
-        [HttpPatch("GetMoviesWithPreferences/{total_movies}")]
+        [HttpGet("GetMoviesWithPreferences/{total_movies}")]
         public async Task<IActionResult> GetMoviesWithPreferences(int total_movies)
         {
             int userId = GetLoggedUserId();
@@ -68,7 +68,7 @@ namespace MoodFlix.Controllers
         }
 
         /// <summary>
-        /// Get 1 or 5 movies based on user preferences and emotions
+        /// Get X movies based on user preferences and emotions
         /// </summary>
         /// <param name="total_movies"></param>
         /// <param name="emotionsId"></param>

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections;
 using System.Text.Json.Serialization;
 
 namespace MoodFlix.Model.Dto.MovieData
