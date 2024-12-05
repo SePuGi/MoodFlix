@@ -278,7 +278,6 @@ namespace MoodFlix.Controllers
 
                     if (movieFound)     //Add the movie info to the list
                         moviesData.Add(movieData);
-                    
                     else                //Movie not found
                         return new List<MovieDataDTO>();
                     
@@ -298,10 +297,10 @@ namespace MoodFlix.Controllers
             //Get the user platforms
             var userPlatformsId = await _context.UserPlatform.Where(up => up.UserId == userId).Select(up => up.PlatformId).ToListAsync();
             var userPlatforms = await _context.Platform.Where(p => userPlatformsId.Contains(p.PlatformId)).ToListAsync();
-
-            if(userPlatforms.Count == 0)// if the user has no platforms, return all the movies
-                return true;
-
+            
+            if(userPlatforms.Count == 0)// if the user has no platforms, return false
+                return false;
+            
             var moviePlatforms = movie.StreamingOptions.ServiceOptions.Select(s => s.ServiceName).ToList();
 
             if (userPlatforms.Any(p => moviePlatforms.Contains(p.PlatformName)))
