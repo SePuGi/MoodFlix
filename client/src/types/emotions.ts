@@ -1,4 +1,7 @@
-export type EmotionsResponse = Emotion[];
+export type EmotionsResponse = {
+  emotions: Emotion[];
+  description: string;
+};
 
 export type Emotion = {
   id: number;

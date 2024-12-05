@@ -5,12 +5,12 @@ import {Typography, Box, Button, Card, CardContent, Grid} from '@mui/material';
 import {setEmotions} from "../features/emotions/emotionsSlice.ts";
 
 function Results() {
-  const emotions = useSelector((state: RootState) => state.emotions.emotions);
+  const emotions = useSelector((state: RootState) => state.emotions);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleRestart = () => {
-    dispatch(setEmotions([]));
+    dispatch(setEmotions({emotions: [], description: ''}));
     navigate('/questionnaire');
   };
 
@@ -37,7 +37,7 @@ function Results() {
       </Typography>
 
       <Grid container spacing={2} justifyContent="center" sx={{maxWidth: 600, marginBottom: 4}}>
-        {emotions.map((emotion, index) => (
+        {emotions.emotions.map((emotion, index) => (
           <Grid item xs={12} sm={6} key={emotion.name}>
             <Card
               sx={{
@@ -72,6 +72,15 @@ function Results() {
             </Card>
           </Grid>
         ))}
+        <Typography
+          variant="body1"
+          sx={{
+            color: 'text.secondary',
+            marginTop: 2,
+          }}
+        >
+          {emotions.description}
+        </Typography>
       </Grid>
 
       <Box sx={{display: 'flex', gap: 2}}>

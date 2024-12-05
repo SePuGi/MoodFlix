@@ -1,18 +1,17 @@
 // src/features/emotions/emotionsSlice.ts
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {Emotion, EmotionsState} from "../../types/emotions.ts";
+import {EmotionsResponse} from "../../types/emotions.ts";
 
-const initialState: EmotionsState = {
+const initialState: EmotionsResponse = {
   emotions: [],
-};
+  description: '',
+}
 
 const emotionsSlice = createSlice({
   name: 'emotions',
   initialState,
   reducers: {
-    setEmotions: (state, action: PayloadAction<Emotion[]>) => {
-      state.emotions = action.payload;
-    },
+    setEmotions: (_, action: PayloadAction<EmotionsResponse>) => action.payload
   },
 });
 
