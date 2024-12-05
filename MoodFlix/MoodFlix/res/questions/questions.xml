@@ -1,32 +1,5 @@
 <questions>
     <question>
-        <text>What do you think about the tasks you have to complete today?</text>
-        <answers>
-            <answer key="A" primary="3" secondary="1" tertiary="19">I am excited to move forward with my projects</answer>
-            <answer key="B" primary="20" secondary="6" tertiary="10">I am worried about not having enough time</answer>
-            <answer key="C" primary="24" secondary="0" tertiary="26">I feel overwhelmed and unwilling to start</answer>
-            <answer key="D" primary="15" secondary="12" tertiary="12">I feel annoyed about having so many responsibilities</answer>
-        </answers>
-    </question>
-    <question>
-        <text>How do you feel right now about your personal relationships?</text>
-        <answers>
-            <answer key="A" primary="3" secondary="4" tertiary="1">I feel grateful for the important people in my life</answer>
-            <answer key="B" primary="20" secondary="10" tertiary="23">I feel anxious about whether they truly understand me</answer>
-            <answer key="C" primary="24" secondary="0" tertiary="14">I feel distant and disconnected from others</answer>
-            <answer key="D" primary="15" secondary="12" tertiary="12">I feel frustrated with some recent interactions</answer>
-        </answers>
-    </question>
-    <question>
-        <text>What would you like to reflect on at the end of this day?</text>
-        <answers>
-            <answer key="A" primary="3" secondary="22" tertiary="1">I want to feel satisfied with what I accomplished</answer>
-            <answer key="B" primary="20" secondary="6" tertiary="10">I want to think about how to better manage my worries</answer>
-            <answer key="C" primary="24" secondary="21" tertiary="14">I want to understand why I feel sad or melancholic</answer>
-            <answer key="D" primary="15" secondary="12" tertiary="12">I want to analyze what upset me and how to fix it</answer>
-        </answers>
-    </question>
-    <question>
         <text>What do you think about your friends right now?</text>
         <answers>
             <answer key="A" primary="3" secondary="4" tertiary="1">I feel grateful for their companionship</answer>
@@ -69,6 +42,51 @@
             <answer key="B" primary="20" secondary="6" tertiary="26">I am worried about not having achieved more</answer>
             <answer key="C" primary="24" secondary="21" tertiary="14">I feel sad because I think I could have done better</answer>
             <answer key="D" primary="15" secondary="12" tertiary="12">I feel angry because my efforts are not being recognized</answer>
+        </answers>
+    </question>
+    <question>
+        <text>How would you describe your mood when you woke up this morning?</text>
+        <answers>
+            <answer key="A" primary="3" secondary="1" tertiary="22">I felt energized and enthusiastic</answer>
+            <answer key="B" primary="20" secondary="6" tertiary="10">I felt worried about the pending tasks</answer>
+            <answer key="C" primary="24" secondary="0" tertiary="26">I felt demotivated and unmotivated</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="12">I felt irritated about facing the day</answer>
+        </answers>
+    </question>
+    <question>
+        <text>What do you think about the tasks you have to complete today?</text>
+        <answers>
+            <answer key="A" primary="3" secondary="1" tertiary="19">I am excited to move forward with my projects</answer>
+            <answer key="B" primary="20" secondary="6" tertiary="10">I am worried about not having enough time</answer>
+            <answer key="C" primary="24" secondary="0" tertiary="26">I feel overwhelmed and unwilling to start</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="12">I feel annoyed about having so many responsibilities</answer>
+        </answers>
+    </question>
+    <question>
+        <text>How do you feel right now about your personal relationships?</text>
+        <answers>
+            <answer key="A" primary="3" secondary="4" tertiary="1">I feel grateful for the important people in my life</answer>
+            <answer key="B" primary="20" secondary="10" tertiary="23">I feel anxious about whether they truly understand me</answer>
+            <answer key="C" primary="24" secondary="0" tertiary="14">I feel distant and disconnected from others</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="12">I feel frustrated with some recent interactions</answer>
+        </answers>
+    </question>
+    <question>
+        <text>What would you like to reflect on at the end of this day?</text>
+        <answers>
+            <answer key="A" primary="3" secondary="22" tertiary="1">I want to feel satisfied with what I accomplished</answer>
+            <answer key="B" primary="20" secondary="6" tertiary="10">I want to think about how to better manage my worries</answer>
+            <answer key="C" primary="24" secondary="21" tertiary="14">I want to understand why I feel sad or melancholic</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="12">I want to analyze what upset me and how to fix it</answer>
+        </answers>
+    </question>
+    <question>
+        <text>What type of thought dominates your mind right now?</text>
+        <answers>
+            <answer key="A" primary="3" secondary="1" tertiary="22">I feel grateful for the positive things I have</answer>
+            <answer key="B" primary="20" secondary="6" tertiary="10">I am worried about how to face the challenges ahead</answer>
+            <answer key="C" primary="24" secondary="21" tertiary="14">I feel nostalgic thinking about past times</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="12">I am annoyed thinking about the problems I haven't solved yet</answer>
         </answers>
     </question>
 </questions>
