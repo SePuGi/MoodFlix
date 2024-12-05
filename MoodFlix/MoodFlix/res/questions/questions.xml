@@ -1,137 +1,92 @@
 <questions>
     <question>
-        <text>How would you describe your emotional connection with your immediate environment?</text>
+        <text>What do you think about your friends right now?</text>
         <answers>
-            <answer key="A" primary="9" secondary="22" tertiary="23">I sit quietly, breathe deeply, and let myself relax</answer>
-            <answer key="B" primary="6" secondary="20" tertiary="15">I pace around and think about all the things I need to handle</answer>
-            <answer key="C" primary="19" secondary="3" tertiary="1">I look around, take notes, and try to discover something new</answer>
-            <answer key="D" primary="24" secondary="0" tertiary="10">I avoid looking around and stay in my own thoughts</answer>
+            <answer key="A" primary="3" secondary="4" tertiary="1">I feel grateful for their companionship</answer>
+            <answer key="B" primary="20" secondary="10" tertiary="23">I am concerned if they truly understand me</answer>
+            <answer key="C" primary="24" secondary="0" tertiary="26">I feel distant and disconnected from them</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="12">I am bothered by recent conflicts</answer>
         </answers>
     </question>
     <question>
-        <text>How do you usually respond when faced with a stressful situation?</text>
+        <text>How do you feel now when thinking about something positive?</text>
         <answers>
-            <answer key="A" primary="9" secondary="22" tertiary="25">I create a plan and break down the problem into steps</answer>
-            <answer key="B" primary="6" secondary="20" tertiary="24">I focus on everything that could go wrong and worry constantly</answer>
-            <answer key="C" primary="3" secondary="1" tertiary="5">I stay optimistic and imagine the positive outcomes</answer>
-            <answer key="D" primary="15" secondary="12" tertiary="26">I lose my temper and lash out verbally or physically</answer>
+            <answer key="A" primary="3" secondary="13" tertiary="21">I smile as I recall something good</answer>
+            <answer key="B" primary="20" secondary="6" tertiary="10">I feel uneasy thinking it might not last</answer>
+            <answer key="C" primary="24" secondary="14" tertiary="26">I feel sad thinking about what I no longer have</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="12">I feel irritated for not having made the most of that moment</answer>
         </answers>
     </question>
     <question>
-        <text>How do you react when something unexpected happens?</text>
+        <text>How would you describe your social interactions right now?</text>
         <answers>
-            <answer key="A" primary="19" secondary="8" tertiary="1">I ask questions and explore what happened in detail</answer>
-            <answer key="B" primary="20" secondary="10" tertiary="24">I freeze and find it difficult to respond immediately</answer>
-            <answer key="C" primary="3" secondary="20" tertiary="10">I make a joke but feel uncertain about the situation</answer>
-            <answer key="D" primary="6" secondary="21" tertiary="0">I step back, avoid involvement, and look for escape routes</answer>
+            <answer key="A" primary="3" secondary="1" tertiary="13">I enjoy being around people and living the moment</answer>
+            <answer key="B" primary="20" secondary="6" tertiary="10">I feel anxious and try to avoid conversations</answer>
+            <answer key="C" primary="24" secondary="0" tertiary="14">I feel distant and prefer to be alone</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="12">I feel irritated by others' behavior</answer>
         </answers>
     </question>
     <question>
-        <text>How do you feel after achieving something meaningful?</text>
+        <text>What would you do if someone asked for your help right now?</text>
         <answers>
-            <answer key="A" primary="3" secondary="25" tertiary="22">I celebrate with others and share my happiness</answer>
-            <answer key="B" primary="22" secondary="9" tertiary="1">I reflect quietly and think about how much effort I put in</answer>
-            <answer key="C" primary="5" secondary="19" tertiary="25">I immediately plan the next big thing to accomplish</answer>
-            <answer key="D" primary="24" secondary="26" tertiary="20">I downplay my achievement and feel it wasn’t enough</answer>
+            <answer key="A" primary="3" secondary="1" tertiary="22">I would help enthusiastically and willingly</answer>
+            <answer key="B" primary="20" secondary="23" tertiary="10">I would feel insecure but try to do it</answer>
+            <answer key="C" primary="24" secondary="14" tertiary="0">I would feel overwhelmed and try to avoid getting involved</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="12">I would feel annoyed and help reluctantly</answer>
         </answers>
     </question>
     <question>
-        <text>How do you usually feel when spending time with close friends?</text>
+        <text>How do you feel when thinking about your recent achievements?</text>
         <answers>
-            <answer key="A" primary="3" secondary="13" tertiary="1">I laugh, share stories, and create memories with them</answer>
-            <answer key="B" primary="23" secondary="4" tertiary="14">I listen and feel deeply connected to their experiences</answer>
-            <answer key="C" primary="24" secondary="10" tertiary="26">I sit silently, feeling left out of the conversations</answer>
-            <answer key="D" primary="15" secondary="24" tertiary="12">I feel frustrated about my role in the group</answer>
+            <answer key="A" primary="3" secondary="25" tertiary="22">I feel proud and happy with what I have achieved</answer>
+            <answer key="B" primary="20" secondary="6" tertiary="26">I am worried about not having achieved more</answer>
+            <answer key="C" primary="24" secondary="21" tertiary="14">I feel sad because I think I could have done better</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="12">I feel angry because my efforts are not being recognized</answer>
         </answers>
     </question>
     <question>
-        <text>How do you approach learning something new?</text>
+        <text>How would you describe your mood when you woke up this morning?</text>
         <answers>
-            <answer key="A" primary="20" secondary="19" tertiary="25">I feel determined but cautious about mastering it</answer>
-            <answer key="B" primary="6" secondary="20" tertiary="10">I hesitate, doubting my ability to understand it</answer>
-            <answer key="C" primary="0" secondary="24" tertiary="21">I start but quickly lose focus and get bored</answer>
-            <answer key="D" primary="1" secondary="13" tertiary="22">I explore creatively and share my findings with others</answer>
+            <answer key="A" primary="3" secondary="1" tertiary="22">I felt energized and enthusiastic</answer>
+            <answer key="B" primary="20" secondary="6" tertiary="10">I felt worried about the pending tasks</answer>
+            <answer key="C" primary="24" secondary="0" tertiary="26">I felt demotivated and unmotivated</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="12">I felt irritated about facing the day</answer>
         </answers>
     </question>
     <question>
-        <text>How do you usually feel when you are in a large crowd?</text>
+        <text>What do you think about the tasks you have to complete today?</text>
         <answers>
-            <answer key="A" primary="9" secondary="22" tertiary="23">I take deep breaths and try to stay calm and present</answer>
-            <answer key="B" primary="6" secondary="20" tertiary="15">I get overwhelmed and look for a way to leave</answer>
-            <answer key="C" primary="20" secondary="3" tertiary="13">I enjoy the energy but stay alert for possible risks</answer>
-            <answer key="D" primary="24" secondary="10" tertiary="0">I avoid engaging with anyone and stay on the sidelines</answer>
+            <answer key="A" primary="3" secondary="1" tertiary="19">I am excited to move forward with my projects</answer>
+            <answer key="B" primary="20" secondary="6" tertiary="10">I am worried about not having enough time</answer>
+            <answer key="C" primary="24" secondary="0" tertiary="26">I feel overwhelmed and unwilling to start</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="12">I feel annoyed about having so many responsibilities</answer>
         </answers>
     </question>
     <question>
-        <text>How do you respond when you face an intense challenge at work or school?</text>
+        <text>How do you feel right now about your personal relationships?</text>
         <answers>
-            <answer key="A" primary="9" secondary="25" tertiary="22">I stay calm, organize my tasks, and tackle them one by one</answer>
-            <answer key="B" primary="20" secondary="6" tertiary="24">I feel paralyzed, imagining the worst possible outcomes</answer>
-            <answer key="C" primary="23" secondary="1" tertiary="4">I seek help and advice, feeling supported by others</answer>
-            <answer key="D" primary="15" secondary="12" tertiary="26">I get frustrated and criticize myself or others</answer>
+            <answer key="A" primary="3" secondary="4" tertiary="1">I feel grateful for the important people in my life</answer>
+            <answer key="B" primary="20" secondary="10" tertiary="23">I feel anxious about whether they truly understand me</answer>
+            <answer key="C" primary="24" secondary="0" tertiary="14">I feel distant and disconnected from others</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="12">I feel frustrated with some recent interactions</answer>
         </answers>
     </question>
     <question>
-        <text>How do you feel when you watch an inspiring movie or read a powerful story?</text>
+        <text>What would you like to reflect on at the end of this day?</text>
         <answers>
-            <answer key="A" primary="1" secondary="7" tertiary="8">I feel deeply moved and admire the creativity behind it</answer>
-            <answer key="B" primary="21" secondary="14" tertiary="24">I get emotional, thinking about similar experiences in my life</answer>
-            <answer key="C" primary="3" secondary="25" tertiary="5">I feel inspired to take action and try something new</answer>
-            <answer key="D" primary="0" secondary="10" tertiary="6">I feel detached and uninterested in the story</answer>
+            <answer key="A" primary="3" secondary="22" tertiary="1">I want to feel satisfied with what I accomplished</answer>
+            <answer key="B" primary="20" secondary="6" tertiary="10">I want to think about how to better manage my worries</answer>
+            <answer key="C" primary="24" secondary="21" tertiary="14">I want to understand why I feel sad or melancholic</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="12">I want to analyze what upset me and how to fix it</answer>
         </answers>
     </question>
     <question>
-        <text>How do you act when you feel someone has treated you unfairly?</text>
+        <text>What type of thought dominates your mind right now?</text>
         <answers>
-            <answer key="A" primary="9" secondary="22" tertiary="25">I confront them calmly and explain my perspective</answer>
-            <answer key="B" primary="15" secondary="20" tertiary="9">I feel a strong need to assert myself calmly</answer>
-            <answer key="C" primary="24" secondary="20" tertiary="26">I keep my feelings to myself and withdraw</answer>
-            <answer key="D" primary="6" secondary="10" tertiary="23">I overanalyze the situation, trying to figure out what went wrong</answer>
-        </answers>
-    </question>
-    <question>
-        <text>How do you react when you're in a beautiful natural setting?</text>
-        <answers>
-            <answer key="A" primary="9" secondary="7" tertiary="1">I take a moment to appreciate the beauty around me</answer>
-            <answer key="B" primary="8" secondary="20" tertiary="3">I feel amazed but also introspective about life's challenges</answer>
-            <answer key="C" primary="21" secondary="23" tertiary="24">I feel nostalgic, remembering similar moments in the past</answer>
-            <answer key="D" primary="6" secondary="0" tertiary="10">I feel uneasy and prefer to focus on something else</answer>
-        </answers>
-    </question>
-    <question>
-        <text>How do you feel after making a mistake in front of others?</text>
-        <answers>
-            <answer key="A" primary="3" secondary="13" tertiary="25">I laugh it off and move on quickly</answer>
-            <answer key="B" primary="6" secondary="20" tertiary="26">I overthink it and worry about what others think of me</answer>
-            <answer key="C" primary="23" secondary="1" tertiary="22">I apologize and try to make amends</answer>
-            <answer key="D" primary="24" secondary="10" tertiary="14">I avoid others and dwell on my failure</answer>
-        </answers>
-    </question>
-    <question>
-        <text>How do you act when you're enjoying a great meal with others?</text>
-        <answers>
-            <answer key="A" primary="22" secondary="3" tertiary="1">I savor the flavors and share my thoughts about the food</answer>
-            <answer key="B" primary="23" secondary="4" tertiary="9">I feel grateful and connect with the people around me</answer>
-            <answer key="C" primary="16" secondary="6" tertiary="12">I feel envious of others’ choices and wish I’d picked differently</answer>
-            <answer key="D" primary="0" secondary="10" tertiary="24">I focus only on eating and avoid conversations</answer>
-        </answers>
-    </question>
-    <question>
-        <text>How do you behave when someone asks for your help?</text>
-        <answers>
-            <answer key="A" primary="23" secondary="22" tertiary="25">I listen carefully and offer practical advice or support</answer>
-            <answer key="B" primary="6" secondary="20" tertiary="10">I feel burdened and reluctant to get involved</answer>
-            <answer key="C" primary="4" secondary="1" tertiary="3">I enjoy helping and go the extra mile to assist them</answer>
-            <answer key="D" primary="15" secondary="26" tertiary="12">I agree to help but feel frustrated or resentful about it later</answer>
-        </answers>
-    </question>
-    <question>
-        <text>How do you feel when you remember a meaningful past event?</text>
-        <answers>
-            <answer key="A" primary="21" secondary="22" tertiary="3">I smile and feel warmth, appreciating the memory</answer>
-            <answer key="B" primary="24" secondary="14" tertiary="23">I feel bittersweet, missing the people or moments from that time</answer>
-            <answer key="C" primary="25" secondary="19" tertiary="1">I feel inspired to create new, similar experiences</answer>
-            <answer key="D" primary="26" secondary="6" tertiary="20">I feel regretful and focus on what I could have done differently</answer>
+            <answer key="A" primary="3" secondary="1" tertiary="22">I feel grateful for the positive things I have</answer>
+            <answer key="B" primary="20" secondary="6" tertiary="10">I am worried about how to face the challenges ahead</answer>
+            <answer key="C" primary="24" secondary="21" tertiary="14">I feel nostalgic thinking about past times</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="12">I am annoyed thinking about the problems I haven't solved yet</answer>
         </answers>
     </question>
 </questions>

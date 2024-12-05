@@ -11,62 +11,6 @@ Content-Type: application/json
   {
     "question": "How would you describe your emotional connection with your immediate environment?",
     "answer": "A"
-  },
-  {
-    "question": "How do you usually respond when faced with a stressful situation?",
-    "answer": "D"
-  },
-  {
-    "question": "How do you react when something unexpected happens?",
-    "answer": "B"
-  },
-  {
-    "question": "How do you feel after achieving something meaningful?",
-    "answer": "C"
-  },
-  {
-    "question": "How do you usually feel when spending time with close friends?",
-    "answer": "A"
-  },
-  {
-    "question": "How do you approach learning something new?",
-    "answer": "B"
-  },
-  {
-    "question": "How do you usually feel when you are in a large crowd?",
-    "answer": "D"
-  },
-  {
-    "question": "How do you respond when you face an intense challenge at work or school?",
-    "answer": "B"
-  },
-  {
-    "question": "How do you feel when you watch an inspiring movie or read a powerful story?",
-    "answer": "D"
-  },
-  {
-    "question": "How do you act when you feel someone has treated you unfairly?",
-    "answer": "C"
-  },
-  {
-    "question": "How do you react when you're in a beautiful natural setting?",
-    "answer": "A"
-  },
-  {
-    "question": "How do you feel after making a mistake in front of others?",
-    "answer": "C"
-  },
-  {
-    "question": "How do you act when you're enjoying a great meal with others?",
-    "answer": "A"
-  },
-  {
-    "question": "How do you behave when someone asks for your help?",
-    "answer": "D"
-  },
-  {
-    "question": "How do you feel when you remember a meaningful past event?",
-    "answer": "D"
   }
 ]
 
