@@ -125,7 +125,7 @@ namespace MoodFlix.Controllers
             { 
                 Model = "gpt-3.5-turbo", //gpt-4o-mini        gpt-3.5-turbo
                 Messages = prompt,
-                MaxTokens = 100,
+                MaxTokens = 200,
                 Temperature = 2f,
                 TopP = 0.9f
             };
@@ -273,17 +273,15 @@ namespace MoodFlix.Controllers
                     MovieDataDTO movieData = GetMovieInfoFromJArray(moviesResponse, userCountry);
 
                     //Check if the movie is in the platform
-                    movieFound = await CheckMoviesPlatform(userId, movieData);
+                    if(movieData.StreamingOptions.ServiceOptions.Count != 0)
+                        movieFound = await CheckMoviesPlatform(userId, movieData);
 
-                    if (movieFound)
-                    {
-                        //Add the movie info to the list
+                    if (movieFound)     //Add the movie info to the list
                         moviesData.Add(movieData);
-                    }
-                    else
-                    {
-                        //Movie not found, add a null object to the list
-                    }
+                    
+                    else                //Movie not found
+                        return new List<MovieDataDTO>();
+                    
                 }                
             }
 
@@ -300,6 +298,9 @@ namespace MoodFlix.Controllers
             //Get the user platforms
             var userPlatformsId = await _context.UserPlatform.Where(up => up.UserId == userId).Select(up => up.PlatformId).ToListAsync();
             var userPlatforms = await _context.Platform.Where(p => userPlatformsId.Contains(p.PlatformId)).ToListAsync();
+
+            if(userPlatforms.Count == 0)// if the user has no platforms, return all the movies
+                return true;
 
             var moviePlatforms = movie.StreamingOptions.ServiceOptions.Select(s => s.ServiceName).ToList();
 
@@ -319,6 +320,11 @@ namespace MoodFlix.Controllers
 
             //Get the streaming options from the object (streamingOptions atributte name is the countryCode, can't do a dto with a dynamic name)
             var streamingOptions = movie["streamingOptions"];
+
+            //Check if the movie has streaming options
+            if (streamingOptions == null)
+                return movieData;
+
             var countryStremingOptions = streamingOptions[userCountry.ToLower()];
             List<StreamingService> streamingServices = new List<StreamingService>();//Movie info!
             foreach (var streamingService in countryStremingOptions)
