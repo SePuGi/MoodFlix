@@ -73,7 +73,7 @@ namespace MoodFlix.Controllers
         /// <returns>The top three emotions based on the user's responses.</returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> SubmitQuestionary([FromBody] List<QuestionaryResponseDTO> responses, [FromQuery] int registerId)
+        public async Task<IActionResult> SubmitQuestionary([FromBody] List<QuestionaryResponseDTO> responses)
         {
             int userId = /*GetLoggedUserId();*/ 1;
 
