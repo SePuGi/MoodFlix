@@ -1,4 +1,3 @@
-// src/components/BottomNavBar.tsx
 import React, {useState} from 'react';
 import {BottomNavigation, BottomNavigationAction, Paper} from '@mui/material';
 import {FaHome, FaUser, FaRegUser, FaFilm, FaHistory} from 'react-icons/fa';
@@ -11,11 +10,11 @@ function BottomNavBar({isLoggedIn}: { isLoggedIn: boolean }) {
 
   const handleNavigation = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
-    if (newValue === 0) navigate("/");
-    if (newValue === 1) navigate("/login");
+    if (newValue === 0) navigate("/login");
+    if (newValue === 1) navigate("/");
     if (newValue === 2) navigate("/");
+    if (newValue === 3) navigate("/profile");
   }
-
   return (
     <Paper
       sx={{position: 'fixed', bottom: 0, left: 0, right: 0, height: MOBILEBAR_HEIGHT,}}
@@ -27,11 +26,6 @@ function BottomNavBar({isLoggedIn}: { isLoggedIn: boolean }) {
         onChange={handleNavigation}
 
       >
-        {/* Home */}
-        <BottomNavigationAction
-          label="Home"
-          icon={<FaHome/>}
-        />
 
         {/* Login/Profile */}
         <BottomNavigationAction
@@ -50,6 +44,13 @@ function BottomNavBar({isLoggedIn}: { isLoggedIn: boolean }) {
           label="History"
           icon={<FaHistory/>}
         />
+
+        {/* Profile */}
+        <BottomNavigationAction
+          label="Profile"
+          icon={<FaUser/>}
+        />
+
       </BottomNavigation>
     </Paper>
   );

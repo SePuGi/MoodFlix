@@ -1,78 +1,49 @@
-// src/pages/Register.tsx
 import React, {useState} from 'react';
 import {
-  Box,
-  Button,
   CircularProgress,
   Container,
-  MenuItem,
-  TextField,
-  Typography,
-  Alert,
 } from '@mui/material';
-import {MOBILEBAR_HEIGHT} from "../constants/constants.ts";
+import RegisterForm from "../components/Register/RegisterForm.tsx";
+import {useFetchCountriesQuery} from "../features/api/preferencesApi.ts";
+import {validateForm} from "../utils/validateForm.ts";
+import {UserRegisterForm} from "../types/formdata.ts";
+import {useRegisterUserMutation} from "../features/api/authApi.ts";
+import {useNavigate} from "react-router-dom";
 
-
-// A list of country codes
-const countries = [
-  {code: 'US', name: 'United States'},
-  {code: 'CA', name: 'Canada'},
-  {code: 'GB', name: 'United Kingdom'},
-  {code: 'AU', name: 'Australia'},
-  {code: 'IN', name: 'India'},
-  // Add more countries as needed
-];
-
-  /**************
-  * TODO
-  ** - implement the Register
-  ** - segregate different compoonents(form)
-  ** - create hook for the validate function
-  * */
 function Register() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<UserRegisterForm>({
     userName: '',
     email: '',
     password: '',
     birthDate: '',
-    countryCode: '',
+    countryId: '',
   });
-
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [loading, setLoading] = useState(false);
+  const [registerUser, {isLoading: loadingFormSubmit}] = useRegisterUserMutation();
+  const {data: countriesData, isLoading: loadingCountries} = useFetchCountriesQuery();
+  const navigate = useNavigate();
 
-  const validateForm = () => {
-    const newErrors: { [key: string]: string } = {};
-    if (!formData.userName) newErrors.userName = 'User name is required.';
-    if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email address.';
-    if (!formData.password || !/^(?=.*\d).{8,}$/.test(formData.password)) {
-      newErrors.password = 'Password must be at least 8 characters long and include numbers.';
-    }
-    if (!formData.birthDate) newErrors.birthDate = 'Birth date is required.';
-    if (!formData.countryCode) newErrors.countryCode = 'Please select a country.';
-    return newErrors;
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {name, value} = e.target;
     setFormData({...formData, [name]: value});
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const validationErrors = validateForm();
+    const validationErrors = validateForm(formData);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
     setErrors({});
-    setLoading(true);
 
-    // Simulating server request
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await registerUser(formData).unwrap();
       alert('Registration successful!');
-    }, 2000);
+      navigate('/login');
+    } catch (error) {
+      console.error('Error submitting responses:', error);
+    }
   };
 
   return (
@@ -83,102 +54,15 @@ function Register() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: `calc(100vh - ${MOBILEBAR_HEIGHT}px)`,
+        minHeight: '100vh',
       }}
     >
-      <Typography variant="h1" sx={{fontSize: '1.5rem', marginBottom: 3}}>
-        Register
-      </Typography>
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{
-          width: '100%',
-          backgroundColor: 'background.paper',
-          padding: 3,
-          borderRadius: 2,
-          boxShadow: 3,
-        }}
-      >
-        {Object.keys(errors).length > 0 && (
-          <Alert severity="error" sx={{marginBottom: 2}}>
-            Please correct the errors below.
-          </Alert>
-        )}
-
-        <TextField
-          label="User Name"
-          name="userName"
-          fullWidth
-          margin="normal"
-          value={formData.userName}
-          onChange={handleChange}
-          error={!!errors.userName}
-          helperText={errors.userName}
-        />
-        <TextField
-          label="Email"
-          name="email"
-          type="email"
-          fullWidth
-          margin="normal"
-          value={formData.email}
-          onChange={handleChange}
-          error={!!errors.email}
-          helperText={errors.email}
-        />
-        <TextField
-          label="Password"
-          name="password"
-          type="password"
-          fullWidth
-          margin="normal"
-          value={formData.password}
-          onChange={handleChange}
-          error={!!errors.password}
-          helperText={errors.password}
-        />
-        <TextField
-          label="Birth Date"
-          name="birthDate"
-          type="date"
-          fullWidth
-          margin="normal"
-          InputLabelProps={{shrink: true}}
-          value={formData.birthDate}
-          onChange={handleChange}
-          error={!!errors.birthDate}
-          helperText={errors.birthDate}
-
-        />
-        <TextField
-          select
-          label="Country"
-          name="countryCode"
-          fullWidth
-          margin="normal"
-          value={formData.countryCode}
-          onChange={handleChange}
-          error={!!errors.countryCode}
-          helperText={errors.countryCode}
-        >
-          {countries.map((country) => (
-            <MenuItem key={country.code} value={country.code}>
-              {country.name}
-            </MenuItem>
-          ))}
-        </TextField>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="secondary" // changed from primary to secondary
-          disabled={loading}
-          sx={{marginTop: 2}}
-        >
-          {loading ? <CircularProgress size={24} sx={{color: 'white'}}/> : 'Register'}
-        </Button>
-      </Box>
+      {loadingCountries ?
+        <CircularProgress size={24} sx={{color: 'white'}}/>
+        :
+        <RegisterForm formData={formData} handleChange={handleChange} countries={countriesData} errors={errors}
+                      handleSubmit={handleSubmit} loading={loadingFormSubmit}/>
+      }
     </Container>
   );
 }

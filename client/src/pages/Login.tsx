@@ -1,4 +1,3 @@
-// src/pages/Login.tsx
 import React, {useState} from 'react';
 import {
   Box,
@@ -13,28 +12,38 @@ import {
 import {LuClapperboard} from 'react-icons/lu'
 import {MOBILEBAR_HEIGHT} from "../constants/constants.ts";
 import {useNavigate} from "react-router-dom";
+import {useLoginUserMutation} from "../features/api/authApi.ts";
+import {setToken} from "../features/auth/authSlice.ts";
+import {useDispatch} from "react-redux";
 
 // TODO LOGIN LOGICA
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
+  const [loginUser, {isLoading}] = useLoginUserMutation();
+  const dispatch = useDispatch();
 
-  const handleSubmit = (event: React.FormEvent) => {
+
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(null);
-    setLoading(true);
 
-    // Mock server request
-    setTimeout(() => {
-      setLoading(false);
-      if (email !== 'test@example.com' || password !== 'password') {
-        setError('Invalid credentials. Please try again.');
-      }
-    }, 2000);
+    if (!email || !password) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    try {
+      const {token} = await loginUser({email, password}).unwrap();
+      dispatch(setToken(token));
+    } catch (error) {
+      console.error('Error submitting responses:', error);
+    } finally {
+      navigate('/');
+    }
   };
 
   return (
@@ -104,10 +113,10 @@ function Login() {
           fullWidth
           variant="contained"
           color="primary"
-          disabled={loading}
+          disabled={isLoading}
           sx={{marginTop: 2}}
         >
-          {loading ? <CircularProgress size={24} sx={{color: 'white'}}/> : 'Login'}
+          {isLoading ? <CircularProgress size={24} sx={{color: 'white'}}/> : 'Login'}
         </Button>
       </Box>
 
@@ -121,7 +130,9 @@ function Login() {
       >
         <Typography variant="body2" color="text.secondary">
           Not registered yet?{' '}
-          <Link underline="hover" onClick={() => navigate("/register")}>
+          <Link underline="hover"
+                sx={{cursor: 'pointer'}}
+                onClick={() => navigate("/register")}>
             Register
           </Link>
         </Typography>

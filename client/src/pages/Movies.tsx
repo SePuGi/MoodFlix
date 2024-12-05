@@ -1,19 +1,29 @@
 import {Container, Typography} from '@mui/material';
 import OptionCard from '../components/OptionCard';
 import {FaRandom, FaFilm, FaSmile} from 'react-icons/fa';
+import {useNavigate} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {RootState} from "../app/store.ts";
 
 function Movies() {
+  const navigate = useNavigate();
+  const emotions = useSelector((state: RootState) => state.emotions.emotions);
+
   const handleRandomMovie = () => {
-    alert('Surprise! A random movie will be selected for you.');
+    navigate('/movies/movieSelected');
   };
 
   const handleFiveRandomMovies = () => {
     alert('Here are 5 random movies to choose from!');
   };
 
-  const handleEmotionalMood = () => {
-    alert('Let’s discover movies based on your mood.');
-  };
+  const handleMoodMovies = () => {
+    if (emotions.length === 0) {
+      navigate('/questionnaire');
+    } else {
+      navigate('/results');
+    }
+  }
 
   return (
     <Container
@@ -26,7 +36,7 @@ function Movies() {
     >
       <Typography
         variant="h1"
-        sx={{fontSize: '1.5rem', fontWeight: 600, margin: '2rem 0'}}
+        sx={{fontWeight: 600, margin: '2rem 0'}}
       >
         Explore Your Movie Options
       </Typography>
@@ -51,7 +61,7 @@ function Movies() {
         title="Discover Movies Based on Your Feelings!"
         description="Take a fun quiz to match your mood with the perfect movie."
         buttonText="Find Movies by Mood"
-        onClick={handleEmotionalMood}
+        onClick={handleMoodMovies}
         icon={<FaSmile size={32} color="#3F51B5"/>}
       />
     </Container>
