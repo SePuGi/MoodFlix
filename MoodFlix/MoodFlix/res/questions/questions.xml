@@ -5,7 +5,7 @@
             <answer key="A" primary="3" secondary="4" tertiary="1">I feel grateful for their companionship</answer>
             <answer key="B" primary="20" secondary="10" tertiary="23">I am concerned if they truly understand me</answer>
             <answer key="C" primary="24" secondary="0" tertiary="26">I feel distant and disconnected from them</answer>
-            <answer key="D" primary="15" secondary="12" tertiary="12">I am bothered by recent conflicts</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="0">I am bothered by recent conflicts</answer>
         </answers>
     </question>
     <question>
@@ -14,7 +14,7 @@
             <answer key="A" primary="3" secondary="13" tertiary="21">I smile as I recall something good</answer>
             <answer key="B" primary="20" secondary="6" tertiary="10">I feel uneasy thinking it might not last</answer>
             <answer key="C" primary="24" secondary="14" tertiary="26">I feel sad thinking about what I no longer have</answer>
-            <answer key="D" primary="15" secondary="12" tertiary="12">I feel irritated for not having made the most of that moment</answer>
+            <answer key="D" primary="15" secondary="16" tertiary="18">I feel irritated for not having made the most of that moment</answer>
         </answers>
     </question>
     <question>
@@ -23,7 +23,7 @@
             <answer key="A" primary="3" secondary="1" tertiary="13">I enjoy being around people and living the moment</answer>
             <answer key="B" primary="20" secondary="6" tertiary="10">I feel anxious and try to avoid conversations</answer>
             <answer key="C" primary="24" secondary="0" tertiary="14">I feel distant and prefer to be alone</answer>
-            <answer key="D" primary="15" secondary="12" tertiary="12">I feel irritated by others' behavior</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="16">I feel irritated by others' behavior</answer>
         </answers>
     </question>
     <question>
@@ -32,7 +32,7 @@
             <answer key="A" primary="3" secondary="1" tertiary="22">I would help enthusiastically and willingly</answer>
             <answer key="B" primary="20" secondary="23" tertiary="10">I would feel insecure but try to do it</answer>
             <answer key="C" primary="24" secondary="14" tertiary="0">I would feel overwhelmed and try to avoid getting involved</answer>
-            <answer key="D" primary="15" secondary="12" tertiary="12">I would feel annoyed and help reluctantly</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="18">I would feel annoyed and help reluctantly</answer>
         </answers>
     </question>
     <question>
@@ -41,7 +41,7 @@
             <answer key="A" primary="3" secondary="25" tertiary="22">I feel proud and happy with what I have achieved</answer>
             <answer key="B" primary="20" secondary="6" tertiary="26">I am worried about not having achieved more</answer>
             <answer key="C" primary="24" secondary="21" tertiary="14">I feel sad because I think I could have done better</answer>
-            <answer key="D" primary="15" secondary="12" tertiary="12">I feel angry because my efforts are not being recognized</answer>
+            <answer key="D" primary="15" secondary="16" tertiary="12">I feel angry because my efforts are not being recognized</answer>
         </answers>
     </question>
     <question>
@@ -50,7 +50,7 @@
             <answer key="A" primary="3" secondary="1" tertiary="22">I felt energized and enthusiastic</answer>
             <answer key="B" primary="20" secondary="6" tertiary="10">I felt worried about the pending tasks</answer>
             <answer key="C" primary="24" secondary="0" tertiary="26">I felt demotivated and unmotivated</answer>
-            <answer key="D" primary="15" secondary="12" tertiary="12">I felt irritated about facing the day</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="21">I felt irritated about facing the day</answer>
         </answers>
     </question>
     <question>
@@ -59,7 +59,7 @@
             <answer key="A" primary="3" secondary="1" tertiary="19">I am excited to move forward with my projects</answer>
             <answer key="B" primary="20" secondary="6" tertiary="10">I am worried about not having enough time</answer>
             <answer key="C" primary="24" secondary="0" tertiary="26">I feel overwhelmed and unwilling to start</answer>
-            <answer key="D" primary="15" secondary="12" tertiary="12">I feel annoyed about having so many responsibilities</answer>
+            <answer key="D" primary="15" secondary="18" tertiary="12">I feel annoyed about having so many responsibilities</answer>
         </answers>
     </question>
     <question>
@@ -68,7 +68,7 @@
             <answer key="A" primary="3" secondary="4" tertiary="1">I feel grateful for the important people in my life</answer>
             <answer key="B" primary="20" secondary="10" tertiary="23">I feel anxious about whether they truly understand me</answer>
             <answer key="C" primary="24" secondary="0" tertiary="14">I feel distant and disconnected from others</answer>
-            <answer key="D" primary="15" secondary="12" tertiary="12">I feel frustrated with some recent interactions</answer>
+            <answer key="D" primary="15" secondary="12" tertiary="26">I feel frustrated with some recent interactions</answer>
         </answers>
     </question>
     <question>
@@ -77,7 +77,7 @@
             <answer key="A" primary="3" secondary="22" tertiary="1">I want to feel satisfied with what I accomplished</answer>
             <answer key="B" primary="20" secondary="6" tertiary="10">I want to think about how to better manage my worries</answer>
             <answer key="C" primary="24" secondary="21" tertiary="14">I want to understand why I feel sad or melancholic</answer>
-            <answer key="D" primary="15" secondary="12" tertiary="12">I want to analyze what upset me and how to fix it</answer>
+            <answer key="D" primary="15" secondary="19" tertiary="9">I want to analyze what upset me and how to fix it</answer>
         </answers>
     </question>
     <question>
@@ -86,7 +86,7 @@
             <answer key="A" primary="3" secondary="1" tertiary="22">I feel grateful for the positive things I have</answer>
             <answer key="B" primary="20" secondary="6" tertiary="10">I am worried about how to face the challenges ahead</answer>
             <answer key="C" primary="24" secondary="21" tertiary="14">I feel nostalgic thinking about past times</answer>
-            <answer key="D" primary="15" secondary="12" tertiary="12">I am annoyed thinking about the problems I haven't solved yet</answer>
+            <answer key="D" primary="15" secondary="0" tertiary="12">I am annoyed thinking about the problems I haven't solved yet</answer>
         </answers>
     </question>
 </questions>
