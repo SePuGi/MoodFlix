@@ -9,8 +9,44 @@ POST http://localhost:5091/api/questionary
 Content-Type: application/json
 [
   {
-    "question": "How would you describe your emotional connection with your immediate environment?",
+    "question": "What do you think about your friends right now?",
     "answer": "A"
+  },
+  {
+    "question": "How do you feel now when thinking about something positive?",
+    "answer": "A"
+  },
+  {
+    "question": "How would you describe your social interactions right now?",
+    "answer": "A"
+  },
+  {
+    "question": "What would you do if someone asked for your help right now?",
+    "answer": "A"
+  },
+  {
+    "question": "How do you feel when thinking about your recent achievements?",
+    "answer": "A"
+  },
+  {
+    "question": "How would you describe your mood when you woke up this morning?",
+    "answer": "D"
+  },
+  {
+    "question": "What do you think about the tasks you have to complete today?",
+    "answer": "D"
+  },
+  {
+    "question": "How do you feel right now about your personal relationships?",
+    "answer": "D"
+  },
+  {
+    "question": "What would you like to reflect on at the end of this day?",
+    "answer": "D"
+  },
+  {
+    "question": "What type of thought dominates your mind right now?",
+    "answer": "D"
   }
 ]
 

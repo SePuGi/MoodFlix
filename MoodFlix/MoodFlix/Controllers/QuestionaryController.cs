@@ -110,7 +110,7 @@ namespace MoodFlix.Controllers
                 AddEmotionScore(emotionScores, (int)selectedOption.TertiaryEmotion, 1); // Tertiary: 1 point
             }
 
-            List<EmotionDTO> sortedEmotions = CalculateEmotions(emotionScores);
+            List<EmotionDTO> sortedEmotions = CalculateEmotions(emotionScores, responses);
 
             var description = await GetEmotionDescriptionOpenAI(userId, sortedEmotions);
 
@@ -150,16 +150,71 @@ namespace MoodFlix.Controllers
         /// </summary>
         /// <param name="emotionScores">A dictionary containing emotion IDs as keys and their corresponding scores as values.</param>
         /// <returns>A list of EmotionDTO objects representing the top emotions, including one truncal emotion and two secondary emotions.</returns>
-        private static List<EmotionDTO> CalculateEmotions(Dictionary<int, int> emotionScores)
+        private List<EmotionDTO> CalculateEmotions(Dictionary<int, int> emotionScores, List<QuestionaryResponseDTO> responses)
         {
             // Get the 4 truncal emotions
             List<int> truncalEmotions = new List<int> { (int)EnumEmotion.Joy, (int)EnumEmotion.Sadness, (int)EnumEmotion.Fear, (int)EnumEmotion.Anger };
 
-            // Get the first truncal emotion from responses
-            var firstEmotion = emotionScores
+            // Calculate the score of each truncal emotion
+            var truncalScores = emotionScores
                 .Where(e => truncalEmotions.Contains(e.Key))
                 .OrderByDescending(e => e.Value)
-                .FirstOrDefault();
+                .ToList();
+
+            // Handle tie in truncal emotions
+            var maxScore = truncalScores.First().Value;
+            var topTruncals = truncalScores.Where(e => e.Value == maxScore).ToList();
+
+            int selectedTruncalId;
+            if (topTruncals.Count > 1)
+            {
+                // Count secondary emotions frequencies for each truncal
+                var secondaryFrequencyMap = new Dictionary<int, Dictionary<int, int>>();
+
+                foreach (var truncal in topTruncals)
+                {
+                    secondaryFrequencyMap[truncal.Key] = new Dictionary<int, int>();
+
+                    foreach (var response in responses)
+                    {
+                        var question = _questionary.Questions.FirstOrDefault(q => q.Text == response.Question);
+                        var selectedOption = question?.Options.FirstOrDefault(o => o.Key == response.Answer);
+
+                        if (selectedOption != null && (int)selectedOption.PrimaryEmotion == truncal.Key)
+                        {
+                            int secondary = (int)selectedOption.SecondaryEmotion;
+                            int tertiary = (int)selectedOption.TertiaryEmotion;
+
+                            // Increment frequency counts
+                            if (!secondaryFrequencyMap[truncal.Key].ContainsKey(secondary))
+                                secondaryFrequencyMap[truncal.Key][secondary] = 0;
+
+                            if (!secondaryFrequencyMap[truncal.Key].ContainsKey(tertiary))
+                                secondaryFrequencyMap[truncal.Key][tertiary] = 0;
+
+                            secondaryFrequencyMap[truncal.Key][secondary]++;
+                            secondaryFrequencyMap[truncal.Key][tertiary]++;
+                        }
+                    }
+                }
+
+                // Determine the truncal emotion with the most frequent associated emotion
+                selectedTruncalId = topTruncals
+                    .Select(truncal => new
+                    {
+                        TruncalId = truncal.Key,
+                        MaxFrequency = secondaryFrequencyMap[truncal.Key].MaxBy(e => e.Value).Value
+                    })
+                    .OrderByDescending(e => e.MaxFrequency)
+                    .ThenBy(e => truncalEmotions.IndexOf(e.TruncalId)) // Fallback to predefined order
+                    .First()
+                    .TruncalId;
+            }
+            else
+            {
+                selectedTruncalId = topTruncals.First().Key;
+            }
+
 
             // Sort emotions which are not truncal emotions (2 secondary emotions)
             var otherEmotions = emotionScores
@@ -168,17 +223,15 @@ namespace MoodFlix.Controllers
                 .Take(2);
 
             // Combine truncal emotion with the rest
-            List<EmotionDTO> sortedEmotions = new List<EmotionDTO>();
-
-            if (firstEmotion.Key != 0)
+            List<EmotionDTO> sortedEmotions = new List<EmotionDTO>
             {
-                sortedEmotions.Add(new EmotionDTO
+                new EmotionDTO
                 {
-                    Id = firstEmotion.Key,
-                    Name = ((EnumEmotion)firstEmotion.Key).ToString(),
-                    Score = firstEmotion.Value
-                });
-            }
+                    Id = selectedTruncalId,
+                    Name = ((EnumEmotion)selectedTruncalId).ToString(),
+                    Score = emotionScores[selectedTruncalId]
+                }
+            };
 
             sortedEmotions.AddRange(otherEmotions.Select(e => new EmotionDTO
             {
@@ -187,17 +240,6 @@ namespace MoodFlix.Controllers
                 Score = e.Value
             }));
 
-            // Sort emotions by score and select the top three
-            //var sortedEmotions = emotionScores
-            //    .OrderByDescending(e => e.Value)
-            //    .Take(3)
-            //    .Select(e => new EmotionDTO
-            //    {
-            //        Id = e.Key,
-            //        Name = ((EnumEmotion)e.Key).ToString(),
-            //        Score = e.Value
-            //    })
-            //    .ToList();
             return sortedEmotions;
         }
 
