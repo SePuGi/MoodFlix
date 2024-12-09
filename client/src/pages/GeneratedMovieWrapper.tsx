@@ -5,7 +5,6 @@ import GeneratedRandomMovie from "./GeneratedRandomMovie.tsx";
 function GeneratedMovieWrapper() {
   const {haveEmotions} = useParams<{ haveEmotions: string }>();
   const haveEmotionsBool = haveEmotions === 'true';
-  console.log(haveEmotionsBool);
 
   if (!haveEmotionsBool) {
     return <GeneratedRandomMovie/>

@@ -4,6 +4,7 @@ import emotionsReducer from '../features/emotions/emotionsSlice.ts';
 import authReducer from '../features/auth/authSlice.ts';
 import userReducer from '../features/user/userSlice.ts';
 import userPreferencesReducer from '../features/user/userPreferencesSlice.ts'
+import recentMoviesReducer from '../features/movie/recentMoviesSlice.ts';
 import {preferencesApi} from "../features/api/preferencesApi.ts";
 import {authApi} from "../features/api/authApi.ts";
 import {authMiddleware} from "../middleware/authMiddleware.ts";
@@ -19,6 +20,7 @@ export const store = configureStore({
     auth: authReducer,
     user: userReducer,
     userPreferences: userPreferencesReducer,
+    recentMovies: recentMoviesReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
