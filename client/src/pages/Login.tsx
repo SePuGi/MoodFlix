@@ -54,7 +54,7 @@ function Login() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: `calc(100vh - ${MOBILEBAR_HEIGHT}px)`
+        minHeight: `calc(100vh - ${MOBILEBAR_HEIGHT})`
       }}
     >
       {/* Icon and Title */}

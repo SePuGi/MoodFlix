@@ -7,9 +7,8 @@ import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Questionnaire from "./pages/Questionnaire.tsx";
 import EmotionsResult from "./pages/EmotionsResult.tsx";
 import Profile from "./pages/Profile.tsx";
-import EditPlatforms from "./pages/EditPlatforms.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
-import MovieSelected from "./pages/MovieSelected.tsx";
+import GeneratedMovieWrapper from "./pages/GeneratedMovieWrapper.tsx";
 
 function App() {
 
@@ -24,12 +23,11 @@ function App() {
             <Route path="/questionnaire" element={<Questionnaire/>}/>
             <Route path="/results" element={<EmotionsResult/>}/>
             <Route path="/profile" element={<Profile/>}/>
-            <Route path="/movies/movieSelected" element={<MovieSelected/>}/>
+            <Route path="/movies/generateMovie/emotions/:haveEmotions" element={<GeneratedMovieWrapper/>}/>
           </Route>
 
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>}/>
-          {/*          <Route path="/profile/platforms" element={<EditPlatforms/>}/>*/}
         </Routes>
         <BottomNavBar isLoggedIn={false}/>
       </Router>

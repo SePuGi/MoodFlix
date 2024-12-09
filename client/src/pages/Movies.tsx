@@ -10,7 +10,7 @@ function Movies() {
   const emotions = useSelector((state: RootState) => state.emotions.emotions);
 
   const handleRandomMovie = () => {
-    navigate('/movies/movieSelected');
+    navigate(`/movies/generateMovie/emotions/${false}`);
   };
 
   const handleFiveRandomMovies = () => {

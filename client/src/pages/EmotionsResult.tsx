@@ -15,8 +15,7 @@ function Results() {
   };
 
   const handleGetMovie = () => {
-    alert('Redirecting to movie recommendation!');
-    // Navigate to the movie recommendation page if applicable
+    navigate(`/movies/generateMovie/emotions/${true}`);
   };
 
   return (

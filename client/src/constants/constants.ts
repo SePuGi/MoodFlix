@@ -1,3 +1,3 @@
-const MOBILEBAR_HEIGHT = 56;
+const MOBILEBAR_HEIGHT = '56px';
 
 export {MOBILEBAR_HEIGHT};
