@@ -7,5 +7,6 @@
         public DateTime RegisterDate { get; set; }
         public List<string> EmotionName { get; set; }
         public MovieHistoryDTO Movie { get; set; }
+        public int? MovieRating { get; set; }
     }
 }

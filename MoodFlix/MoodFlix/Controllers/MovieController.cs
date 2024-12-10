@@ -77,7 +77,7 @@ namespace MoodFlix.Controllers
         /// <param name="emotionsId"></param>
         /// <returns></returns>
         //POST: /api/movies/{total_movies}
-        [HttpPatch("GetMoviesWithEmotions/{total_movies}")]
+        [HttpPost("GetMoviesWithEmotions/{total_movies}")]
         public async Task<IActionResult> GetMoviesWithEmotions(int total_movies, EmotionMovieSuggestedDTO emotion_movie)
         {
             int userId = GetLoggedUserId();

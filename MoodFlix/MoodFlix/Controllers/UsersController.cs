@@ -235,7 +235,8 @@ namespace MoodFlix.Controllers
                             W480 = r.Movie.HorizontalPosterw480,
                             W360 = r.Movie.HorizontalPosterw360
                         }
-                    }                    
+                    },
+                    MovieRating = r.Rating ?? null
                 })
                 .ToList());
 
@@ -401,6 +402,7 @@ namespace MoodFlix.Controllers
         #region Utils
 
         //GET: api/Countries
+        [AllowAnonymous]
         [HttpGet("Countries")]
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
