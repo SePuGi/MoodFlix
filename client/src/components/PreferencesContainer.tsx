@@ -1,6 +1,7 @@
 import {useState} from "react";
 import {Box, Button, Grid, Typography} from "@mui/material";
 import PlatformCard from "./StreamingOptionCard.tsx";
+import {MIN_HEIGHT_CONTAINER} from "../constants/constants.ts";
 
 function PreferencesContainer({handleSave, preferences}) {
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
@@ -19,7 +20,7 @@ function PreferencesContainer({handleSave, preferences}) {
         alignItems: 'center',
         padding: 3,
         backgroundColor: 'background.default',
-        minHeight: '100vh',
+        minHeight: MIN_HEIGHT_CONTAINER,
       }}
     >
       <Typography variant="h1" sx={{fontSize: '1.5rem', marginBottom: 3}}>

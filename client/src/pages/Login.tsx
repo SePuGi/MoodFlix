@@ -10,7 +10,7 @@ import {
   Link,
 } from '@mui/material';
 import {LuClapperboard} from 'react-icons/lu'
-import {MOBILEBAR_HEIGHT} from "../constants/constants.ts";
+import {MIN_HEIGHT_CONTAINER, MOBILEBAR_HEIGHT} from "../constants/constants.ts";
 import {useNavigate} from "react-router-dom";
 import {useLoginUserMutation} from "../features/api/authApi.ts";
 import {setToken} from "../features/auth/authSlice.ts";
@@ -54,7 +54,7 @@ function Login() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: `calc(100vh - ${MOBILEBAR_HEIGHT})`
+        minHeight: MIN_HEIGHT_CONTAINER
       }}
     >
       {/* Icon and Title */}

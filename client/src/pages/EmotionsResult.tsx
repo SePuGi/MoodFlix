@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import {RootState} from '../app/store';
 import {Typography, Box, Button, Card, CardContent, Grid} from '@mui/material';
 import {setEmotions} from "../features/emotions/emotionsSlice.ts";
+import {MIN_HEIGHT_CONTAINER} from "../constants/constants.ts";
 
 function Results() {
   const emotions = useSelector((state: RootState) => state.emotions);
@@ -25,7 +26,7 @@ function Results() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '100vh',
+        minHeight: MIN_HEIGHT_CONTAINER,
         backgroundColor: 'background.default',
         color: 'text.primary',
         padding: 3,
@@ -35,7 +36,7 @@ function Results() {
         Your Emotional Results
       </Typography>
 
-      <Grid container spacing={2} sx={{ marginBottom: 2}}>
+      <Grid container spacing={2} sx={{marginBottom: 2}}>
         {emotions.emotions.map((emotion, index) => (
           <Grid item xs={12} sm={6} key={emotion.name}>
             <Card

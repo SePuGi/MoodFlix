@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {Box, Button, Typography} from '@mui/material';
 import EditableField from '../components/EditableField';
 import {useNavigate} from 'react-router-dom';
+import {MIN_HEIGHT_CONTAINER} from "../constants/constants.ts";
 
 function Profile() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ function Profile() {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        minHeight: '100vh',
+        minHeight: MIN_HEIGHT_CONTAINER,
         backgroundColor: 'background.default',
         color: 'text.primary',
         padding: 3,

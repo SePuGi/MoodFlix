@@ -9,6 +9,7 @@ import {validateForm} from "../utils/validateForm.ts";
 import {UserRegisterForm} from "../types/formdata.ts";
 import {useRegisterUserMutation} from "../features/api/authApi.ts";
 import {useNavigate} from "react-router-dom";
+import {MIN_HEIGHT_CONTAINER} from "../constants/constants.ts";
 
 function Register() {
   const [formData, setFormData] = useState<UserRegisterForm>({
@@ -54,7 +55,7 @@ function Register() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '100vh',
+        minHeight: MIN_HEIGHT_CONTAINER,
       }}
     >
       {loadingCountries ?

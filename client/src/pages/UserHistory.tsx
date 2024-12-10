@@ -2,6 +2,7 @@ import {Box, Typography} from '@mui/material';
 import UserHistoryCard from '../components/UserHistoryCard';
 import {useGetUserHistoryQuery} from "../features/api/userHistoryApi.ts";
 import {useEffect} from "react";
+import {MIN_HEIGHT_CONTAINER, MOBILEBAR_HEIGHT} from "../constants/constants.ts";
 
 function UserHistory() {
   const {data: history, isLoading, isError, refetch} = useGetUserHistoryQuery();
@@ -27,7 +28,8 @@ function UserHistory() {
       sx={{
         padding: 3,
         backgroundColor: 'background.default',
-        minHeight: '100vh',
+        minHeight: MIN_HEIGHT_CONTAINER,
+        mb: MOBILEBAR_HEIGHT
       }}
     >
       <Typography variant="h1" sx={{marginBottom: 3}}>
@@ -46,39 +48,3 @@ function UserHistory() {
 }
 
 export default UserHistory;
-
-/*
-import {useGetUserHistoryQuery} from "../features/api/userHistoryApi.ts";
-import {useEffect} from "react";
-
-function UserHistory() {
-  const {data: history, isLoading, isError, refetch} = useGetUserHistoryQuery();
-  console.log(history);
-
-  useEffect(() => {
-    refetch();
-  }, []);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  if (isError) {
-    return <div>Error</div>;
-  }
-
-  return (
-    <div>
-      <h1>History</h1>
-      <div>
-        {history?.map((item) => (
-          <div key={item.registerId}>
-            <h2>{item.movie.title}</h2>
-            <p>{new Date(item.registerDate).toDateString()}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-export default UserHistory;*/

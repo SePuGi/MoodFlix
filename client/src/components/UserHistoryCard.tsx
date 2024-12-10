@@ -51,7 +51,7 @@ function UserHistoryCard({history, onRate}: UserHistoryCardProps) {
         />
 
         {/* Movie Details */}
-        <CardContent sx={{flex: 1, padding: 0}}>
+        <CardContent sx={{flex: 1, padding: 0, '&:last-child': {paddingBottom: 0}}}>
           <Typography
             variant="h2"
             sx={{fontSize: '1rem', fontWeight: 600, marginBottom: 1}}

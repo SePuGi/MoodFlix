@@ -6,6 +6,7 @@ import {useEffect, useState} from "react";
 import {RootState} from "../app/store.ts";
 import {useDispatch, useSelector} from "react-redux";
 import {setRecentMovies} from "../features/movie/recentMoviesSlice.ts";
+import {MIN_HEIGHT_CONTAINER, MOBILEBAR_HEIGHT} from "../constants/constants.ts";
 
 interface MovieListProps {
   isLoading: boolean;
@@ -66,7 +67,8 @@ function MovieList({isLoading, isError, fetchMovies}: MovieListProps) {
   }
 
   return (
-    <Box sx={{padding: 3, backgroundColor: 'background.default', minHeight: '100vh'}}>
+    <Box
+      sx={{padding: 3, backgroundColor: 'background.default', minHeight: MIN_HEIGHT_CONTAINER, mb: MOBILEBAR_HEIGHT}}>
       {movies.map((movie) =>
         <MovieCard key={movie.id} movie={movie}/>
       )}
