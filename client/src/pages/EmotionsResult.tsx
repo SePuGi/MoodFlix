@@ -35,7 +35,7 @@ function Results() {
         Your Emotional Results
       </Typography>
 
-      <Grid container spacing={2} justifyContent="center" sx={{maxWidth: 600, marginBottom: 4}}>
+      <Grid container spacing={2} sx={{ marginBottom: 2}}>
         {emotions.emotions.map((emotion, index) => (
           <Grid item xs={12} sm={6} key={emotion.name}>
             <Card
@@ -71,16 +71,18 @@ function Results() {
             </Card>
           </Grid>
         ))}
-        <Typography
-          variant="body1"
-          sx={{
-            color: 'text.secondary',
-            marginTop: 2,
-          }}
-        >
-          {emotions.description}
-        </Typography>
       </Grid>
+
+      <Typography
+        variant="body1"
+        sx={{
+          color: 'text.secondary',
+          mb: 3,
+        }}
+        textAlign={"center"}
+      >
+        {emotions.description}
+      </Typography>
 
       <Box sx={{display: 'flex', gap: 2}}>
         <Button

@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {Box, Button, Grid, Typography} from "@mui/material";
-import PlatformCard from "./PlatformCard.tsx";
+import PlatformCard from "./StreamingOptionCard.tsx";
 
 function PreferencesContainer({handleSave, preferences}) {
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);

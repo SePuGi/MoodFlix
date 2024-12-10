@@ -9,7 +9,7 @@ type RegisterFormProps = {
   errors: { [key: string]: string };
   loading: boolean;
   handleSubmit: (e: React.FormEvent) => void;
-  countries: Country[];
+  countries: Country[] | undefined;
 }
 
 function RegisterForm({formData, handleChange, errors, countries, handleSubmit, loading}: RegisterFormProps) {
@@ -86,7 +86,7 @@ function RegisterForm({formData, handleChange, errors, countries, handleSubmit, 
           error={!!errors.country}
           helperText={errors.country}
         >
-          {countries.map((country) => (
+          {countries?.map((country) => (
             <MenuItem key={country.countryCode} value={country.countryId}>
               {country.countryName}
             </MenuItem>

@@ -9,6 +9,7 @@ import EmotionsResult from "./pages/EmotionsResult.tsx";
 import Profile from "./pages/Profile.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import GeneratedMovieWrapper from "./pages/GeneratedMovieWrapper.tsx";
+import UserHistory from "./pages/UserHistory.tsx";
 
 function App() {
 
@@ -22,8 +23,9 @@ function App() {
             <Route path="/" element={<Movies/>}/>
             <Route path="/questionnaire" element={<Questionnaire/>}/>
             <Route path="/results" element={<EmotionsResult/>}/>
-            <Route path="/profile" element={<Profile/>}/>
             <Route path="/movies/generateMovie/emotions/:haveEmotions" element={<GeneratedMovieWrapper/>}/>
+            <Route path="/profile" element={<Profile/>}/>
+            <Route path={"/history"} element={<UserHistory/>}/>
           </Route>
 
           <Route path="/login" element={<Login/>}/>

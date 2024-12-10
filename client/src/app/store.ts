@@ -9,6 +9,7 @@ import {preferencesApi} from "../features/api/preferencesApi.ts";
 import {authApi} from "../features/api/authApi.ts";
 import {authMiddleware} from "../middleware/authMiddleware.ts";
 import {moviesApi} from "../features/api/moviesApi.ts";
+import {userHistory} from "../features/api/userHistoryApi.ts";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     [preferencesApi.reducerPath]: preferencesApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [moviesApi.reducerPath]: moviesApi.reducer,
+    [userHistory.reducerPath]: userHistory.reducer,
     emotions: emotionsReducer,
     auth: authReducer,
     user: userReducer,
@@ -28,6 +30,7 @@ export const store = configureStore({
       preferencesApi.middleware,
       authApi.middleware,
       moviesApi.middleware,
+      userHistory.middleware,
       authMiddleware
     ),
 });

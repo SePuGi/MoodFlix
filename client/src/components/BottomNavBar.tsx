@@ -12,7 +12,7 @@ function BottomNavBar({isLoggedIn}: { isLoggedIn: boolean }) {
     setValue(newValue);
     if (newValue === 0) navigate("/login");
     if (newValue === 1) navigate("/");
-    if (newValue === 2) navigate("/");
+    if (newValue === 2) navigate("/history");
     if (newValue === 3) navigate("/profile");
   }
   return (

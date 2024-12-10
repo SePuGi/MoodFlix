@@ -1,19 +1,40 @@
-import {Box, Card, CardMedia, Typography, Chip, Grid, IconButton, Collapse} from '@mui/material';
+import {Box, Card, CardMedia, Typography, Chip, Grid, IconButton, Collapse, Button} from '@mui/material';
 import {MovieAPI} from "../types/movies.ts";
 import {useSelector} from "react-redux";
 import {RootState} from "../app/store.ts";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import HistoryIcon from "@mui/icons-material/History";
 import {useState} from "react";
+import {useAddToUserHistoryMutation} from "../features/api/userHistoryApi.ts";
+import StreamingOptionCard from "./StreamingOptionCard.tsx";
+import {filterStreamingOptions} from "../utils/filterStreamingOptions.ts";
 
 function MovieCard({movie}: { movie: MovieAPI }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const primaryPoster = movie.imageSet.verticalPoster.w480;
-  const userPlatforms = useSelector((state: RootState) => state.userPreferences.platforms)
-    .map(platform => platform.platformName);
-  const streamingOptionsFiltered = movie.streamingOptions.serviceOptions.filter(option => (
-    userPlatforms.includes(option.serviceName)
-  ));
+  const emotionId = useSelector((state: RootState) => state.emotions.emotions).map((emotion) => emotion.id);
+  const userPlatforms = useSelector((state: RootState) => state.userPreferences.platforms).map(platform => platform.platformName);
+
+  const [addToUserHistory, {isLoading, isError, isSuccess}] = useAddToUserHistoryMutation();
+
+  const streamingOptionsFiltered = filterStreamingOptions(movie.streamingOptions.serviceOptions, userPlatforms);
+
+  const addToHistory = async (movie: MovieAPI) => {
+    const historyRecord = {
+      ...movie,
+      emotionId: emotionId,
+    }
+    await addToUserHistory(historyRecord);
+  };
+
+  if (isSuccess) {
+    alert('Movie added to history!');
+  }
+
+  if (isError) {
+    alert('Error adding movie to history.');
+  }
 
   return (
     <Card
@@ -42,52 +63,16 @@ function MovieCard({movie}: { movie: MovieAPI }) {
       />
 
       {/* Movie Details */}
-      <Typography variant="h1" sx={{fontSize: '1.5rem', fontWeight: 600, marginBottom: 3}}>
+      <Typography variant="h1" sx={{marginBottom: 3}}>
         {movie.title}
       </Typography>
 
       {/* Streaming Options */}
       <Box sx={{width: '100%'}}>
         <Grid container spacing={2}>
-          {streamingOptionsFiltered.map((option) => (
-            <Grid item xs={6} key={option.serviceName}>
-              <Box
-                component="a"
-                href={option.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-around',
-                  textDecoration: 'none',
-                  textTransform: 'capitalize',
-                  backgroundColor: 'background.default',
-                  borderRadius: 2,
-                  padding: 2,
-                  boxShadow: 1,
-                  '&:hover': {
-                    boxShadow: "0 1px 4px rgba(255, 255, 255, 0.1)",
-                  },
-                }}
-              >
-                <img
-                  src={option.imageSet.darkThemeImage}
-                  alt={option.serviceName}
-                  style={{height: 40, marginRight: 10}}
-                />
-              </Box>
-              <Typography
-                display={"block"}
-                mt={1}
-                variant="caption"
-                color="text.secondary"
-                textAlign={"center"}
-                textTransform={"capitalize"}>
-                {option.accesType}
-              </Typography>
-            </Grid>
-          ))}
+          {Object.values(streamingOptionsFiltered).map((option, index) =>
+            <StreamingOptionCard option={option} key={index}/>
+          )}
         </Grid>
       </Box>
 
@@ -98,7 +83,7 @@ function MovieCard({movie}: { movie: MovieAPI }) {
 
       {/* Collapsible Content */}
       <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-        <Typography variant="body1" sx={{marginBottom: 2, color: 'text.secondary'}}>
+        <Typography variant="body2" sx={{marginBottom: 2, color: 'text.secondary'}}>
           {movie.overview}
         </Typography>
         <Box sx={{display: 'flex', gap: 1, flexWrap: 'wrap', marginBottom: 2}}>
@@ -113,6 +98,13 @@ function MovieCard({movie}: { movie: MovieAPI }) {
           Runtime: {movie.runtime} minutes
         </Typography>
       </Collapse>
+
+      <Button variant="contained" disabled={isLoading || isSuccess} color="primary"
+              onClick={() => addToHistory(movie)}>
+        <HistoryIcon sx={{marginRight: 1}}/>
+        Add to History
+      </Button>
+
     </Card>
   );
 }

@@ -30,15 +30,22 @@ function MovieList({isLoading, isError, fetchMovies}: MovieListProps) {
     refreshMovies();
   }, []);
 
-  const addToHistory = () => {
-    alert('No streaming link available.');
-  };
-
   if (isError) {
     return (
-      <Typography variant="h2" sx={{textAlign: 'center', marginTop: '2rem'}}>
-        Error loading movies. Please try again later.
-      </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          height: '100vh',
+          backgroundColor: 'background.default',
+        }}
+      >
+        <Typography variant="h2" sx={{textAlign: 'center', marginTop: '2rem'}}>
+          Error loading movies. Please try again.
+        </Typography>
+        <MovieButtons refresh={refreshMovies}/>
+      </Box>
     );
   }
 
@@ -60,12 +67,12 @@ function MovieList({isLoading, isError, fetchMovies}: MovieListProps) {
 
   return (
     <Box sx={{padding: 3, backgroundColor: 'background.default', minHeight: '100vh'}}>
-      {movies.map((movie) => (
+      {movies.map((movie) =>
         <MovieCard key={movie.id} movie={movie}/>
-      ))}
-      <MovieButtons add={addToHistory} refresh={refreshMovies}/>
+      )}
+      <MovieButtons refresh={refreshMovies}/>
     </Box>
-  );
+  )
 }
 
 export default MovieList;
