@@ -46,12 +46,18 @@ namespace MoodFlix.Controllers
             if (user == null)
                 return NotFound();
 
+            var userCountry = await _context.Country.FirstOrDefaultAsync(c => c.CountryId == user.CountryId);
+
             var userData = new {
                 user.UserId ,
                 user.Email,
                 user.UserName,
                 user.BirthDate,
-                user.CountryId
+                country = new {
+                    user.CountryId,
+                    userCountry.CountryName,
+                    userCountry.CountryCode
+                }
             };
             
             return userData;
