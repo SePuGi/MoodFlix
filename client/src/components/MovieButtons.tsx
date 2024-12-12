@@ -7,7 +7,7 @@ type MovieButtonsProps = {
 function MovieButtons({refresh}: MovieButtonsProps) {
   return (
     <Box sx={{display: 'flex', justifyContent: 'center', gap: 2, mt: 3}}>
-      <Button variant="outlined" color="secondary" onClick={refresh}>
+      <Button variant="text" onClick={refresh} color={"secondary"}>
         Refresh
       </Button>
     </Box>

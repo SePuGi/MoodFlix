@@ -3,7 +3,7 @@ import {setToken} from "../features/auth/authSlice.ts";
 import {authApi} from "../features/api/authApi.ts";
 import {setUser, clearUser} from "../features/user/userSlice.ts";
 import {setGenres, setPlatforms} from "../features/user/userPreferencesSlice.ts";
-import {preferencesApi} from "../features/api/preferencesApi.ts";
+import {userApi} from "../features/api/userApi.ts";
 
 export const authMiddleware: Middleware = (store) => (next) => async (action) => {
   // Pass the action along
@@ -20,7 +20,7 @@ export const authMiddleware: Middleware = (store) => (next) => async (action) =>
 
       // Fetch user preferences
       const userPreferences = await store
-        .dispatch(preferencesApi.endpoints.getUserPreferences.initiate(undefined))
+        .dispatch(userApi.endpoints.getUserPreferences.initiate(undefined))
         .unwrap();
 
       // Update the user preferences in the store

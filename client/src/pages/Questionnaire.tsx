@@ -124,7 +124,8 @@ function Questionnaire() {
               fullWidth
               sx={{
                 marginBottom: 2,
-                borderColor: 'primary.main',
+                textTransform: 'none',
+                fontSize: '0.95rem',
                 color: selectedAnswer === answer.key ? 'white' : 'primary.main',
                 '&:hover': {
                   backgroundColor: selectedAnswer === answer.key ? 'primary.main' : 'none',

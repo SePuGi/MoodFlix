@@ -1,19 +1,16 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-
-export type User = {
-  userId: number | null;
-  userName: string;
-  email: string;
-  birthDate: string;
-  countryId: number | null;
-}
+import {User} from "../../types/user.ts";
 
 const initialState: User = {
   userId: null,
   userName: '',
   email: '',
   birthDate: '',
-  countryId: null,
+  country: {
+    countryId: null,
+    countryCode: '',
+    countryName: ''
+  }
 }
 
 const userSlice = createSlice({

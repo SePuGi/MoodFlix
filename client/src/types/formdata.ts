@@ -1,8 +1,8 @@
-export type UserRegisterForm = {
-  userName: string,
-  email: string,
-  password: string,
-  birthDate: string,
-  countryId: number | '',
-}
+import {User} from "./user.ts";
+
+export type UserRegisterForm = Pick<User, 'userName' | 'email' | 'birthDate'> &
+  {
+    password: string,
+    countryId: number | '',
+  }
 

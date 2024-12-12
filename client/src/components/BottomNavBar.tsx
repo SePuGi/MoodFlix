@@ -8,7 +8,7 @@ function BottomNavBar({isLoggedIn}: { isLoggedIn: boolean }) {
   const [value, setValue] = useState(0); // State to track the selected tab
   const navigate = useNavigate();
 
-  const handleNavigation = (event: React.SyntheticEvent, newValue: number) => {
+  const handleNavigation = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
     if (newValue === 0) navigate("/login");
     if (newValue === 1) navigate("/");

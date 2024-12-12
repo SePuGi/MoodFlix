@@ -1,75 +1,91 @@
 import {useState} from 'react';
 import {Box, Button, Typography} from '@mui/material';
-import EditableField from '../components/EditableField';
-import {useNavigate} from 'react-router-dom';
+import ProfileField from '../components/ProfileField';
+import GenresModal from '../components/GenresModal';
+import {User} from '../types/user.ts';
 import {MIN_HEIGHT_CONTAINER} from "../constants/constants.ts";
+import {useSelector} from "react-redux";
+import {RootState} from "../app/store.ts";
+import PlatformsModal from "../components/PlatformsModal.tsx";
 
 function Profile() {
-  const navigate = useNavigate();
+  const currentUser = useSelector((state: RootState) => state.user);
+  const [user, setUser] = useState<User>(currentUser);
+  const [genresModalOpen, setGenresModalOpen] = useState(false);
+  const [platformsModalOpen, setPlatformsModalOpen] = useState(false);
 
-  /*TODO: Replace the hard-coded values with state variables from userSlice*/
-  const [email, setEmail] = useState('user@example.com');
-  const [password, setPassword] = useState('********');
-  const [username, setUsername] = useState('JohnDoe');
-
-  const handleEditPlatforms = () => {
-    navigate('/profile/platforms');
-  };
-
-  const handleEditGenres = () => {
-    alert('Edit genres clicked');
+  const formatDateForInput = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0]; // Extract YYYY-MM-DD
   };
 
   return (
     <Box
       sx={{
+        padding: 3,
+        backgroundColor: 'background.default',
+        minHeight: MIN_HEIGHT_CONTAINER,
         display: 'flex',
         flexDirection: 'column',
+        gap: 3,
         justifyContent: 'center',
-        minHeight: MIN_HEIGHT_CONTAINER,
-        backgroundColor: 'background.default',
-        color: 'text.primary',
-        padding: 3,
       }}
     >
-      <Typography variant="h1" sx={{fontSize: '1.5rem', marginBottom: 5, textAlign: 'center'}}>
+      <Typography variant="h1" textAlign={"center"} sx={{marginBottom: 3}}>
         Profile
       </Typography>
 
-      <EditableField
-        label="Email"
-        value={email}
-        onSave={(newValue) => setEmail(newValue)}
-      />
-      <EditableField
-        label="Password"
-        value={password}
-        onSave={(newValue) => setPassword(newValue)}
-      />
-      <EditableField
+      {/* Editable Profile Fields */}
+      <ProfileField
         label="Username"
-        value={username}
-        onSave={(newValue) => setUsername(newValue)}
+        value={user.userName}
+        onChange={(value) => setUser({...user, userName: value})}
+      />
+      <ProfileField
+        label="Email"
+        value={user.email}
+        onChange={(value) => setUser({...user, email: value})}
+      />
+      <ProfileField
+        label="Birth Date"
+        value={formatDateForInput(user.birthDate)}
+        type="date"
+        onChange={(value) => setUser({...user, birthDate: value})}
+      />
+      <ProfileField
+        label="Country"
+        value={String(user.country.countryName)}
+        disabled
       />
 
-      <Box sx={{display: 'flex', gap: 2, marginTop: 3, justifyContent: 'center'}}>
+      {/* Buttons */}
+      <Box justifyContent={"center"} display={"flex"} gap={2} mt={3}>
         <Button
           variant="contained"
           color="secondary"
-          onClick={handleEditPlatforms}
-          sx={{textTransform: 'uppercase'}}
+          onClick={() => setGenresModalOpen(true)}
         >
-          Edit Platforms
+          Genres
         </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleEditGenres}
-          sx={{textTransform: 'uppercase'}}
+        <Button variant="contained"
+                color="primary"
+                onClick={() => setPlatformsModalOpen(true)}
         >
-          Edit Genres
+          Platforms
         </Button>
       </Box>
+
+      {/* Genres Modal */}
+      <GenresModal
+        open={genresModalOpen}
+        onClose={() => setGenresModalOpen(false)}
+      />
+
+      {/* Platforms Modal */}
+      <PlatformsModal
+        open={platformsModalOpen}
+        onClose={() => setPlatformsModalOpen(false)}
+      />
     </Box>
   );
 }

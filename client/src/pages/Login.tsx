@@ -7,10 +7,10 @@ import {
   TextField,
   Typography,
   Alert,
-  Link,
+  Link, useTheme,
 } from '@mui/material';
 import {LuClapperboard} from 'react-icons/lu'
-import {MIN_HEIGHT_CONTAINER, MOBILEBAR_HEIGHT} from "../constants/constants.ts";
+import {MIN_HEIGHT_CONTAINER} from "../constants/constants.ts";
 import {useNavigate} from "react-router-dom";
 import {useLoginUserMutation} from "../features/api/authApi.ts";
 import {setToken} from "../features/auth/authSlice.ts";
@@ -18,6 +18,7 @@ import {useDispatch} from "react-redux";
 
 // TODO LOGIN LOGICA
 function Login() {
+  const theme = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -64,7 +65,7 @@ function Login() {
           marginBottom: 4,
         }}
       >
-        <LuClapperboard size={48} color="#4CAF50"/>
+        <LuClapperboard size={48} color={theme.palette.primary.main}/>
         <Typography variant="h1" sx={{marginTop: 1}}>
           Welcome Back
         </Typography>

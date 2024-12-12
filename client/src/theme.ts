@@ -37,6 +37,13 @@ const theme = createTheme({
           ,
         }
         ,
+        MuiButton: {
+          styleOverrides: {
+            contained: {
+              color: '#262726'
+            },
+          }
+        }
       }
     ,
     typography: {

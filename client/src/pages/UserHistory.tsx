@@ -6,7 +6,6 @@ import {MIN_HEIGHT_CONTAINER, MOBILEBAR_HEIGHT} from "../constants/constants.ts"
 
 function UserHistory() {
   const {data: history, isLoading, isError, refetch} = useGetUserHistoryQuery();
-  console.log(history);
 
   useEffect(() => {
     refetch();
@@ -32,7 +31,7 @@ function UserHistory() {
         mb: MOBILEBAR_HEIGHT
       }}
     >
-      <Typography variant="h1" sx={{marginBottom: 3}}>
+      <Typography variant="h1" sx={{marginBottom: 3, fontWeight: 600}}>
         View History
       </Typography>
 
