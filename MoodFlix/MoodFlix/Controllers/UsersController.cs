@@ -32,7 +32,7 @@ namespace MoodFlix.Controllers
         #region UserCRUD-Login-Register
         
         // GET: api/Users/5
-        [HttpGet()]
+        [HttpGet]
         public async Task<ActionResult<Object>> GetUser()
         {
             int logged_id = GetLoggedUserId();
@@ -65,32 +65,24 @@ namespace MoodFlix.Controllers
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut]
-        public async Task<IActionResult> PutUser(User user)
+        [HttpPut("/ChangePassword")]
+        public async Task<IActionResult> PutPassword(string password)
         {
             int userId = GetLoggedUserId();
 
-            if (userId != user.UserId)
+            if (userId == -1)
                 return Unauthorized();
 
-            //if email is already in the database, return BadRequest
-            if (_context.User.Any(u => u.Email == user.Email && u.UserId != user.UserId))
+            var userDb = await _context.User.FindAsync(userId);
+            if (userDb == null)
+                return NotFound();
+
+            if(!Utils.CheckPassword(password)) //Check if the password is valid
                 return BadRequest();
 
-            //update the user
-            _context.Entry(user).State = EntityState.Modified;
+            userDb.Password = Utils.EncryptPassword(password);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(user.UserId))
-                    return NotFound();
-                else
-                    throw;
-            }
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
