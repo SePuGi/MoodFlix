@@ -71,7 +71,7 @@ namespace MoodFlix.Controllers
             //Get more movies?
             return Ok(moviesInfo);
         }
-
+        /*
         /// <summary>
         /// Get X movies based on user preferences and emotions
         /// </summary>
@@ -101,7 +101,7 @@ namespace MoodFlix.Controllers
 
             //Get more movies?
             return Ok(moviesInfo);
-        }
+        }*/
 
         #endregion
 
