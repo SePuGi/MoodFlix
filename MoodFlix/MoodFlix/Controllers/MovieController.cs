@@ -154,8 +154,6 @@ namespace MoodFlix.Controllers
                 //Get the response
                 var responseString = await response.Content.ReadAsStringAsync();
 
-                Console.WriteLine(responseString);
-
                 //Get the content from the response using RequestOpenAi class
                 var responseObj = JsonConvert.DeserializeObject<ResponseOpenAi>(responseString);
 
@@ -232,7 +230,7 @@ namespace MoodFlix.Controllers
             //Only get the movies with moviesWatched, genre and platform preferences
 
             //Generate json with the total movies
-            if(GPTModel.Contains("40-mini"))    //gpt-4o-mini       gpt-3.5-turbo
+            if(GPTModel.Contains("4o-mini"))    //gpt-4o-mini       gpt-3.5-turbo
                 message.Add(new Message() { Role = "user", Content = $"Generate a list of {totalMovies} movies that meet these criteria. The output format should be JSON with the following structure: {{ \"movies\": [\"Movie Name 1\", \"Movie Name 2\", ...] }}. Don't use backticks just the JSON format" });
             else
                 message.Add(new Message() { Role = "user", Content = $"Generate a list of {totalMovies} movies that meet these criteria. The output format should be JSON with the following structure: {{ \"movies\": [\"Movie Name 1\", \"Movie Name 2\", ...] }}." });
