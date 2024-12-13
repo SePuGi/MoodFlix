@@ -39,5 +39,15 @@ namespace MoodFlix.Model
             BirthDate = birthDate;
             CountryId = countryId;
         }
+
+        public User(int userId, string userName, string email, string password, DateTime birthDate, int countryId)
+        {
+            UserId = userId;
+            UserName = userName;
+            Email = email;
+            Password = password;
+            BirthDate = birthDate;
+            CountryId = countryId;
+        }
     }
 }

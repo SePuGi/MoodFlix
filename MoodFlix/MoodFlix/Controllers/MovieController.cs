@@ -46,7 +46,7 @@ namespace MoodFlix.Controllers
         /// <returns></returns>
         //POST: /api/movies/{total_movies}
         [HttpPost("GetMoviesWithPreferences/{total_movies}")]
-        public async Task<IActionResult> GetMoviesWithPreferences(int total_movies, [FromBody]List<string> moviesSuggested)
+        public async Task<IActionResult> GetMoviesWithPreferences(int total_movies, [FromBody] GetMoviesDTO? userPreferences)
         {
             //int userId = 1;
             int userId = GetLoggedUserId();
@@ -55,15 +55,15 @@ namespace MoodFlix.Controllers
                 return Unauthorized("User not found");
 
             // "movies" have a list of the movie titles
-            var movies = await GetMoviesOpenAI(userId, total_movies, moviesSuggested);
+            var movies = await GetMoviesOpenAI(userId, total_movies, userPreferences);
 
-            if(movies.Count == 0)
+            if (movies.Count == 0)
                 return NotFound("No movies found");
 
             //GetMoviesinfo
             var moviesInfo = await GetMovieInfo(userId, movies);
-            
-            if(moviesInfo.Count == total_movies)
+
+            if (moviesInfo.Count == total_movies)
                 return Ok(moviesInfo);
 
             //Get more movies?
@@ -78,7 +78,7 @@ namespace MoodFlix.Controllers
         /// <returns></returns>
         //POST: /api/movies/{total_movies}
         [HttpPatch("GetMoviesWithEmotions/{total_movies}")]
-        public async Task<IActionResult> GetMoviesWithEmotions(int total_movies, EmotionMovieSuggestedDTO emotion_movie)
+        public async Task<IActionResult> GetMoviesWithEmotions(int total_movies, [FromBody] GetMoviesDTO userPreferences)
         {
             int userId = GetLoggedUserId();
 
@@ -86,7 +86,7 @@ namespace MoodFlix.Controllers
                 return Unauthorized("User not found");
 
             // "movies" have a list of the movie titles
-            var movies = await GetMoviesOpenAI(userId,total_movies, emotion_movie.MovieSuggested, emotion_movie.EmotionId);
+            var movies = await GetMoviesOpenAI(userId,total_movies, userPreferences);
 
             if (movies.Count == 0)
                 return NotFound("No movies found");
@@ -112,13 +112,13 @@ namespace MoodFlix.Controllers
         /// <param name="total_movies"></param>
         /// <param name="emotionId"></param>
         /// <returns></returns>
-        private async Task<List<string>> GetMoviesOpenAI(int userId, int total_movies, List<string> moviesSuggested , List<int> emotionId = null)
+        private async Task<List<string>> GetMoviesOpenAI(int userId, int total_movies, GetMoviesDTO userPreferences)
         {
             string openAIKey = Utils.GetApiKey("OpenAI");
             string apiEndpoint = "https://api.openai.com/v1/chat/completions";
             
             List<Message> prompt= new List<Message>();
-            prompt = await CreatePrompt(userId, total_movies, moviesSuggested, emotionId);
+            prompt = await CreatePrompt(userId, total_movies, userPreferences);
 
             //Prompt
             RequestOpenAi request = new RequestOpenAi() 
@@ -165,12 +165,12 @@ namespace MoodFlix.Controllers
             return moviesResponse;
         }
 
-        private async Task<List<Message>> CreatePrompt(int userId, int totalMovies, List<string> moviesSuggested, List<int> emotionId)
+        private async Task<List<Message>> CreatePrompt(int userId, int totalMovies, GetMoviesDTO userPreferences)
         {
             List<Message> message = new List<Message>();
 
             //Add conversation context (you are a movie expert...)
-            if(emotionId != null)
+            if(userPreferences.EmotionsId != null)
                 message.Add(new Message() { Role = "system", Content = "You are an expert movie recommender. Your job is to suggest movies based on the streaming platforms the user has, the user's genre preferences, avoiding the genres they don't want, and considering their current emotions to improve their mood. You must also take into account the movies they have already watched to avoid recommending them again. The recommendations should be useful and in JSON format." });
             else
                 message.Add(new Message() { Role = "system", Content = "You are an expert movie recommender. Your job is to suggest random movies based on the streaming platforms the user has, avoiding the genres they don't want. You must also take into account the movies they have already watched to avoid recommending them again. The recommendations should be in JSON format." });
@@ -196,8 +196,15 @@ namespace MoodFlix.Controllers
                 message.Add(new Message() { Role = "system", Content = $"I have seen this movies (don't use it as a reference for the suggest): {string.Join(",", moviesWatched)}" });
 
             //Add the movies suggested if there are any, if not, do no add this message
-            if (moviesSuggested.Count != 0)
-                message.Add(new Message() { Role = "system", Content = $"Don't recommend any of this: {string.Join(",", moviesSuggested)}" });
+            if (userPreferences.MoviesSuggested.Count != 0)
+                message.Add(new Message() { Role = "system", Content = $"Don't recommend any of this: {string.Join(",", userPreferences.MoviesSuggested)}" });
+
+            //Add the emotion the user want to feel watching the movie
+            if (userPreferences.EmotionId != null)
+            {
+                var emotion = await _context.Emotion.Where(e => e.EmotionId == userPreferences.EmotionId).Select(e => e.EmotionName).FirstOrDefaultAsync();
+                message.Add(new Message() { Role = "system", Content = $"I want to feel {emotion} watching this movie." });
+            }
 
             //Add the user not preferred genres if there are any, if not, do no add this message
             if (userNotPreferredGenres.Count != 0)
@@ -209,10 +216,10 @@ namespace MoodFlix.Controllers
 
             message.Add(new Message() { Role = "system", Content = $"I am {age} years old" });
 
-            if (emotionId != null)
+            if (userPreferences.EmotionsId != null)
             {
                 //Get the emotions from the enum
-                var emotions = _context.Emotion.Where(e => emotionId.Contains(e.EmotionId)).Select(e => e.EmotionName).ToList();
+                var emotions = _context.Emotion.Where(e => userPreferences.EmotionsId.Contains(e.EmotionId)).Select(e => e.EmotionName).ToList();
 
                 //Add emotions context if there are any
                 message.Add(new Message() { Role = "system", Content = $"This emotions can resume my feelings: {string.Join(",", emotions)}" });
