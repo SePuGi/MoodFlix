@@ -157,6 +157,8 @@ namespace MoodFlix.Controllers
                 //Get the content from the response using RequestOpenAi class
                 var responseObj = JsonConvert.DeserializeObject<ResponseOpenAi>(responseString);
 
+                //Console.WriteLine(responseString);
+
                 //Get the movies from the response (responseObj.Choices[0].Message.Content) <- this is a json string with the movies titles
                 var movies = JsonConvert.DeserializeObject<MovieContent>(responseObj.Choices[0].Message.Content);
 
@@ -285,7 +287,7 @@ namespace MoodFlix.Controllers
                     MovieDataDTO movieData = GetMovieInfoFromJArray(moviesResponse, userCountry);
 
                     //Check if the movie is in the platform
-                    if(movieData.StreamingOptions.ServiceOptions.Count != 0)
+                    if(movieData.StreamingOptions.ServiceOptions != null)
                         movieFound = await CheckMoviesPlatform(userId, movieData);
 
                     if (movieFound)     //Add the movie info to the list

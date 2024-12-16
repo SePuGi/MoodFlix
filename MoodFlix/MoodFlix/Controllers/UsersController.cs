@@ -395,6 +395,7 @@ namespace MoodFlix.Controllers
         }
 
         //GET: api/Genres
+        [AllowAnonymous]
         [HttpGet("Genres")]
         public async Task<ActionResult<IEnumerable<Genre>>> GetGenres()
         {
@@ -407,6 +408,7 @@ namespace MoodFlix.Controllers
         /// <param name="countryCode"></param>
         /// <returns></returns>
         //GET: api/Platforms/{countryCode}
+        [AllowAnonymous]
         [HttpGet("Platforms/{countryCode}")]
         public async Task<ActionResult<IEnumerable<PlatformDTO>>> GetPlatformsByCountry(string countryCode)
         {
