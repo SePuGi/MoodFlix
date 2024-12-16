@@ -332,13 +332,17 @@ namespace MoodFlix.Controllers
             //Get the streaming options from the object (streamingOptions atributte name is the countryCode, can't do a dto with a dynamic name)
             var streamingOptions = movie["streamingOptions"];
 
-            //Check if the movie has streaming options
             if (streamingOptions == null)
                 return movieData;
 
-            var countryStremingOptions = streamingOptions[userCountry.ToLower()];
+            var countryStreamingOptions = streamingOptions[userCountry.ToLower()];
+
+            //Check if the movie has streaming options
+            if (countryStreamingOptions == null)
+                return movieData;
+
             List<StreamingService> streamingServices = new List<StreamingService>();//Movie info!
-            foreach (var streamingService in countryStremingOptions)
+            foreach (var streamingService in countryStreamingOptions)
             {
                 //foreach streaming service need to get the service name and the url
                 streamingServices.Add(new StreamingService()
