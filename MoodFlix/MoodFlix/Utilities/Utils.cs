@@ -42,7 +42,7 @@ namespace MoodFlix.Utilities
         /// <returns></returns>
         public static bool CheckPassword(string password)
         {
-             Regex regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$");
+            Regex regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$");
             return regex.IsMatch(password);
         }
 

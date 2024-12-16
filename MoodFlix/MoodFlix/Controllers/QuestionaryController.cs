@@ -42,10 +42,10 @@ namespace MoodFlix.Controllers
         [HttpGet]
         public IActionResult GetQuestionary()
         {
-            int userId = /*GetLoggedUserId();*/ 1;
+            int userId = GetLoggedUserId();;
 
-            //if (userId == -1)
-            //    return Unauthorized("User not found");
+            if (userId == -1)
+                return Unauthorized("User not found");
 
             var response = _questionary.Questions.Select(q => new
             {
@@ -71,14 +71,13 @@ namespace MoodFlix.Controllers
         /// <param name="responses">A list of user responses to the questionary.</param>
         /// <param name="registerId">An optional register ID for storing the history.</param>
         /// <returns>The top three emotions based on the user's responses.</returns>
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> SubmitQuestionary([FromBody] List<QuestionaryResponseDTO> responses)
         {
-            int userId = /*GetLoggedUserId();*/ 1;
+            int userId = GetLoggedUserId();;
 
-            //if (userId == -1)
-            //    return Unauthorized("User not found");
+            if (userId == -1)
+                return Unauthorized("User not found");
 
             if (responses == null || responses.Count == 0)
             {

@@ -9,11 +9,7 @@
           "email": "sergi@gmail.com",
           "password": "Passw0rd!",
           "birthDate": "1999-12-23",
-          "countryId": 108,
-          "userPlatforms": [1, 2, 3],  
-          "userGenres": {
-            "6": true, 
-            "8": false  
+          "countryId": 108
           }
         }
     */

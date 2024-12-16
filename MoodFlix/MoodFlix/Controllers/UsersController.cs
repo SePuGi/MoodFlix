@@ -73,7 +73,7 @@ namespace MoodFlix.Controllers
             if (userId == -1)
                 return Unauthorized();
 
-            var userDb = await _context.User.FindAsync(userId);
+            var userDb = await _context.User.FindAsync(userId); //Get the user from the database
             if (userDb == null)
                 return NotFound();
 
@@ -109,21 +109,7 @@ namespace MoodFlix.Controllers
 
             //save the changes, to get the UserId and save it in the relational tables
             await _context.SaveChangesAsync();
-            /*
-            //Add UserGenres to the database
-            foreach (var genre in user.UserGenres)
-            {
-                _context.UserGenre.Add(new UserGenre { UserId = userDb.UserId, GenreId = genre.Key, IsPreferred = genre.Value });
-            }
-
-            //Add UserPlatforms to the database
-            foreach (var platform in user.UserPlatforms)
-            {
-                _context.UserPlatform.Add(new UserPlatform { UserId = userDb.UserId, PlatformId = platform });
-            }
-            */
-            await _context.SaveChangesAsync();
-
+            
             return CreatedAtAction("RegisterUser", new { id = userDb.UserId });
         }
 
@@ -246,6 +232,7 @@ namespace MoodFlix.Controllers
         public async Task<ActionResult<Register>> AddToHistory(Model.Dto.MovieData.MovieInfoDTO movieData)
         {
             int logged_id = GetLoggedUserId();
+
             //if user is not logged or the user is not the same as the one in the token, it will return Unauthorized
             if (logged_id == -1)
                 return Unauthorized();
