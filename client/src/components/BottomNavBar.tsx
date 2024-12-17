@@ -1,19 +1,29 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {BottomNavigation, BottomNavigationAction, Paper} from '@mui/material';
 import {FaHome, FaUser, FaRegUser, FaFilm, FaHistory} from 'react-icons/fa';
 import {MOBILEBAR_HEIGHT} from "../constants/constants.ts";
 import {useNavigate} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {RootState} from "../app/store.ts";
 
-function BottomNavBar({isLoggedIn}: { isLoggedIn: boolean }) {
+function BottomNavBar() {
   const [value, setValue] = useState(0); // State to track the selected tab
+  const userName = useSelector((state: RootState) => state.user.userName);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.pathname === "/") setValue(0);
+    else if (location.pathname === "/movies") setValue(1);
+    else if (location.pathname === "/history") setValue(2);
+    else if (location.pathname === "/profile" || location.pathname === "/login") setValue(3);
+  }, [location.pathname]);
 
   const handleNavigation = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
-    if (newValue === 0) navigate("/login");
-    if (newValue === 1) navigate("/");
+    if (newValue === 0) navigate("/");
+    if (newValue === 1) navigate("/movies");
     if (newValue === 2) navigate("/history");
-    if (newValue === 3) navigate("/profile");
+    if (newValue === 3) navigate(userName ? "/profile" : "/login");
   }
   return (
     <Paper
@@ -26,11 +36,10 @@ function BottomNavBar({isLoggedIn}: { isLoggedIn: boolean }) {
         onChange={handleNavigation}
 
       >
-
-        {/* Login/Profile */}
+        {/* Home */}
         <BottomNavigationAction
-          label={isLoggedIn ? "Profile" : "Login"}
-          icon={isLoggedIn ? <FaUser/> : <FaRegUser/>}
+          label="Home"
+          icon={<FaHome/>}
         />
 
         {/* Movie Recommendation */}
@@ -45,12 +54,18 @@ function BottomNavBar({isLoggedIn}: { isLoggedIn: boolean }) {
           icon={<FaHistory/>}
         />
 
-        {/* Profile */}
-        <BottomNavigationAction
-          label="Profile"
-          icon={<FaUser/>}
-        />
-
+        {/* Login/Profile */}
+        {userName ?
+          <BottomNavigationAction
+            label={userName}
+            icon={<FaUser/>}
+          />
+          :
+          <BottomNavigationAction
+            label={"Login"}
+            icon={<FaRegUser/>}
+          />
+        }
       </BottomNavigation>
     </Paper>
   );

@@ -5,10 +5,11 @@ import {RootState} from "../app/store.ts";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HistoryIcon from "@mui/icons-material/History";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useAddToUserHistoryMutation} from "../features/api/userHistoryApi.ts";
 import StreamingOptionCard from "./StreamingOptionCard.tsx";
 import {filterStreamingOptions} from "../utils/filterStreamingOptions.ts";
+import {toast} from "sonner";
 
 function MovieCard({movie}: { movie: MovieAPI }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -18,7 +19,7 @@ function MovieCard({movie}: { movie: MovieAPI }) {
 
   const [addToUserHistory, {isLoading, isError, isSuccess}] = useAddToUserHistoryMutation();
 
-  const streamingOptionsFiltered = filterStreamingOptions(movie.streamingOptions.serviceOptions, userPlatforms);
+  const streamingOptionsFiltered = movie.streamingOptions.serviceOptions ? filterStreamingOptions(movie.streamingOptions.serviceOptions, userPlatforms) : {};
 
   const addToHistory = async (movie: MovieAPI) => {
     const historyRecord = {
@@ -28,13 +29,17 @@ function MovieCard({movie}: { movie: MovieAPI }) {
     await addToUserHistory(historyRecord);
   };
 
-  if (isSuccess) {
-    alert('Movie added to history!');
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success('Movie added to history.');
+    }
+  }, [isSuccess]);
 
-  if (isError) {
-    alert('Error adding movie to history.');
-  }
+  useEffect(() => {
+    if (isError) {
+      toast.error('Failed to add movie to history.');
+    }
+  }, [isError]);
 
   return (
     <Card
@@ -45,8 +50,7 @@ function MovieCard({movie}: { movie: MovieAPI }) {
         padding: 3,
         backgroundColor: 'background.paper',
         boxShadow: 3,
-        maxWidth: 600,
-        margin: '0 auto',
+        marginBottom: 3,
       }}
     >
       {/* Movie Poster */}

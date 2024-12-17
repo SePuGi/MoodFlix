@@ -1,17 +1,8 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
-import {UserRegisterForm} from "../../types/formdata.ts";
+import {UserRegisterForm} from "../../types/auth.ts";
 import {User} from "../../types/user.ts";
 import {RootState} from "../../app/store.ts";
-
-type RegisterUserResponse = {
-  id: number
-}
-
-type LoginResponse = {
-  token: string
-}
-
-type LoginForm = Pick<User, 'email'> & { password: string }
+import type {LoginForm, LoginResponse, RegisterUserResponse} from "../../types/auth.ts";
 
 export const authApi = createApi({
   reducerPath: 'authApi',

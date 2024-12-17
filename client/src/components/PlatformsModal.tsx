@@ -9,6 +9,7 @@ import {setPlatforms} from "../features/user/userPreferencesSlice.ts";
 import PreferenceModalItem from "./PreferenceModalItem.tsx";
 import ErrorPageLoading from "./errors/ErrorPageLoading.tsx";
 import LoadingPage from "./LoadingPage.tsx";
+import {toast} from "sonner";
 
 type GenresModalProps = {
   open: boolean;
@@ -20,7 +21,10 @@ function PlatformsModal({open, onClose}: GenresModalProps) {
   const userCountryCode = useSelector((state: RootState) => state.user.country.countryCode);
   const dispatch = useDispatch();
 
-  const [updateUserPlatforms, {isLoading: updateIsLoading,}] = useUpdateUserPlatformsMutation();
+  const [updateUserPlatforms, {
+    isLoading: updateIsLoading,
+    isSuccess: updateSuccess
+  }] = useUpdateUserPlatformsMutation();
 
   const {data: allPlatforms, isError, isLoading} = useFetchPlatformsQuery(userCountryCode);
 
@@ -39,8 +43,6 @@ function PlatformsModal({open, onClose}: GenresModalProps) {
   const handleSave = async () => {
     const platformsId = platformsSelected.map((platform) => platform.platformId);
     await updateUserPlatforms(platformsId);
-    dispatch(setPlatforms(platformsSelected))
-    alert('Platforms updated successfully');
   };
 
   const checkSelected = (platformId: number) => {
@@ -55,6 +57,11 @@ function PlatformsModal({open, onClose}: GenresModalProps) {
     return <ErrorPageLoading message={'Failed to load platforms'}/>
   }
 
+  if (updateSuccess) {
+    dispatch(setPlatforms(platformsSelected))
+    toast.success('Platforms updated successfully');
+    onClose();
+  }
   const title = 'Manage your Platforms';
   const description = 'Select the platforms you own to get better recommendations';
 

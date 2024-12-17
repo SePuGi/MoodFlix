@@ -1,6 +1,6 @@
 import {Box, Button, CircularProgress, MenuItem, TextField, Typography} from "@mui/material";
 import {Country} from "../../types/preferences.ts";
-import {UserRegisterForm} from "../../types/formdata.ts";
+import {UserRegisterForm} from "../../types/auth.ts";
 import React from "react";
 
 type RegisterFormProps = {

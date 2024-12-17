@@ -17,6 +17,8 @@ import {useNavigate} from "react-router-dom";
 import {setEmotions} from "../features/emotions/emotionsSlice.ts";
 import {SubmitResponseItem} from "../types/questionnaire.ts";
 import {MIN_HEIGHT_CONTAINER} from "../constants/constants.ts";
+import ErrorPageLoading from "../components/errors/ErrorPageLoading.tsx";
+import LoadingPage from "../components/LoadingPage.tsx";
 
 function Questionnaire() {
   const {data: questions, isLoading, isError} = useFetchQuestionsQuery();
@@ -50,35 +52,23 @@ function Questionnaire() {
       answer: selectedAnswers[index]!,
     }));
 
-    try {
-      const emotions = await submitResponses(formattedResponses).unwrap();
-      dispatch(setEmotions(emotions));
-      navigate('/results');
-    } catch (error) {
-      console.error('Error submitting responses:', error);
-    }
+    const emotions = await submitResponses(formattedResponses).unwrap();
+    dispatch(setEmotions(emotions));
+    navigate('/results');
   };
 
   if (isLoading) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-          backgroundColor: 'background.default',
-        }}
-      >
-        <CircularProgress color="primary"/>
-      </Box>
-    );
+    return <LoadingPage/>;
   }
 
-  if (isError || !questions) {
+  if (isError) {
+    return <ErrorPageLoading message={'Error loading questions. Please try again later.'}/>;
+  }
+
+  if (!questions) {
     return (
       <Typography variant="h2" sx={{textAlign: 'center', marginTop: '2rem'}}>
-        Error loading questions. Please try again later.
+        No questions found.
       </Typography>
     );
   }

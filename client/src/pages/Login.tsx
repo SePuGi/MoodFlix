@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Box,
   Button,
@@ -15,8 +15,8 @@ import {useNavigate} from "react-router-dom";
 import {useLoginUserMutation} from "../features/api/authApi.ts";
 import {setToken} from "../features/auth/authSlice.ts";
 import {useDispatch} from "react-redux";
+import {toast} from "sonner";
 
-// TODO LOGIN LOGICA
 function Login() {
   const theme = useTheme();
   const [email, setEmail] = useState('');
@@ -24,9 +24,14 @@ function Login() {
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
-  const [loginUser, {isLoading}] = useLoginUserMutation();
+  const [loginUser, {isLoading, isError}] = useLoginUserMutation();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (isError) {
+      toast.error('Invalid email or password');
+    }
+  }, [isError]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -37,14 +42,12 @@ function Login() {
       return;
     }
 
-    try {
-      const {token} = await loginUser({email, password}).unwrap();
-      dispatch(setToken(token));
-    } catch (error) {
-      console.error('Error submitting responses:', error);
-    } finally {
-      navigate('/');
-    }
+    const {token} = await loginUser({email, password}).unwrap();
+    dispatch(setToken(token));
+
+    setTimeout(() => {
+      navigate('/movies');
+    }, 500);
   };
 
   return (

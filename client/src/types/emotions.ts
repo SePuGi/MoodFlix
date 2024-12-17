@@ -1,6 +1,7 @@
 export type EmotionsResponse = {
   emotions: Emotion[];
   description: string;
+  desiredEmotionId?: number;
 };
 
 export type Emotion = {

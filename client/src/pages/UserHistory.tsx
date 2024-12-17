@@ -3,6 +3,8 @@ import UserHistoryCard from '../components/UserHistoryCard';
 import {useGetUserHistoryQuery} from "../features/api/userHistoryApi.ts";
 import {useEffect} from "react";
 import {MIN_HEIGHT_CONTAINER, MOBILEBAR_HEIGHT} from "../constants/constants.ts";
+import LoadingPage from "../components/LoadingPage.tsx";
+import ErrorPageLoading from "../components/errors/ErrorPageLoading.tsx";
 
 function UserHistory() {
   const {data: history, isLoading, isError, refetch} = useGetUserHistoryQuery();
@@ -16,10 +18,11 @@ function UserHistory() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingPage/>;
   }
+
   if (isError) {
-    return <div>Error</div>;
+    return <ErrorPageLoading message={'Failed to load history'}/>;
   }
 
   return (

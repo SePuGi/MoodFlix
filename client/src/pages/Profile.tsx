@@ -76,16 +76,20 @@ function Profile() {
       </Box>
 
       {/* Genres Modal */}
-      <GenresModal
-        open={genresModalOpen}
-        onClose={() => setGenresModalOpen(false)}
-      />
+      {genresModalOpen && (
+        <GenresModal
+          open={genresModalOpen}
+          onClose={() => setGenresModalOpen(false)}
+        />
+      )}
 
       {/* Platforms Modal */}
-      <PlatformsModal
-        open={platformsModalOpen}
-        onClose={() => setPlatformsModalOpen(false)}
-      />
+      {platformsModalOpen && (
+        <PlatformsModal
+          open={platformsModalOpen}
+          onClose={() => setPlatformsModalOpen(false)}
+        />
+      )}
     </Box>
   );
 }

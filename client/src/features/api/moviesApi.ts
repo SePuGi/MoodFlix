@@ -2,9 +2,10 @@ import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {RootState} from "../../app/store.ts";
 import {MovieAPI} from "../../types/movies.ts";
 
-type GenerateMovieOnEmotions = {
-  emotionId: number[];
-  movieSuggested: string[];
+type MoviesRequest = {
+  moviesSuggested: string[];
+  emotionId?: number;
+  emotionsId: number[];
 }
 
 export const moviesApi = createApi({
@@ -20,14 +21,7 @@ export const moviesApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    generateMovieWithEmotions: builder.mutation<MovieAPI[], { body: GenerateMovieOnEmotions, movieCount: number }>({
-      query: ({body, movieCount}) => ({
-        url: `/GetMoviesWithEmotions/${movieCount}`,
-        method: 'POST',
-        body,
-      })
-    }),
-    generateRandomMovie: builder.mutation<MovieAPI[], { body: string[], movieCount: number }>({
+    generateRandomMovie: builder.mutation<MovieAPI[], { body: MoviesRequest, movieCount: number }>({
       query: ({body, movieCount}) => ({
         url: `/GetMoviesWithPreferences/${movieCount}`,
         method: 'POST',
@@ -37,4 +31,4 @@ export const moviesApi = createApi({
   }),
 });
 
-export const {useGenerateRandomMovieMutation, useGenerateMovieWithEmotionsMutation} = moviesApi;
+export const {useGenerateRandomMovieMutation} = moviesApi;

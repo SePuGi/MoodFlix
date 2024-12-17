@@ -5,18 +5,16 @@ import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {RootState} from "../app/store.ts";
 import {MIN_HEIGHT_CONTAINER, MOBILEBAR_HEIGHT} from "../constants/constants.ts";
+import SetYourPreferencesWarning from "../components/SetYourPreferencesWarning.tsx";
 
 function Movies() {
   const theme = useTheme();
   const navigate = useNavigate();
+  const preferences = useSelector((state: RootState) => state.userPreferences);
   const emotions = useSelector((state: RootState) => state.emotions.emotions);
 
-  const handleRandomMovie = () => {
-    navigate(`/movies/generateMovie/emotions/${false}`);
-  };
-
-  const handleFiveRandomMovies = () => {
-    alert('Here are 5 random movies to choose from!');
+  const handleRandomMovie = (numMovies: number = 1) => {
+    navigate(`/movies/${numMovies}/selectEmotion`);
   };
 
   const handleMoodMovies = () => {
@@ -25,6 +23,10 @@ function Movies() {
     } else {
       navigate('/results');
     }
+  }
+
+  if (preferences.genres.length === 0 || preferences.platforms.length === 0) {
+    return <SetYourPreferencesWarning/>;
   }
 
   return (
@@ -52,15 +54,15 @@ function Movies() {
         title="Surprise Me with a Movie!"
         description="Feeling adventurous? Let us surprise you with a random movie recommendation!"
         buttonText="Surprise Me"
-        onClick={handleRandomMovie}
+        onClick={() => handleRandomMovie()}
         icon={<FaRandom size={32} color={theme.palette.primary.main}/>}
       />
 
       <OptionCard
-        title="Pick Your Favorite from 5 Choices!"
+        title="Pick Your Favorite from 3 Choices!"
         description="Not sure what to watch? Choose your favorite from five handpicked movies."
-        buttonText="Show Me 5 Movies"
-        onClick={handleFiveRandomMovies}
+        buttonText="Show Me 3 Movies"
+        onClick={() => handleRandomMovie(3)}
         icon={<FaFilm size={32} color={theme.palette.text.secondary}/>}
       />
 

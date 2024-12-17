@@ -9,6 +9,7 @@ import PreferencesModal from "./PreferencesModal.tsx";
 import PreferenceModalItem from "./PreferenceModalItem.tsx";
 import ErrorPageLoading from "./errors/ErrorPageLoading.tsx";
 import LoadingPage from "./LoadingPage.tsx";
+import {toast} from "sonner";
 
 type GenresModalProps = {
   open: boolean;
@@ -17,7 +18,8 @@ type GenresModalProps = {
 
 function GenresModal({open, onClose}: GenresModalProps) {
   const {data: allGenres, isError, isLoading} = useFetchGenresQuery();
-  const [updateUserGenres, {isLoading: updateIsLoading}] = useUpdateUserGenresMutation();
+
+  const [updateUserGenres, {isLoading: updateIsLoading, isSuccess: updateSuccess}] = useUpdateUserGenresMutation();
 
   const userGenres = useSelector((state: RootState) => state.userPreferences.genres)
     .map((genre): GenreNotPreferred => ({
@@ -43,7 +45,6 @@ function GenresModal({open, onClose}: GenresModalProps) {
 
   const handleSave = async () => {
     await updateUserGenres(genresNotPreferred);
-    alert('Genres updated successfully');
   };
 
   const checkSelected = (genreId: number) => {
@@ -56,6 +57,11 @@ function GenresModal({open, onClose}: GenresModalProps) {
 
   if (isError) {
     return <ErrorPageLoading message={'Failed to load genres'}/>
+  }
+
+  if (updateSuccess) {
+    toast.success('Genres updated successfully');
+    onClose();
   }
 
   const title = 'Manage your Genres';

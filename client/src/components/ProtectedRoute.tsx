@@ -5,9 +5,9 @@ import {RootState} from "../app/store.ts";
 function ProtectedRoute() {
   const token = useSelector((state: RootState) => state.auth.token);
 
- /* if (!token) {
+  if (!token) {
     return <Navigate to={'/login'}/>;
-  }*/
+  }
 
   return <Outlet/>;
 }

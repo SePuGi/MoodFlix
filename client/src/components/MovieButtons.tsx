@@ -1,7 +1,7 @@
 import {Box, Button} from "@mui/material";
 
 type MovieButtonsProps = {
-  refresh: () => void;
+  refresh: () => Promise<void>;
 }
 
 function MovieButtons({refresh}: MovieButtonsProps) {

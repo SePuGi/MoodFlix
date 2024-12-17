@@ -1,4 +1,4 @@
-import {UserRegisterForm} from "../types/formdata.ts";
+import {UserRegisterForm} from "../types/auth.ts";
 
 export const validateForm = (formData: UserRegisterForm) => {
   const newErrors: { [key: string]: string } = {};

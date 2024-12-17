@@ -10,28 +10,34 @@ import Profile from "./pages/Profile.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import GeneratedMovieWrapper from "./pages/GeneratedMovieWrapper.tsx";
 import UserHistory from "./pages/UserHistory.tsx";
+import Home from "./pages/Home.tsx";
+import ChooseEmotion from "./pages/ChooseEmotion.tsx";
+import {Toaster} from "sonner";
 
 function App() {
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" sx={{padding: 0}}>
+      <Toaster richColors position={'top-right'}/>
       <Router>
         <Routes>
           <Route
             element={<ProtectedRoute/>}
           >
-            <Route path="/" element={<Movies/>}/>
+            <Route path="/movies" element={<Movies/>}/>
             <Route path="/questionnaire" element={<Questionnaire/>}/>
             <Route path="/results" element={<EmotionsResult/>}/>
-            <Route path="/movies/generateMovie/emotions/:haveEmotions" element={<GeneratedMovieWrapper/>}/>
+            <Route path="/movies/generateMovie/emotions/:haveEmotions/:numMovies?" element={<GeneratedMovieWrapper/>}/>
+            <Route path="/movies/:numMovies/selectEmotion" element={<ChooseEmotion/>}/>
             <Route path="/profile" element={<Profile/>}/>
             <Route path={"/history"} element={<UserHistory/>}/>
           </Route>
 
+          <Route path="/" element={<Home/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>}/>
         </Routes>
-        <BottomNavBar isLoggedIn={false}/>
+        <BottomNavBar/>
       </Router>
     </Container>
   )

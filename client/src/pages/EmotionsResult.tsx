@@ -16,7 +16,7 @@ function Results() {
   };
 
   const handleGetMovie = () => {
-    navigate(`/movies/generateMovie/emotions/${true}`);
+    navigate(`/movies/${1}/selectEmotion`);
   };
 
   return (
@@ -85,6 +85,7 @@ function Results() {
         {emotions.description}
       </Typography>
 
+
       <Box sx={{display: 'flex', gap: 2}}>
         <Button
           variant="contained"
@@ -100,7 +101,7 @@ function Results() {
           onClick={handleGetMovie}
           sx={{textTransform: 'uppercase'}}
         >
-          Get Movie
+          Continue
         </Button>
       </Box>
     </Box>

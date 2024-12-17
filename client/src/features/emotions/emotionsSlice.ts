@@ -8,12 +8,16 @@ const initialState: EmotionsResponse = {
 }
 
 const emotionsSlice = createSlice({
-  name: 'emotions',
-  initialState,
-  reducers: {
-    setEmotions: (_, action: PayloadAction<EmotionsResponse>) => action.payload
-  },
-});
+    name: 'emotions',
+    initialState,
+    reducers: {
+      setEmotions: (_, action: PayloadAction<EmotionsResponse>) => action.payload,
+      addDesiredEmotion: (state, action: PayloadAction<number>) => {
+        state.desiredEmotionId = action.payload
+      },
+    },
+  })
+;
 
-export const {setEmotions} = emotionsSlice.actions;
+export const {setEmotions, addDesiredEmotion} = emotionsSlice.actions;
 export default emotionsSlice.reducer;

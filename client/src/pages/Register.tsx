@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   CircularProgress,
   Container,
@@ -6,10 +6,13 @@ import {
 import RegisterForm from "../components/Register/RegisterForm.tsx";
 import {useFetchCountriesQuery} from "../features/api/preferencesApi.ts";
 import {validateForm} from "../utils/validateForm.ts";
-import {UserRegisterForm} from "../types/formdata.ts";
-import {useRegisterUserMutation} from "../features/api/authApi.ts";
+import {useLoginUserMutation, useRegisterUserMutation} from "../features/api/authApi.ts";
 import {useNavigate} from "react-router-dom";
 import {MIN_HEIGHT_CONTAINER} from "../constants/constants.ts";
+import type {UserRegisterForm} from "../types/auth.ts";
+import {useDispatch} from "react-redux";
+import {setToken} from "../features/auth/authSlice.ts";
+import {toast} from "sonner";
 
 function Register() {
   const [formData, setFormData] = useState<UserRegisterForm>({
@@ -20,9 +23,15 @@ function Register() {
     countryId: '',
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [registerUser, {isLoading: loadingFormSubmit}] = useRegisterUserMutation();
+  const [registerUser, {
+    isLoading: loadingFormSubmit,
+    isSuccess: registrationSuccess,
+    error: registrationError
+  }] = useRegisterUserMutation();
+  const [loginUser, {isLoading: loginLoading, isSuccess: loginSuccess}] = useLoginUserMutation();
   const {data: countriesData, isLoading: loadingCountries} = useFetchCountriesQuery();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {name, value} = e.target;
@@ -38,14 +47,34 @@ function Register() {
     }
     setErrors({});
 
-    try {
-      await registerUser(formData).unwrap();
-      alert('Registration successful!');
-      navigate('/login');
-    } catch (error) {
-      console.error('Error submitting responses:', error);
-    }
+    await registerUser(formData).unwrap();
   };
+
+  useEffect(() => {
+
+
+    if (registrationSuccess) {
+      const loginUserAfterRegistration = async () => {
+        const {token} = await loginUser({email: formData.email, password: formData.password}).unwrap();
+        dispatch(setToken(token));
+      }
+
+      loginUserAfterRegistration();
+    }
+  }, [registrationSuccess, loginUser, formData.email, formData.password, dispatch]);
+
+  useEffect(() => {
+    if (registrationError && 'status' in registrationError && registrationError.status === 400) {
+      toast.error('User with this email already exists');
+    }
+  }, [registrationError]);
+
+  useEffect(() => {
+    if (loginSuccess) {
+      toast.success('Successfully registered and logged in!');
+      navigate('/movies');
+    }
+  }, [loginSuccess, navigate]);
 
   return (
     <Container
@@ -58,7 +87,7 @@ function Register() {
         minHeight: MIN_HEIGHT_CONTAINER,
       }}
     >
-      {loadingCountries ?
+      {loadingCountries || loginLoading ?
         <CircularProgress size={24} sx={{color: 'white'}}/>
         :
         <RegisterForm formData={formData} handleChange={handleChange} countries={countriesData} errors={errors}
