@@ -536,12 +536,17 @@ namespace MoodFlix.Controllers
             }
             await _context.SaveChangesAsync();
 
-            //Add the directors of the movie to the database (add the relationship)
-            //Get a list of the directors from the database, to get de Id
-            List<Director> directorDb = _context.Director.Where(d => directors.Select(d => d.DirectorName).Contains(d.DirectorName)).ToList();
-            _context.DirectorMovie.AddRange(directorDb.Select(d => new DirectorMovie { DirectorId = d.DirectorId, MovieId = movieId }));
+            //check relationship
+            if(!_context.DirectorMovie.Any(dm => dm.MovieId == movieId && directors.Select(d => d.DirectorId).Contains(dm.DirectorId)))
+            {
+                //Add the directors of the movie to the database (add the relationship)
+                //Get a list of the directors from the database, to get de Id
+            
+                List<Director> directorDb = _context.Director.Where(d => directors.Select(d => d.DirectorName).Contains(d.DirectorName)).ToList();
+                _context.DirectorMovie.AddRange(directorDb.Select(d => new DirectorMovie { DirectorId = d.DirectorId, MovieId = movieId }));
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
         }
 
         private async Task CreateRegister(RegisterDTO register)
