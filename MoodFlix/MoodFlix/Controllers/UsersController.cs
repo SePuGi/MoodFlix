@@ -331,23 +331,16 @@ namespace MoodFlix.Controllers
                 .Where(ug => ug.UserId == userId)
                 .Select(ug => new { ug.GenreId, ug.Genre.GenreName, ug.IsPreferred })
                 .ToList();
+            
+            var genresToAdd = userGenres.Select(ug => ug.GenreId).Except(userGenresPreferences.Select(ug => ug.GenreId)).ToList();
+            var genresToRemove = userGenresPreferences.Select(ug => ug.GenreId).Except(userGenres.Select(ug => ug.GenreId)).ToList();
 
-            foreach(var newUserGenre in userGenres)
-            {
-                //if the gerne is in the database, check if isPreferred is different
-                if (userGenresPreferences.Any(ug => ug.GenreId == newUserGenre.GenreId))
-                {
-                    var userGenre = userGenresPreferences.FirstOrDefault(ug => ug.GenreId == newUserGenre.GenreId);
-
-                    if (userGenre.IsPreferred != newUserGenre.IsPreferred)//if isPreferred is different, update the value
-                        _context.UserGenre.FirstOrDefault(ug => ug.UserId == userId && ug.GenreId == newUserGenre.GenreId).IsPreferred = newUserGenre.IsPreferred;
-                }
-                else   // if the genre is not in the database, add it
-                {
-                    _context.UserGenre.Add(new UserGenre { UserId = userId, GenreId = newUserGenre.GenreId, IsPreferred = newUserGenre.IsPreferred });
-                }
-            }
-
+            foreach(var addGenre in genresToAdd)
+                _context.UserGenre.Add(new UserGenre { UserId = userId, GenreId = addGenre, IsPreferred = userGenres.FirstOrDefault(ug => ug.GenreId == addGenre).IsPreferred });
+            
+            foreach (var removeGenre in genresToRemove)
+                _context.UserGenre.Remove(_context.UserGenre.FirstOrDefault(ug => ug.UserId == userId && ug.GenreId == removeGenre));
+            
             await _context.SaveChangesAsync();
 
             return NoContent();
